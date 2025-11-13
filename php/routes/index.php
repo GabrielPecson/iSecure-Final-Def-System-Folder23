@@ -1,6 +1,6 @@
 <?php
 session_start();
-require '../database/db_connect.php';
+require 'Pages/db_connect.php';
 // Check if any admin user exists
 $stmt = $pdo->prepare("SELECT COUNT(*) FROM users WHERE role = 'Admin'");
 $stmt->execute();
