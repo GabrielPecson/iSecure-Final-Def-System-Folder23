@@ -1,6 +1,6 @@
 <?php
 session_start();
-require '../../database/db_connect.php';
+require 'db_connect.php';
 
 function generateRandomToken($length = 64) {
     return bin2hex(random_bytes($length / 2));
@@ -24,9 +24,9 @@ if (!$token) {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="icon" type="image/png" href="../../../images/logo/5thFighterWing-logo.png">
+    <link rel="icon" type="image/png" href="5thFighterWing-logo.png">
     <title>5th Fighter Wing</title>
-    <link href="../../../src/output.css" rel="stylesheet" >
+    <link href="output.css" rel="stylesheet" >
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@200..700&display=swap" rel="stylesheet">
@@ -42,7 +42,7 @@ if (!$token) {
     <div class="flex items-center justify-between w-full sm:w-auto">
       <!-- 5th Fighter Wing Logo -->
       <div class="flex items-center">
-        <img src="../../../images/logo/5thFighterWing-logo.png" alt="5th Fighter Wing Logo"
+        <img src="5thFighterWing-logo.png" alt="5th Fighter Wing Logo"
           class="w-[65px] h-[65px] object-contain mr-5 sm:mr-8" />
       </div>
 
@@ -64,21 +64,21 @@ if (!$token) {
 
     <!-- Right Logos (includes PAF) -->
     <div class="flex items-center space-x-3 mt-4 sm:mt-0">
-      <img src="../../../images/logo/PAF-logo.png" alt="PAF Logo" class="w-[65px] h-[65px] object-contain" />
-      <img src="../../../images/logo/TS-logo.png" alt="TS Logo" class="w-[65px] h-[65px] object-contain" />
-      <img src="../../../images/logo/BP-logo.png" alt="BP Logo" class="w-[65px] h-[65px] object-contain" />
+      <img src="PAF-logo.png" alt="PAF Logo" class="w-[65px] h-[65px] object-contain" />
+      <img src="TS-logo.png" alt="TS Logo" class="w-[65px] h-[65px] object-contain" />
+      <img src="BP-logo.png" alt="BP Logo" class="w-[65px] h-[65px] object-contain" />
     </div>
   </div>
 
  <!-- Desktop Navbar -->
   <nav class="hidden sm:flex justify-center items-center w-full h-[75px] bg-[#F8FAFC] border-y border-[#E4E4E4]">
     <ul class="flex space-x-[40px]">
-      <li><a href="../../../php/routes/Pages/home-page.php" class="text-[20px] text-[#5E7EA2] font-medium transition-all duration-200 hover:text-[#003673] hover:text-[23px]">HOME</a></li>
-      <li><a href="../../../php/routes/Pages/about-us-page.php" class="text-[20px] text-[#5E7EA2] font-medium transition-all duration-200 hover:text-[#003673] hover:text-[23px]">ABOUT US</a></li>
-      <li><a href="../../../php/routes/Pages/news-page.php" class="text-[20px] text-[#5E7EA2] font-medium transition-all duration-200 hover:text-[#003673] hover:text-[23px]">NEWS</a></li>
-      <li><a href="../../../php/routes/Pages/advisory-page.php" class="text-[20px] text-[#5E7EA2] font-medium transition-all duration-200 hover:text-[#003673] hover:text-[23px]">ADVISORY</a></li>
-      <li><a href="../../../php/routes/Pages/visit-page.php" class="text-[20px] text-[#5E7EA2] font-medium transition-all duration-200 hover:text-[#003673] hover:text-[23px]">VISIT US</a></li>
-      <li><a href="../../../php/routes/Pages/contact-page.php" class="text-[20px] text-[#5E7EA2] font-medium transition-all duration-200 hover:text-[#003673] hover:text-[23px]">CONTACT US</a></li>
+      <li><a href="home-page.php" class="text-[20px] text-[#5E7EA2] font-medium transition-all duration-200 hover:text-[#003673] hover:text-[23px]">HOME</a></li>
+      <li><a href="about-us-page.php" class="text-[20px] text-[#5E7EA2] font-medium transition-all duration-200 hover:text-[#003673] hover:text-[23px]">ABOUT US</a></li>
+      <li><a href="news-page.php" class="text-[20px] text-[#5E7EA2] font-medium transition-all duration-200 hover:text-[#003673] hover:text-[23px]">NEWS</a></li>
+      <li><a href="advisory-page.php" class="text-[20px] text-[#5E7EA2] font-medium transition-all duration-200 hover:text-[#003673] hover:text-[23px]">ADVISORY</a></li>
+      <li><a href="visit-page.php" class="text-[20px] text-[#5E7EA2] font-medium transition-all duration-200 hover:text-[#003673] hover:text-[23px]">VISIT US</a></li>
+      <li><a href="contact-page.php" class="text-[20px] text-[#5E7EA2] font-medium transition-all duration-200 hover:text-[#003673] hover:text-[23px]">CONTACT US</a></li>
     </ul>
   </nav>
 
@@ -88,12 +88,12 @@ if (!$token) {
     class="absolute top-full left-0 w-full bg-[#F8FAFC] border-y border-[#E4E4E4] hidden opacity-0 translate-y-[-10px] transition-all duration-300 ease-in-out"
   >
     <ul class="flex flex-col items-center py-5 space-y-5">
-      <li><a href="../../../php/routes/Pages/home-page.php" class="text-[18px] text-[#5E7EA2] font-medium hover:text-[#003673] transition">HOME</a></li>
-      <li><a href="../../../php/routes/Pages/about-us-page.php" class="text-[18px] text-[#5E7EA2] font-medium hover:text-[#003673] transition">ABOUT US</a></li>
-      <li><a href="../../../php/routes/Pages/news-page.php" class="text-[18px] text-[#5E7EA2] font-medium hover:text-[#003673] transition">NEWS</a></li>
-      <li><a href="../../../php/routes/Pages/advisory-page.php" class="text-[18px] text-[#5E7EA2] font-medium hover:text-[#003673] transition">ADVISORY</a></li>
-      <li><a href="../../../php/routes/Pages/visit-page.php" class="text-[18px] text-[#5E7EA2] font-medium hover:text-[#003673] transition">VISIT US</a></li>
-      <li><a href="../../../php/routes/Pages/contact-page.php" class="text-[18px] text-[#5E7EA2] font-medium hover:text-[#003673] transition">CONTACT US</a></li>
+      <li><a href="home-page.php" class="text-[18px] text-[#5E7EA2] font-medium hover:text-[#003673] transition">HOME</a></li>
+      <li><a href="about-us-page.php" class="text-[18px] text-[#5E7EA2] font-medium hover:text-[#003673] transition">ABOUT US</a></li>
+      <li><a href="news-page.php" class="text-[18px] text-[#5E7EA2] font-medium hover:text-[#003673] transition">NEWS</a></li>
+      <li><a href="advisory-page.php" class="text-[18px] text-[#5E7EA2] font-medium hover:text-[#003673] transition">ADVISORY</a></li>
+      <li><a href="visit-page.php" class="text-[18px] text-[#5E7EA2] font-medium hover:text-[#003673] transition">VISIT US</a></li>
+      <li><a href="contact-page.php" class="text-[18px] text-[#5E7EA2] font-medium hover:text-[#003673] transition">CONTACT US</a></li>
     </ul>
   </nav>
 </header>
@@ -185,9 +185,9 @@ if (!$token) {
     <!-- Left Section -->
     <div class="flex flex-col items-center md:items-start space-y-3">
       <div class="flex space-x-3">
-        <img src="../../../images/logo/5thFighterWing-logo.png" alt="Logo 1" class="h-[70px] w-auto">
-        <img src="../../../images/logo/BP-logo.png" alt="Logo 2" class="h-[70px] w-auto">
-        <img src="../../../images/logo/PAF-logo.png" alt="Logo 3" class="h-[70px] w-auto">
+        <img src="5thFighterWing-logo.png" alt="Logo 1" class="h-[70px] w-auto">
+        <img src="BP-logo.png" alt="Logo 2" class="h-[70px] w-auto">
+        <img src="PAF-logo.png" alt="Logo 3" class="h-[70px] w-auto">
       </div>
       <p class="text-sm leading-tight mt-2">
         Copyright © Basa Air Base 5th Fighter Wing.<br>
@@ -210,8 +210,8 @@ if (!$token) {
     <div class="flex flex-col items-center md:items-end space-y-3">
       <p class="text-base font-medium">DEVELOPED BY:</p>
       <div class="flex items-center space-x-3">
-        <img src="../../../images/logo/PAMSU-logo.png" alt="PSU Logo 1" class="h-[70px] w-auto">
-        <img src="../../../images/logo/CCS-logo.png" alt="PSU Logo 2" class="h-[70px] w-auto">
+        <img src="PAMSU-logo.png" alt="PSU Logo 1" class="h-[70px] w-auto">
+        <img src="CCS-logo.png" alt="PSU Logo 2" class="h-[70px] w-auto">
       </div>
       <p class="text-sm leading-tight text-center md:text-right">
         CCS Students of<br>Pampanga State University
@@ -225,5 +225,5 @@ if (!$token) {
 
 </body>
 <!-- <script src="https://cdn.tailwindcss.com"></script> -->
-<script src="../../../scripts/landingpage.js"></script>
+<script src="landingpage.js"></script>
 </html>
