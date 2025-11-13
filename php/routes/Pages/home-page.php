@@ -163,20 +163,20 @@ if (!$token) {
   </div>
   <!-- Right Column -->
   <div class="vision-right w-full h-[300px] sm:w-[525px] sm:h-[425px] bg-gray-200 rounded-lg flex items-center justify-center">
-    <span class="text-gray-500 text-[16px] sm:text-[20px]"><img src="../../../images/Vision-img.png" alt="vision-img"></span>
+    <span class="text-gray-500 text-[16px] sm:text-[20px]"><img src="Vision-img.png" alt="vision-img"></span>
   </div>
 </div>
 
  <div class="mission-container bg-white rounded-[46px] mt-[174px] p-[32px] sm:p-[115px] shadow-[0_4px_83.9px_-21px_rgba(0,0,0,0.25)] w-full max-w-[1768px] h-auto flex flex-col sm:flex-row gap-8">
   <!-- Left Column -->
   <div class="mission-left w-full h-[300px] sm:w-[525px] sm:h-[425px] bg-gray-200 rounded-lg flex items-center justify-center">
-    <span class="text-gray-500 text-[16px] sm:text-[20px]"><img src="../../../images/Mission-img.jpg" alt="mission-img"></span>
+    <span class="text-gray-500 text-[16px] sm:text-[20px]"><img src="Mission-img.jpg" alt="mission-img"></span>
   </div>
   <!-- Right Column -->
   <div class="mission-right flex-1 flex flex-col items-end text-right">
     <h2 class=" font-[Oswald] text-[24px] sm:text-[37px] text-[#003673] font-semibold mb-4">Our Mission</h2>
     <p class="font-[Inter] font-normal text-[16px] sm:text-[18px] sm:leading-[30px] text-[#336DAF] mb-6 leading-relaxed">To be a world-class air force that excels in defending the nation's sovereignty, fostering innovation, and empowering our airmen to achieve unparalleled excellence in air power.</p>
-    <a href="../../../php/routes/Pages/about-us-page.php#mission-vision-section" class="bg-[#003673] text-white font-[Inter] font-semibold text-[14px] sm:text-[16px] w-[180px] sm:w-[210px] h-[45px] sm:h-[50px] rounded-lg hover:bg-[#002244] transition duration-200 self-end inline-block text-center leading-[45px] sm:leading-[50px]">Read More</a>
+    <a href="about-us-page.php#mission-vision-section" class="bg-[#003673] text-white font-[Inter] font-semibold text-[14px] sm:text-[16px] w-[180px] sm:w-[210px] h-[45px] sm:h-[50px] rounded-lg hover:bg-[#002244] transition duration-200 self-end inline-block text-center leading-[45px] sm:leading-[50px]">Read More</a>
   </div>
 </div>
 </section>
