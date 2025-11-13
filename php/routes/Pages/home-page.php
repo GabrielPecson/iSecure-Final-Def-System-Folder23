@@ -77,8 +77,8 @@ if (!$token) {
       <li><a href="about-us-page.php" class="text-[20px] text-[#5E7EA2] font-medium transition-all duration-200 hover:text-[#003673] hover:text-[23px]">ABOUT US</a></li>
       <li><a href="news-page.php" class="text-[20px] text-[#5E7EA2] font-medium transition-all duration-200 hover:text-[#003673] hover:text-[23px]">NEWS</a></li>
       <li><a href="advisory-page.php" class="text-[20px] text-[#5E7EA2] font-medium transition-all duration-200 hover:text-[#003673] hover:text-[23px]">ADVISORY</a></li>
-      <li><a href="Pages/visit-page.php" class="text-[20px] text-[#5E7EA2] font-medium transition-all duration-200 hover:text-[#003673] hover:text-[23px]">VISIT US</a></li>
-      <li><a href="Pages/contact-page.php" class="text-[20px] text-[#5E7EA2] font-medium transition-all duration-200 hover:text-[#003673] hover:text-[23px]">CONTACT US</a></li>
+      <li><a href="visit-page.php" class="text-[20px] text-[#5E7EA2] font-medium transition-all duration-200 hover:text-[#003673] hover:text-[23px]">VISIT US</a></li>
+      <li><a href="contact-page.php" class="text-[20px] text-[#5E7EA2] font-medium transition-all duration-200 hover:text-[#003673] hover:text-[23px]">CONTACT US</a></li>
     </ul>
   </nav>
 
@@ -88,12 +88,12 @@ if (!$token) {
     class="absolute top-full left-0 w-full bg-[#F8FAFC] border-y border-[#E4E4E4] hidden opacity-0 translate-y-[-10px] transition-all duration-300 ease-in-out"
   >
     <ul class="flex flex-col items-center py-5 space-y-5">
-      <li><a href="../../../php/routes/Pages/home-page.php" class="text-[18px] text-[#5E7EA2] font-medium hover:text-[#003673] transition">HOME</a></li>
-      <li><a href="../../../php/routes/Pages/about-us-page.php" class="text-[18px] text-[#5E7EA2] font-medium hover:text-[#003673] transition">ABOUT US</a></li>
-      <li><a href="../../../php/routes/Pages/news-page.php" class="text-[18px] text-[#5E7EA2] font-medium hover:text-[#003673] transition">NEWS</a></li>
-      <li><a href="../../../php/routes/Pages/advisory-page.php" class="text-[18px] text-[#5E7EA2] font-medium hover:text-[#003673] transition">ADVISORY</a></li>
-      <li><a href="../../../php/routes/Pages/visit-page.php" class="text-[18px] text-[#5E7EA2] font-medium hover:text-[#003673] transition">VISIT US</a></li>
-      <li><a href="../../../php/routes/Pages/contact-page.php" class="text-[18px] text-[#5E7EA2] font-medium hover:text-[#003673] transition">CONTACT US</a></li>
+      <li><a href="home-page.php" class="text-[18px] text-[#5E7EA2] font-medium hover:text-[#003673] transition">HOME</a></li>
+      <li><a href="about-us-page.php" class="text-[18px] text-[#5E7EA2] font-medium hover:text-[#003673] transition">ABOUT US</a></li>
+      <li><a href="news-page.php" class="text-[18px] text-[#5E7EA2] font-medium hover:text-[#003673] transition">NEWS</a></li>
+      <li><a href="advisory-page.php" class="text-[18px] text-[#5E7EA2] font-medium hover:text-[#003673] transition">ADVISORY</a></li>
+      <li><a href="visit-page.php" class="text-[18px] text-[#5E7EA2] font-medium hover:text-[#003673] transition">VISIT US</a></li>
+      <li><a href="contact-page.php" class="text-[18px] text-[#5E7EA2] font-medium hover:text-[#003673] transition">CONTACT US</a></li>
     </ul>
   </nav>
 </header>
@@ -159,7 +159,7 @@ if (!$token) {
   <div class="vision-left flex-1 flex flex-col">
     <h2 class=" font-[Oswald] text-[24px] sm:text-[37px] text-[#003673] font-semibold mb-4">Our Vision</h2>
     <p class="font-[Inter] font-normal text-[16px] sm:text-[18px] sm:leading-[30px] text-[#336DAF] mb-6 leading-relaxed">To be a world-class air force that excels in defending the nation's sovereignty, fostering innovation, and empowering our airmen to achieve unparalleled excellence in air power.</p>
-    <a href="../../../php/routes/Pages/about-us-page.php#mission-vision-section" class="bg-[#003673] text-white font-[Inter] font-semibold text-[14px] sm:text-[16px] w-[180px] sm:w-[210px] h-[45px] sm:h-[50px] rounded-lg hover:bg-[#002244] transition duration-200 inline-block text-center leading-[45px] sm:leading-[50px]">Read More</a>
+    <a href="about-us-page.php#mission-vision-section" class="bg-[#003673] text-white font-[Inter] font-semibold text-[14px] sm:text-[16px] w-[180px] sm:w-[210px] h-[45px] sm:h-[50px] rounded-lg hover:bg-[#002244] transition duration-200 inline-block text-center leading-[45px] sm:leading-[50px]">Read More</a>
   </div>
   <!-- Right Column -->
   <div class="vision-right w-full h-[300px] sm:w-[525px] sm:h-[425px] bg-gray-200 rounded-lg flex items-center justify-center">
@@ -263,7 +263,7 @@ if (!$token) {
     <div class="news-card bg-white rounded-xl shadow-lg overflow-hidden w-full max-w-sm">
       <img src="newshighlight-img1.jpg" alt="News 1" class="w-full h-60 object-cover" />
       <div class="p-4 flex justify-start">
-        <a href="../../../php/routes/Pages/news-page.php#news-cards-container" class="text-[#003673] font-semibold hover:underline">VIEW ➤</a>
+        <a href="news-page.php#news-cards-container" class="text-[#003673] font-semibold hover:underline">VIEW ➤</a>
       </div>
     </div>
 
@@ -271,7 +271,7 @@ if (!$token) {
     <div class="news-card bg-white rounded-xl shadow-lg overflow-hidden w-full max-w-sm">
       <img src="newshighlight-img2.jpg" alt="News 2" class="w-full h-60 object-cover" />
       <div class="p-4 flex justify-start">
-        <a href="../../../php/routes/Pages/news-page.php#news-cards-container" class="text-[#003673] font-semibold hover:underline">VIEW ➤</a>
+        <a href="news-page.php#news-cards-container" class="text-[#003673] font-semibold hover:underline">VIEW ➤</a>
       </div>
     </div>
 
@@ -279,12 +279,12 @@ if (!$token) {
     <div class="news-card bg-white rounded-xl shadow-lg overflow-hidden w-full max-w-sm">
       <img src="newshighlight-img3.jpg" alt="News 3" class="w-full h-60 object-cover" />
       <div class="p-4 flex justify-start">
-        <a href="../../../php/routes/Pages/news-page.php#news-cards-container" class="text-[#003673] font-semibold hover:underline">VIEW ➤</a>
+        <a href="news-page.php#news-cards-container" class="text-[#003673] font-semibold hover:underline">VIEW ➤</a>
       </div>
     </div>
   </div>
 
- <a href="../../../php/routes/Pages/news-page.php" class="mt-[34px] bg-[#003673] text-white font-[Inter] font-semibold text-[14px] sm:text-[16px] w-[180px] sm:w-[210px] h-[45px] sm:h-[50px] rounded-lg hover:bg-[#002244] transition duration-200 inline-block text-center leading-[45px] sm:leading-[50px] fade-in">More News</a>
+ <a href="news-page.php" class="mt-[34px] bg-[#003673] text-white font-[Inter] font-semibold text-[14px] sm:text-[16px] w-[180px] sm:w-[210px] h-[45px] sm:h-[50px] rounded-lg hover:bg-[#002244] transition duration-200 inline-block text-center leading-[45px] sm:leading-[50px] fade-in">More News</a>
 
   <!-- Latest Advisories Section -->
     <h2 class="font-[Oswald] text-[37px] md:text-[37px] font-semibold text-[#003673] mt-[131px] mb-[34px] fade-in">
@@ -313,7 +313,7 @@ if (!$token) {
     </div>
   </div>
 
-<a href="../../../php/routes/Pages/advisory-page.php" class="mt-[25px] bg-[#003673] text-white font-[Inter] font-semibold text-[14px] sm:text-[16px] w-[180px] sm:w-[210px] h-[45px] sm:h-[50px] rounded-lg hover:bg-[#002244] transition duration-200 inline-block text-center leading-[45px] sm:leading-[50px] fade-in">More Advisories</a>
+<a href="advisory-page.php" class="mt-[25px] bg-[#003673] text-white font-[Inter] font-semibold text-[14px] sm:text-[16px] w-[180px] sm:w-[210px] h-[45px] sm:h-[50px] rounded-lg hover:bg-[#002244] transition duration-200 inline-block text-center leading-[45px] sm:leading-[50px] fade-in">More Advisories</a>
 
 </div>
 
