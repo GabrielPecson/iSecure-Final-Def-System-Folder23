@@ -365,5 +365,5 @@ if (!$token) {
 
 </body>
 <!-- <script src="https://cdn.tailwindcss.com"></script> -->
-<script src="../../../scripts/landingpage.js"></script>
+<script src="landingpage.js"></script>
 </html>
