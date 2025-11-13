@@ -1,6 +1,6 @@
 <?php
 session_start();
-require '../../database/db_connect.php';
+require 'db_connect.php';
 
 function generateRandomToken($length = 64) {
     return bin2hex(random_bytes($length / 2));
@@ -26,7 +26,7 @@ if (!$token) {
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="icon" type="image/png" href="../../../images/logo/5thFighterWing-logo.png">
     <title>5th Fighter Wing</title>
-    <link href="../../../src/output.css" rel="stylesheet" >
+    <link href="output.css" rel="stylesheet" >
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@200..700&display=swap" rel="stylesheet">
@@ -42,7 +42,7 @@ if (!$token) {
     <div class="flex items-center justify-between w-full sm:w-auto">
       <!-- 5th Fighter Wing Logo -->
       <div class="flex items-center">
-        <img src="../../../images/logo/5thFighterWing-logo.png" alt="5th Fighter Wing Logo"
+        <img src="5thFighterWing-logo.png" alt="5th Fighter Wing Logo"
           class="w-[65px] h-[65px] object-contain mr-5 sm:mr-8" />
       </div>
 
@@ -64,9 +64,9 @@ if (!$token) {
 
     <!-- Right Logos (includes PAF) -->
     <div class="flex items-center space-x-3 mt-4 sm:mt-0">
-      <img src="../../../images/logo/PAF-logo.png" alt="PAF Logo" class="w-[65px] h-[65px] object-contain" />
-      <img src="../../../images/logo/TS-logo.png" alt="TS Logo" class="w-[65px] h-[65px] object-contain" />
-      <img src="../../../images/logo/BP-logo.png" alt="BP Logo" class="w-[65px] h-[65px] object-contain" />
+      <img src="PAF-logo.png" alt="PAF Logo" class="w-[65px] h-[65px] object-contain" />
+      <img src="TS-logo.png" alt="TS Logo" class="w-[65px] h-[65px] object-contain" />
+      <img src="BP-logo.png" alt="BP Logo" class="w-[65px] h-[65px] object-contain" />
     </div>
   </div>
 
@@ -260,19 +260,19 @@ if (!$token) {
     <div class="grid grid-cols-1 md:grid-cols-3 gap-8 bg-white rounded-[17px] border border-[#003673] shadow-lg p-8 sm:p-12 w-full max-w-6xl mx-auto place-items-center">
       <!-- PAF -->
       <a href="https://www.paf.mil.ph/" target="_blank" class="flex flex-col items-center justify-center bg-white rounded-2xl shadow-sm border border-gray-100 text-center hover:shadow-2xl transition-shadow duration-300 p-6 w-full max-w-[400px]">
-        <img src="../../../images/logo/PAF-logo.png" alt="Philippine Air Force Logo" class="w-28 h-28 object-contain mb-4" />
+        <img src="PAF-logo.png" alt="Philippine Air Force Logo" class="w-28 h-28 object-contain mb-4" />
         <p class="font-[Inter] font-semibold text-lg text-[#003673]">Philippine Air Force</p>
       </a>
 
       <!-- DND -->
       <a href="https://www.dnd.gov.ph/" target="_blank" class="flex flex-col items-center justify-center bg-white rounded-2xl shadow-sm border border-gray-100 text-center hover:shadow-2xl transition-shadow duration-300 p-6 w-full max-w-[400px]">
-        <img src="../../../images/logo/DND-logo.png" alt="Department of National Defense Logo" class="w-28 h-28 object-contain mb-4" />
+        <img src="DND-logo.png" alt="Department of National Defense Logo" class="w-28 h-28 object-contain mb-4" />
         <p class="font-[Inter] font-semibold text-lg text-[#003673]">Department of National Defense</p>
       </a>
 
       <!-- AFP -->
       <a href="https://www.afp.mil.ph/" target="_blank" class="flex flex-col items-center justify-center bg-white rounded-2xl shadow-sm border border-gray-100 text-center hover:shadow-2xl transition-shadow duration-300 p-6 w-full max-w-[400px]">
-        <img src="../../../images/logo/AFP-logo.png" alt="Armed Forces of the Philippines Logo" class="w-28 h-28 object-contain mb-4" />
+        <img src="AFP-logo.png" alt="Armed Forces of the Philippines Logo" class="w-28 h-28 object-contain mb-4" />
         <p class="font-[Inter] font-semibold text-lg text-[#003673]">Armed Forces of the Philippines</p>
       </a>
     </div>
