@@ -153,7 +153,7 @@ if (!$token) {
   <!-- Facial Scanning -->
   <div class="w-full">
     <label class="block text-sm font-semibold mb-1">
-      Facial Scanning <span class="text-red-500">*</span>
+      Facial Scanning (Optional)
     </label>
     <button
       type="button"
@@ -264,7 +264,7 @@ if (!$token) {
       </section>
 
       <!-- Submit Button -->
-      <button type="submit" id="submit-request-btn" class="w-full bg-gray-400 text-white font-semibold py-3 rounded-md cursor-not-allowed" disabled>
+      <button type="submit" id="submit-request-btn" class="w-full bg-[#003673] text-white font-semibold py-3 rounded-md hover:bg-[#002a59]">
         Submit Visitation Request
       </button>
 
