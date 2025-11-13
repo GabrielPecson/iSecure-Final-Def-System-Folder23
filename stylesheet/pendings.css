@@ -1,0 +1,513 @@
+* {
+    padding: 0;
+    margin: 0;
+    font-family: 'League Spartan', sans-serif;
+    box-sizing: border-box;
+    /* overflow: hidden; */
+}
+
+.body {
+    display: flex;
+    height: 100vh;
+    overflow: hidden;
+    background-color: #F5F5F5;
+}
+
+.left-panel {
+    flex: 0 0 auto;
+}
+
+.right-panel {
+    flex: 1;
+    overflow: hidden;
+}
+
+
+.main-content {
+    flex: 1;
+    padding: 20px 40px;
+    background-color: #F5F5F5;
+    overflow-y: auto;
+}
+
+.main-header {
+    width: 100%;
+    height: 63px;
+    background-color: white;
+    border: 1px solid #C9C3C3;
+    border: 1px solid #C9C3C3;
+    border-radius: 15px;
+    display: flex;
+    justify-content: space-between;
+    padding: 0 15px;
+}
+
+.header-left,
+.header-right {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.user-info {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  justify-content: center;
+}
+
+.user-text {
+  display: flex;
+  flex-direction: column;
+  line-height: 1.2;
+}
+
+.username {
+  font-weight: 900;
+}
+
+.logout-link {
+    font-size: 13px;
+    color: red;
+    text-decoration: none;
+    font-weight: bold;
+}
+.logout-link:hover {
+    text-decoration: underline;
+}
+
+.header-left i {
+    color: #4B5563;
+}
+
+.path {
+    text-align: center;
+    padding-top: 10px;
+    color: #4B5563;
+    font-weight: lighter;
+}
+
+.current-loc {
+    text-align: center;
+    padding-top: 10px;
+    font-weight: 900;
+}
+
+.fa-user-circle {
+    height: 30px;
+    width: 30px;
+    color: #B8ECFF;
+    background-color: #1A728B;
+    border-radius: 50%;
+    align-content: center;
+    justify-content: center;
+    text-align: center;
+    font-size: 30px;
+}
+
+/* === Modal === */
+.modal {
+  display: none; 
+  position: fixed;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: rgba(0,0,0,0.6);
+  justify-content: center;
+  align-items: center;
+  z-index: 2000;
+  pointer-events: none;
+}
+
+.modal.show {
+    display: flex;
+}
+
+.modal-content {
+  background: white;
+  padding: 20px;
+  border-radius: 10px;
+  max-width: 110rem;
+  width: 100%;
+  margin: auto;
+  text-align: center;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  
+}
+
+.modal-actions {
+    margin-top: 20px;
+    display: flex;
+    justify-content: space-around;
+}
+.modal-actions button {
+    padding: 8px 20px;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+}
+.modal-actions .btn-danger {
+    background: #dc3545;
+    color: white;
+}
+.modal-actions .btn-secondary {
+    background: #6c757d;
+    color: white;
+}
+
+/* === Fix table layout for Pendings page === */
+.table-container,
+.table-responsive {
+  width: 100% !important;
+  margin-top: 15px;
+  border: 1px solid #ddd !important;
+  border-radius: 8px !important;
+  overflow-x: auto !important;
+  background: #fff !important;
+  padding: 20px !important;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1) !important;
+}
+
+.table {
+  width: 100% !important;
+  border-collapse: collapse !important;
+  table-layout: auto !important;
+  min-width: 600px !important;
+}
+
+.table thead th {
+  background-color: #5BB7D1 !important;
+  color: #fff !important;
+  font-weight: 600 !important;
+  text-align: center !important;
+  padding: 12px !important;
+  border: none !important;
+  white-space: nowrap !important;
+  min-width: 90px !important;
+  max-width: 150px !important;
+  overflow: hidden !important;
+  text-overflow: ellipsis !important;
+}
+
+/* Override Bootstrap table header background classes */
+.table-light {
+  background-color: #5BB7D1 !important;
+  color: #fff !important;
+}
+.table-success {
+  background-color: #28a745 !important;
+  color: #fff !important;
+}
+.table-danger {
+  background-color: #dc3545 !important;
+  color: #fff !important;
+}
+
+.table tbody td {
+  padding: 8px 6px !important;
+  text-align: center !important;
+  vertical-align: middle !important;
+  border: none !important;
+  background: transparent !important;
+  min-width: 90px !important;
+  max-width: 150px !important;
+  overflow: hidden !important;
+  text-overflow: ellipsis !important;
+  white-space: nowrap !important;
+}
+
+.table tbody tr {
+    border-bottom: 1px solid #f0f0f0 !important;
+}
+
+.table tbody td:last-child {
+    width: 450px !important;
+    white-space: nowrap !important;
+}
+
+.status-badge {
+    display: inline-block !important;
+    padding: 4px 10px !important;
+    border-radius: 20px !important;
+    font-size: 16px !important;
+    font-weight: bold !important;
+    color: #dc3545 !important;
+}
+.status-approved { background: #28a745 !important; }
+.status-pending  { background: #ffc107 !important; color: #000 !important; }
+.status-rejected { background: #dc3545 !important; }
+
+/* Tabs */
+.nav-tabs {
+    border-bottom: none !important;
+    margin-bottom: 10px !important;
+}
+.nav-tabs .nav-link {
+    border: none !important;
+    color: #333 !important;
+    font-weight: 500 !important;
+    padding: 6px 14px !important;
+    min-width: 100px !important;
+    text-align: center !important;
+}
+.nav-tabs .nav-link.active {
+    background: #5BB7D1 !important;
+    color: #fff !important;
+    border-radius: 4px !important;
+}
+
+/* Override Bootstrap nav-tabs active background */
+.nav-tabs .nav-link.active {
+    background-color: #5BB7D1 !important;
+    color: #fff !important;
+}
+.nav-tabs .nav-link:hover {
+    background: #e6e6e6 !important;
+    border-radius: 4px !important;
+}
+
+/* Modal styles for view details */
+.modal img {
+    max-width: 100%;
+    height: auto;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+}
+
+.modal table td {
+    padding: 8px;
+    vertical-align: top;
+}
+
+.modal table td:first-child {
+    font-weight: bold;
+    width: 150px;
+}
+
+/* Visitor details modal improvements */
+.modal-body {
+    font-family: 'League Spartan', sans-serif;
+    color: #006682;
+    line-height: 1.6;
+    max-width: 105rem;
+    max-height: 70vh;
+    margin: 0 auto;
+    background-color: #e0f7ff;
+    padding: 20px 30px;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0, 102, 130, 0.2);
+    overflow-y: auto;
+    overflow-x: hidden;
+    word-wrap: break-word;
+    font-size: 14px;
+}
+
+.modal-body strong {
+    font-weight: 700;
+    color: #2789A4;
+}
+
+.modal-body p {
+    margin-bottom: 14px;
+    font-size: 16px;
+}
+
+.modal-body img {
+    border-radius: 10px;
+    max-width: 60%;
+    max-height: 280px;
+    display: block;
+    margin: 0 auto 20px;
+}
+
+.modal-body .row.mt-3 .col-md-6 {
+    flex: 1;
+    text-align: center;
+    background-color: #cce7ff;
+    padding: 10px;
+    border-radius: 10px;
+    box-shadow: inset 0 0 8px rgba(0,0,0,0.1);
+}
+
+.modal-body .row.mt-3 .col-md-6 img {
+    max-height: 280px;
+    object-fit: contain;
+    border: 2px solid #006682;
+    border-radius: 10px;
+}
+
+.modal-body .row.mt-3 .col-md-6 h6 {
+    font-weight: 700;
+    margin-bottom: 10px;
+    color: #006682;
+}
+
+/* Styles for visitor details modal table and images */
+.modal-body table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-bottom: 20px;
+  background-color: white;
+  color: black;
+}
+
+.modal-body table th {
+  background-color: #f8f9fa;
+  font-weight: bold;
+  padding: 8px 12px;
+  vertical-align: top;
+  border: 1px solid #dee2e6;
+}
+
+.modal-body table td {
+  background-color: white;
+  padding: 8px 12px;
+  vertical-align: top;
+  border: 1px solid #dee2e6;
+}
+
+.image-container {
+  display: flex;
+  justify-content: center;
+  gap: 20px;
+  margin-top: 15px;
+}
+
+.image-box {
+  text-align: center;
+  flex: 0 0 auto;
+}
+
+.uniform-image {
+  width: 150px;
+  height: 150px;
+  object-fit: cover;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+}
+
+/* Bigger modal styles */
+.big-modal-dialog {
+  max-width: 130rem !important;
+  margin: 2rem 2rem!important;
+  display: flex !important;
+  align-items: center !important;
+  min-height: calc(100vh - 4rem) !important;
+}
+
+.big-modal-content {
+  height: 75vh !important;
+  overflow-y: auto !important;
+  margin: auto !important;
+  width: 130rem !important;
+}
+
+.big-modal-body {
+  height: calc(75vh - 120px) !important;
+  overflow-y: auto !important;
+  width: 100% !important;
+  margin: 0 auto !important;
+}
+
+/* Make table inside modal responsive */
+.big-modal-body .table-responsive {
+  max-width: 100%;
+  padding: auto;
+}
+
+.big-modal-body table {
+  width: 100% !important;
+  min-width: unset !important;
+  table-layout: auto !important;
+  word-wrap: break-word !important;
+  padding: auto;
+}
+
+.big-modal-body .table td {
+  min-width: unset !important;
+  max-width: none !important;
+  overflow: visible !important;
+  text-overflow: unset !important;
+  white-space: normal !important;
+  word-wrap: break-word !important;
+}
+
+
+
+/* Tablets or smaller laptops */
+@media (max-width: 1366px) {
+}
+
+/* Mobile or very small screens */
+@media (max-width: 768px) {
+    .body {
+        flex-direction: column;
+    }
+    .right-panel {
+        width: 100%;
+    }
+}
+
+/* === Personnel Table === */
+.personnel-container {
+  width: 100%;
+  background: white;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+  margin-top: 0;
+}
+
+.personnel-container table {
+  width: 100% !important;
+  table-layout: fixed !important;
+  border-collapse: collapse !important;
+  margin-top: 20px;
+}
+
+.personnel-container thead th {
+  background-color: #5BB7D1 !important;
+  color: #fff !important;
+  font-weight: 600 !important;
+  text-align: center !important;
+  padding: 12px !important;
+  border: none !important;
+  white-space: nowrap !important;
+}
+
+.personnel-container tbody td {
+  padding: 12px !important;
+  text-align: center !important;
+  vertical-align: middle !important;
+  border: none !important;
+  background: transparent !important;
+  word-wrap: break-word !important;
+}
+
+.personnel-container tbody tr {
+  border-bottom: 1px solid #f0f0f0 !important;
+}
+
+.personnel-container tbody td:last-child {
+  width: 150px !important;
+  white-space: nowrap !important;
+}
+
+/* === Status Badges === */
+.status-badge {
+  display: inline-block !important;
+  padding: 4px 10px !important;
+  border-radius: 20px !important;
+  font-size: 12px !important;
+  font-weight: bold !important;
+  color: #fff !important;
+}
+.status-active { background: #28a745 !important; }
+.status-inactive { background: #6c757d !important; }
+.status-banned { background: #dc3545 !important; }
+.status-pending { background: #ffc107 !important; color: #000 !important; }
+.status-suspended { background: #6f42c1 !important; }
+.status-approved { background: #28a745 !important; }
+.status-rejected { background: #dc3545 !important; }
+.status-cancelled { background: #6c757d !important; }

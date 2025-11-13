@@ -1,0 +1,25 @@
+/* Key Cards Theming */
+.key-cards-form-section {
+  background: white;
+  border-radius: 8px;
+  padding: 20px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+  margin-bottom: 20px;
+}
+
+.key-cards-list-section {
+  background: white;
+  border-radius: 8px;
+  padding: 20px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+  margin-bottom: 20px;
+}
+
+.key-cards-list .list-group-item {
+  border: none;
+  border-bottom: 1px solid #f0f0f0;
+}
+
+.key-cards-list .list-group-item:last-child {
+  border-bottom: none;
+}

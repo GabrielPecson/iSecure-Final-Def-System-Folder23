@@ -1,0 +1,275 @@
+* {
+    padding: 0;
+    margin: 0;
+    font-family: 'League Spartan', sans-serif;
+    box-sizing: border-box;
+    overflow: hidden;
+}
+
+.body {
+    display: flex;
+    height: 100vh;
+    overflow: hidden;
+    background-color: #F5F5F5;
+}
+
+.left-panel {
+    flex: 0 0 auto;
+}
+
+.right-panel {
+    flex: 1;
+}
+
+
+
+.main-content {
+    flex: 1;
+    padding: 20px;
+    background-color: #F5F5F5;
+    overflow-y: auto;
+}
+
+.main-header {
+    width: 100%;
+    height: 63px;
+    background-color: white;
+    border-style: solid;
+    border-width: 1px;
+    border-color: #C9C3C3;
+    border-radius: 15px;
+    display: flex;
+    justify-content: space-between;
+    padding: 0 15px;
+}
+
+.header-left, 
+.header-right {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    background-color: transparent;
+}
+
+.user-info {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.user-text {
+  display: flex;
+  flex-direction: column;
+  line-height: 1.2;
+  background-color: transparent;
+}
+
+.username {
+  font-weight: 900;
+  background-color: transparent;
+}
+
+.logout-link {
+  font-size: 13px;
+  color: red;
+  text-decoration: none;
+  font-weight: bold;
+}
+
+.logout-link:hover {
+  text-decoration: underline;
+}
+
+
+.header-left i {
+    background-color: transparent;
+    align-self: center;
+    color: #4B5563;
+}
+
+.path {
+    text-align: center;
+    padding-top: 10px;
+    background-color: transparent;
+    color: #4B5563;
+    font-weight: lighter;
+}
+
+.current-loc {
+    text-align: center;
+    padding-top: 10px;
+    background-color: transparent;
+    font-weight: 900;
+}
+
+.header-rght i {
+    height: 30px;
+    width: 30px;
+}
+
+.fa-user-circle {
+    height: 30px;
+    width: 30px;
+    color: #B8ECFF;
+    background-color: #1A728B;
+    border-radius: 50%;
+    align-content: center;
+    justify-content: center;
+    text-align: center;
+    font-size: 30px;
+}
+
+.user-info {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background-color: transparent;
+}
+
+.username {
+    font-weight: 900;
+    text-align: center;
+    padding-top: 10px;
+    background-color: transparent;
+}
+
+/* Modal base */
+.modal {
+  display: none; 
+  position: fixed;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: rgba(0,0,0,0.6);
+  justify-content: center;
+  align-items: center;
+  z-index: 2000;
+}
+
+.modal.show {
+  display: flex;
+}
+
+.modal-content {
+  background: white;
+  padding: 20px;
+  border-radius: 10px;
+  width: 350px;
+  max-width: 90%;
+  text-align: center;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+}
+
+.modal-actions {
+  margin-top: 20px;
+  display: flex;
+  justify-content: space-around;
+}
+
+.modal-actions button {
+  padding: 8px 20px;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.modal-actions .btn-danger {
+  background: #dc3545;
+  color: white;
+}
+
+.modal-actions .btn-secondary {
+  background: #6c757d;
+  color: white;
+}
+
+.camera-feed {
+    height: 50%;
+    margin-top: 140px;
+    padding: 20px;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 40px;
+}
+
+.camera-view {
+    flex: 1;
+    height: 373px;
+    /* Remove fixed width to allow image to fill container */
+    width: auto;
+    align-content: center;
+    /* Remove background color to avoid dark gray area */
+    background-color: transparent;
+    border-radius: 4px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding-left: 0;
+}
+
+.camera-view i {
+    height: 84px;
+    width: 119px;
+    font-size: 90px;
+    background-color: transparent;
+    text-align: justify;
+    color: black;
+}
+
+.camera-view img,
+.camera-view video {
+    width: 100%;
+    height: auto;
+    object-fit: contain;
+}
+
+.camera-feed-status {
+    height: 200px;
+    padding: 20px;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 40px;
+}
+
+.stats-container {
+    flex: 1;
+    padding: 15px;
+    height: 173px;
+    width: 500px;
+    background-color: white;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+}
+
+.stats-container h2 {
+    background-color: transparent;
+}
+
+.stats-container h3 {
+    font-weight: light;
+    background-color: transparent;
+}
+
+.stats-container i {
+    border-radius: 50%;
+    color: green;
+}
+
+/* Tablets or smaller laptops */
+@media (max-width: 1366px) {
+}
+
+/* Mobile or very small screens */
+@media (max-width: 768px) {
+    .body {
+        flex-direction: column;
+    }
+
+    .left-panel {
+        width: 100%;
+    }
+
+    .right-panel {
+        width: 100%;
+    }
+}

@@ -1,0 +1,22 @@
+# iSecure Git Ignore
+.venv/
+venv/
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.env
+.DS_Store
+Thumbs.db
+node_modules/
+uploads/
+*.log
+.idea/
+.vscode/
+
+.venv/
+.venv/
+.venv/
+__pycache__/
+*.pyc
+node_modules/

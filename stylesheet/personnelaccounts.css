@@ -1,0 +1,590 @@
+/* === Your Existing Code (unchanged) === */
+* {
+    padding: 0;
+    margin: 0;
+    font-family: 'League Spartan', sans-serif;
+    box-sizing: border-box;
+    overflow: hidden;
+}
+
+.body {
+    display: flex;
+    height: 100vh;
+    overflow: visible;
+    background-color: #F5F5F5;
+}
+
+.left-panel {
+    flex: 0 0 auto;
+}
+
+.right-panel {
+    flex: 1;
+}
+
+
+.main-content {
+    flex: 1;
+    padding: 20px;
+    background-color: #F5F5F5;
+    overflow-y: auto;
+}
+
+.main-header {
+    width: 100%;
+    height: 63px;
+    background-color: white;
+    border-style: solid;
+    border-width: 1px;
+    border-color: #C9C3C3;
+    border-radius: 15px;
+    display: flex;
+    justify-content: space-between;
+    padding: 0 15px;
+}
+
+.header-left, 
+.header-right {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    background-color: transparent;
+}
+
+.user-info {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.user-text {
+  display: flex;
+  flex-direction: column;
+  line-height: 1.2;
+  background-color: transparent;
+}
+
+.username {
+  font-weight: 900;
+  background-color: transparent;
+}
+
+.logout-link {
+  font-size: 13px;
+  color: red;
+  text-decoration: none;
+  font-weight: bold;
+}
+
+.logout-link:hover {
+  text-decoration: underline;
+}
+
+.header-left i {
+    background-color: transparent;
+    align-self: center;
+    color: #4B5563;
+}
+
+.path {
+    text-align: center;
+    padding-top: 10px;
+    background-color: transparent;
+    color: #4B5563;
+    font-weight: lighter;
+}
+
+.current-loc {
+    text-align: center;
+    padding-top: 10px;
+    background-color: transparent;
+    font-weight: 900;
+}
+
+.header-rght i {
+    height: 30px;
+    width: 30px;
+}
+
+.fa-user-circle {
+    height: 30px;
+    width: 30px;
+    color: #B8ECFF;
+    background-color: #1A728B;
+    border-radius: 50%;
+    align-content: center;
+    justify-content: center;
+    text-align: center;
+    font-size: 30px;
+}
+
+.username {
+    font-weight: 900;
+    text-align: center;
+    padding-top: 10px;
+    background-color: transparent;
+}
+
+.status-cards {
+    width: 100%;
+    height: 160px;
+    gap: 30px;
+    display: flex;
+    flex-direction: row;
+}
+
+.personnel-container {
+  width: 100%;
+  height: 100%;
+  margin: auto;
+  background: white;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+  margin-top: 30px;
+}
+
+.personnel-topbar {
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-start;
+  align-items: center;
+  gap: 15px;
+  flex-wrap: nowrap;
+  padding-right: 20px;
+}
+
+.dropdown {
+  position: relative;
+  display: inline-block;
+  z-index: 1100; /* Ensure dropdown is above other elements */
+}
+
+.dropdown-content {
+  display: none;
+  position: absolute;
+  background-color: rgba(0, 255, 0, 0.1);
+  min-width: 140px;
+  min-height: 100px;
+  max-height: 200px;
+  overflow-y: auto;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+  z-index: 1200; /* Higher than dropdown container */
+  border-radius: 6px;
+  padding: 8px 12px;
+  border: 1px solid green;
+  top: 100%;
+  left: 0;
+}
+
+.dropdown.show .dropdown-content {
+  display: block !important;
+  visibility: visible !important;
+  opacity: 1 !important;
+  position: fixed !important;
+  top: auto !important;
+  left: auto !important;
+  bottom: auto !important;
+  right: auto !important;
+  z-index: 9999 !important;
+  background-color: white;
+  border: 1px solid #ccc;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+  min-width: 140px;
+  border-radius: 6px;
+  padding: 8px 12px;
+}
+
+.role-btn {
+  background: transparent;
+  border-radius: 20px;
+  text-align: center;
+  width: 140px;
+  height: 32px;
+  align-content: center;
+  padding: 5px 12px;
+  color: #1A728B;
+  border-width: 1px;
+  border-style: solid;
+  border-color: #1A728B;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  cursor: pointer;
+  font-weight: 600;
+  font-size: 14px;
+  white-space: nowrap;
+  z-index: 1100;
+}
+
+.add-btn {
+  background: #5BB7D1;
+  color: white;
+  padding-top: 2px;
+  height: 32px;
+  width: 160px;
+  border: none;
+  border-radius: 30px;
+  cursor: pointer;
+  font-size: 16px;
+  text-align: center;
+  justify-content: center;
+  white-space: nowrap;
+  z-index: 1000;
+}
+
+.add-btn:hover {
+  background: #264c56;
+}
+
+.title-perso {
+  justify-content: center;
+  align-items: center;
+  gap: 15px;
+  flex-wrap: nowrap;
+  padding-right: 20px;
+}
+
+.search-bar {
+    border-width: 0.5px;
+    border-color: #1A728B;
+    border-radius: 20px;
+    width: 310px;
+    height: 30px;
+    padding: 5px;
+}
+
+#search-icon {
+    color: #1A728B;
+    text-align: center;
+    align-content: center;
+    width: 30px;
+    height: 30px;
+    font-size: 15px;
+    margin-left: 0;
+}
+
+.role-btn i  {
+    color: #1A728B;
+}
+
+/* Dropdown styles */
+.dropdown-content a {
+  color: #007b8a;
+  padding: 6px 8px;
+  text-decoration: none;
+  display: block;
+  cursor: pointer;
+  font-weight: 500;
+}
+
+.dropdown-content a:hover {
+  background-color: #e6f2f5;
+}
+
+.dropdown-content a.selected {
+  font-weight: 700;
+  color: #004d59;
+}
+
+.dropdown.show .dropdown-content {
+  display: block;
+}
+
+.add-btn {
+  background: #5BB7D1;
+  color: white;
+  padding-top: 2px;
+  height: 30px;
+  width: 200px;
+  border: none;
+  border-radius: 30px;
+  cursor: pointer;
+  font-size: 20px;
+  text-align: center;
+  justify-content: center;
+}
+
+.add-btn:hover {
+  background: #264c56;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 20px;
+}
+
+th, td {
+  padding: 10px;
+  text-align: center;
+}
+
+th {
+  background: #5BB7D1;
+}
+
+/* === Base Modal Overlay === */
+.modal, .custom-modal {
+  display: none;
+  position: fixed;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: rgba(0,0,0,0.6);
+  justify-content: center;
+  align-items: center;
+  z-index: 2000;
+}
+
+.modal.show, .custom-modal.show {
+  display: flex;
+}
+
+/* === Generic Modal Content === */
+.modal-content, .custom-modal-content {
+  background: #fff;
+  padding: 20px;
+  border-radius: 10px;
+  text-align: center;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+  animation: fadeInScale 0.25s ease;
+}
+
+/* === Close Button (X) === */
+.close-modal {
+  position: absolute;
+  top: 12px;
+  right: 15px;
+  font-size: 22px;
+  font-weight: bold;
+  color: #666;
+  cursor: pointer;
+}
+.close-modal:hover {
+  color: #000;
+}
+
+/* === Add Personnel Modal (big form modal) === */
+#addUserModal .form-modal {
+  width: 660px;
+  max-width: 95%;
+  text-align: left;
+  padding: 25px;
+  position: relative;
+}
+
+#addUserModal h2 {
+  margin-bottom: 15px;
+  font-weight: bold;
+}
+
+#addUserModal label {
+  display: block;
+  margin-top: 12px;
+  font-weight: 600;
+}
+
+#addUserModal input,
+#addUserModal select {
+  width: 100%;
+  padding: 8px;
+  margin-top: 5px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+}
+
+#addUserModal .modal-actions {
+  margin-top: 20px;
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+}
+
+#addUserModal .modal-actions button.confirm {
+  background: #28a745;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  padding: 8px 20px;
+}
+
+#addUserModal .modal-actions button.cancel {
+  background: #dc3545;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  padding: 8px 20px;
+}
+
+/* === Confirm & Notify Modals (compact) === */
+#confirmModal .modal-content,
+#notifyModal .custom-modal-content {
+  width: 360px;
+  max-width: 90%;
+  text-align: center;
+}
+
+#confirmModal .modal-actions,
+#notifyModal .modal-actions {
+  margin-top: 20px;
+  display: flex;
+  justify-content: center;
+  gap: 20px;
+}
+
+.btn-danger {
+  background: #dc3545;
+  color: white;
+}
+.btn-secondary {
+  background: #6c757d;
+  color: white;
+}
+.ok-btn {
+  background: #28a745;
+  color: white;
+}
+
+@keyframes fadeInScale {
+  from { opacity: 0; transform: scale(0.9); }
+  to   { opacity: 1; transform: scale(1); }
+}
+
+/* === My Additions for Table & Buttons === */
+.table-actions .btn {
+  border: none;
+  border-radius: 6px;
+  font-size: 13px;
+  padding: 5px 12px;
+  margin: 0 2px;
+  cursor: pointer;
+}
+
+.table-actions .btn-success {
+  background: #28a745;
+  color: white;
+}
+.table-actions .btn-success:hover {
+  background: #218838;
+}
+
+.table-actions .btn-danger {
+  background: #dc3545;
+  color: white;
+}
+.table-actions .btn-danger:hover {
+  background: #c82333;
+}
+
+/* === Edit User Modal Styling === */
+#editUserModal .form-modal {
+  width: 660px;
+  max-width: 95%;
+  text-align: left;
+  padding: 25px;
+  position: relative;
+  background-color: #fff;
+  border-radius: 10px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+  animation: fadeInScale 0.25s ease;
+  display: flex;
+  flex-direction: column;
+}
+
+#editUserModal h2 {
+  margin-bottom: 15px;
+  font-weight: bold;
+}
+
+#editUserModal label {
+  display: block;
+  margin-top: 12px;
+  font-weight: 600;
+}
+
+#editUserModal input,
+#editUserModal select {
+  width: 100%;
+  padding: 8px;
+  margin-top: 5px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+}
+
+#editUserModal .modal-actions {
+  margin-top: 20px;
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+}
+
+#editUserModal .modal-actions button.confirm {
+  background: #007bff;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  padding: 8px 20px;
+}
+
+#editUserModal .modal-actions button.cancel {
+  background: #dc3545;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  padding: 8px 20px;
+}
+
+/* Centering modal overlay */
+#editUserModal {
+  display: none;
+  position: fixed;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: rgba(0,0,0,0.6);
+  justify-content: center;
+  align-items: center;
+  z-index: 2000;
+}
+
+#editUserModal.show {
+  display: flex;
+}
+
+/* Close button (X) */
+#editUserModal .close-modal {
+  position: absolute;
+  top: 12px;
+  right: 15px;
+  font-size: 22px;
+  font-weight: bold;
+  color: #666;
+  cursor: pointer;
+}
+#editUserModal .close-modal:hover {
+  color: #000;
+}
+
+/* Password container for eye icon */
+.password-container {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.password-container input {
+  flex: 1;
+  padding-right: 40px; /* Space for the icon */
+}
+
+.password-container i {
+  position: absolute;
+  right: 10px;
+  cursor: pointer;
+  color: #666;
+}
+
+.password-container i:hover {
+  color: #000;
+}
+
+

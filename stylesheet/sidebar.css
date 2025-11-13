@@ -1,0 +1,71 @@
+.right-panel {
+    flex: 1;
+}
+
+.sidebar-panel {
+    padding: 10px;
+    background-color: #006682;
+    min-width: 252px;
+    max-width: 252px;
+    height: 100vh;
+    overflow-y: auto;
+}
+
+.sidebar-panel h1 {
+    font-weight: 600;
+    font-size: 40px;
+    color: white;
+    background-color: transparent;
+    margin-bottom: 26px;
+}
+
+.nav-links {
+    background-color: transparent;
+}
+
+.nav-links ul {
+   background-color: transparent;
+   list-style: none;
+   padding: 10px;
+   flex-wrap: wrap;
+}
+
+.nav-links h6 {
+    font-size: 17px;
+    font-weight: 300px;
+    color: #FFFFFFBF;
+    background-color: transparent;
+    margin-bottom: 11px;
+}
+
+.nav-links i {
+    height: 18px;
+    width: 18px;
+    margin-right: 10px;
+    margin-left: 5px;
+    color: white;
+    background-color: transparent;
+}
+
+.nav-links li {
+    text-decoration: none;
+    background-color: transparent;
+    margin-bottom: 10px;
+    padding: 4px;
+    flex-wrap: wrap;
+}
+
+.camera-view-drop-down {
+    margin-left: 20px;
+}
+.nav-links a{
+    text-decoration: none;
+    background-color: transparent;
+    color: white;
+    font-weight: bold;
+}
+
+.nav-links li:hover {
+    background-color: #2789A4;
+    border-radius: 6px;
+}

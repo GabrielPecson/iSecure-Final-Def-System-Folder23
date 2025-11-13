@@ -1,0 +1,170 @@
+@import "tailwindcss";
+
+@import url('https://fonts.googleapis.com/css2?family=Oswald:wght@200..700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap');
+
+ /* Smooth hamburger X animation */
+  #menu-btn.open span:nth-child(1) {
+    transform: rotate(45deg) translateY(7px);
+  }
+  #menu-btn.open span:nth-child(2) {
+    opacity: 0;
+  }
+  #menu-btn.open span:nth-child(3) {
+    transform: rotate(-45deg) translateY(-7px);
+  }
+
+  #menu-btn span {
+    transition: all 0.3s ease;
+  }
+
+  #mobile-menu {
+    box-shadow: 0px 8px 16px rgba(0, 0, 0, 0.08);
+  }
+
+  /* Scroll-triggered fade-in upwards animation */
+  .fade-in-up {
+    opacity: 0;
+    transform: translateY(30px);
+    transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+  }
+
+  .fade-in-up.animate {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  /* Vision container animations */
+  .vision-container {
+    opacity: 0;
+    transform: translateY(50px);
+    transition: opacity 0.8s ease-out, transform 0.8s ease-out;
+  }
+
+  .vision-container.animate {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  .vision-container.fade-out {
+    opacity: 0;
+    transition: opacity 0.8s ease-out;
+  }
+
+  .vision-left {
+    opacity: 0;
+    transform: translateX(-50px);
+    transition: opacity 0.8s ease-out 0.3s, transform 0.8s ease-out 0.3s;
+  }
+
+  .vision-container.animate .vision-left {
+    opacity: 1;
+    transform: translateX(0);
+  }
+
+  .vision-right {
+    opacity: 0;
+    transform: translateX(50px);
+    transition: opacity 0.8s ease-out 0.6s, transform 0.8s ease-out 0.6s;
+  }
+
+  .vision-container.animate .vision-right {
+    opacity: 1;
+    transform: translateX(0);
+  }
+
+  /* Mission container animations */
+  .mission-container {
+    opacity: 0;
+    transform: translateY(50px);
+    transition: opacity 0.8s ease-out, transform 0.8s ease-out;
+  }
+
+  .mission-container.animate {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  .mission-container.fade-out {
+    opacity: 0;
+    transition: opacity 0.8s ease-out;
+  }
+
+  .mission-left {
+    opacity: 0;
+    transform: translateX(-50px);
+    transition: opacity 0.8s ease-out 0.3s, transform 0.8s ease-out 0.3s;
+  }
+
+  .mission-container.animate .mission-left {
+    opacity: 1;
+    transform: translateX(0);
+  }
+
+  .mission-right {
+    opacity: 0;
+    transform: translateX(50px);
+    transition: opacity 0.8s ease-out 0.6s, transform 0.8s ease-out 0.6s;
+  }
+
+  .mission-container.animate .mission-right {
+    opacity: 1;
+    transform: translateX(0);
+  }
+
+  /* News card animations */
+  .news-card {
+    opacity: 0;
+    transform: translateY(50px);
+    transition: opacity 0.8s ease-out, transform 0.8s ease-out;
+  }
+
+  .news-card.animate {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  .news-card.fade-out {
+    opacity: 0;
+    transition: opacity 0.8s ease-out;
+  }
+
+  /* Hover effects for news cards */
+  .news-card:hover {
+    transform: translateY(-10px) scale(1.05);
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+  }
+
+  /* Advisory card animations */
+  .advisory-card {
+    opacity: 0;
+    transform: translateY(50px);
+    transition: opacity 0.8s ease-out, transform 0.8s ease-out;
+  }
+
+  .advisory-card.animate {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  .advisory-card.fade-out {
+    opacity: 0;
+    transition: opacity 0.8s ease-out;
+  }
+
+  /* News Advisory Section Background */
+  #news-advisory-section::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-image: url('./images/NewsAdvisory-bg-img.png');
+    background-size: cover;
+    background-position: center;
+    z-index: -1;
+    -webkit-mask-image: linear-gradient(to bottom, transparent 1%, black 10%, black 85%, transparent 100%);
+    mask-image: linear-gradient(to bottom, transparent 1%, black 15%, black 85%, transparent 100%);
+  }

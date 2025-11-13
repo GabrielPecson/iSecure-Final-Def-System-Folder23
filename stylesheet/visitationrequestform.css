@@ -1,0 +1,387 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'League Spartan', sans-serif;
+}
+
+body {
+  background-color: white;
+}
+
+/* Chrome, Edge, Safari */
+::-webkit-scrollbar {
+  width: 10px;
+}
+
+::-webkit-scrollbar-track {
+  background: #f5f5f5;   /* light background from palette */
+  border-radius: 8px;
+}
+
+::-webkit-scrollbar-thumb {
+  background-color: #1a3c6e;  /* main brand color */
+  border-radius: 8px;
+  border: 2px solid #f5f5f5; /* spacing effect */
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background-color: #f4c542;  /* accent color on hover */
+}
+
+/* Firefox */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: #1a3c6e #f5f5f5;
+}
+
+
+.top-bar {
+    margin: 0;
+    padding: 0;
+    height: 30px;
+    width: 100%;
+    background-color: #182947;
+}
+
+.header {
+    display: flex;
+    justify-content: space-between; /* left group vs right group */
+    align-items: center;
+    background-color: #BACBE0;
+    height: 90px;
+    padding: 0 40px;
+    width: 100%;
+    flex-wrap: wrap;
+}
+
+/* Left group: h1 + BASA logo */
+.left-group {
+    display: flex;
+    align-items: center;
+    gap: 15px; /* space between text and logo */
+    background-color: transparent;
+}
+
+.left-group h1 {
+     font-size: 48px;
+    font-weight: bold;
+    color: #003673;
+    text-shadow: 0px 4px 5px rgba(0, 0, 0, 0.25);
+    margin: 0;
+    background-color: transparent;
+}
+
+/* Right group: the other logos */
+.right-group {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    background-color: transparent;
+}
+
+/* BASA logo */
+.basa-logo,
+.transparency-logo,
+.phaf-logo,
+.bagongpilipinas-logo {
+ background-color: transparent;
+}
+
+.basa-logo img {
+    height: 80px;
+    width: 80px;
+    border-radius: 50%;
+}
+
+
+/* Other logos */
+.transparency-logo img, 
+.phaf-logo img, 
+.bagongpilipinas-logo img {
+    height: 70px;
+    width: 70px;
+    border-radius: 50%;
+}
+
+
+.visith1 {
+    font-size: 80px;
+    font-weight: 700;
+    color: #003673;
+    text-align: center;
+    margin-bottom: 40px;
+    margin-top: 40px;
+}
+
+.visith1::after {
+  content: "";
+  display: block;
+  width: 675px;                
+  height: 4px;               
+  background-color: #003366; 
+  margin: -17px auto 20px;       
+  margin-top: 15px; 
+  margin-bottom: 15px;
+}
+
+.visitation-request-section {
+  padding-left: 200px;
+  padding-right: 200px;
+  padding-top: 45px;
+}
+
+.visitation-request-section h3 {
+  font-size: 50px;
+  font-style: bold;
+  color: #003673;
+}
+
+.visitor-information-section, .vehicle-information-section {
+  display: flex;
+  padding: 0;
+  gap:20px;
+  margin-bottom: 35px;
+}
+
+.visitor-information-section label, .vehicle-information-section label{
+  display: flex;
+  gap: 15px;
+  color: #003673;
+  font-weight: 300;
+  font-size: 27px;
+  align-items: center;
+  padding-right: 30px;
+  justify-content: space-between;
+  max-width: 1480px;
+}
+
+.visitor-info-column input, .vehicle-info-column input, .schedule-req-div input {
+  padding: 5px;
+  height: 35px;
+  width: 280px;
+  align-items: center;
+  margin-top: 4px;
+  margin-bottom: 25px;
+  border-radius: 3px;
+  border-width: 0.1px;
+  border-color: #003673;
+  font-size: 20px;
+  color: #012349;
+}
+
+.visitor-info-column button.add, .vehicle-info-column button.add {
+  width: 152px;
+  height: 30px;
+  border-radius: 15px;
+  margin-right: 130px;
+  color: white;
+  background-color: #003673;
+  border: none;
+  align-content: center;
+  padding-top: 2px;
+  font-size: 20px;
+}
+
+.label-btn input {
+  height: 50px;
+  z-index: 1;
+  background-color: transparent;
+}
+
+input[type="file"]::file-selector-button {
+  width: 160px;
+  height: 35px;
+  background-color: #003673;
+  color: white;
+  font-size: 20px;
+  font-weight: 500;
+  border: none;
+  border-radius: 35px;
+  cursor: pointer;
+}
+
+input[type="file"]::file-selector-button:hover {
+  background-color: #004a99;
+}
+
+.visitor-info-column button.add i, .vehicle-info-column button.add i{
+  background-color: transparent;
+}
+
+.visitor-info-column, .vehicle-info-column {
+  flex: 1;
+  padding: 0;
+}
+
+.schedule-req-div label{
+  display: flex;
+  gap: 15px;
+  color: #003673;
+  font-weight: 300;
+  font-size: 27px;
+  align-items: center;
+  padding-right: 30px;
+  justify-content: space-between;
+  width: 1480px;
+}
+
+.schedule-req-div input {
+  padding: 4px 8px;
+  height: 30px;
+  width: 25rem;
+  margin-top: 4px;
+  border-radius: 3px;
+  border-width: 0.1px;
+  border-color: #003673;
+  margin-right: 50rem;
+  margin-top: 10px;
+  flex-direction: column;
+}
+
+#datetime {
+  display: flex;
+  color: #003673;
+  font-weight: 300;
+  font-size: 27px;
+  align-items: center;
+  margin-right: auto;
+  width: 1480px;
+  margin-top: 20px;
+  gap: 15px;
+}
+
+#datetime input {
+  padding: 8px;
+  height: 35px;
+  width: 300px;
+  margin-top: 4px;
+  border-radius: 4px;
+  border-width: 0.1px;
+  border-color: #003673;
+  gap: 10px;
+  font-size: 20px;
+  color: #003673;
+  font-weight: light;
+  font-size: 15px;
+  padding-left: 10px;
+}
+
+
+.schedule-request-section button{
+  width: 160px;
+  height: 35px;
+  border-radius: 35px;
+  margin-left: 59rem;
+  margin-top: 30px;
+  margin-bottom: 40px;
+  color: white; 
+  background-color: #003673;
+  border: none;
+  align-content: center;
+  padding-top: 2px;
+  font-size: 20px;
+  font-weight: 300;
+}
+
+.footer-container {
+  background-color: #003673;
+  padding: 0;
+  height: 265px;
+}
+
+.footer-columns {
+  display: flex;
+  gap: 100px;
+  height: 265px;
+  background-color: #003673;
+}
+
+.col {
+  flex: 1;
+  background-color: transparent;
+  padding-top: 80px;
+  padding-left: 80px;
+  text-align: center;
+  justify-content: center;
+}
+
+#last-col {
+  flex: 1;
+  background-color: transparent;
+  margin-left: 100px;
+  padding-top: 80px;
+  text-align: center;
+}
+
+.col h5 {
+  background-color: transparent;
+  color: white;
+  text-align: justify;
+  font-weight: lighter;
+  width: 25rem;
+}
+
+.middle-panel-text{
+  background-color: transparent;
+  color: white;
+  font-weight: lighter;
+}
+
+.col i{
+  background-color: transparent;
+  color: white;
+  margin: 10px;
+  font-size: 30px;
+}
+
+.col-img {
+  display: flex;
+  flex-direction: row;
+  flex: 1;
+  height: 50px;
+  width: 50px;
+  background-color: transparent;
+  align-items: end;
+  gap: 20px;
+}
+
+#left-col-img {
+  display: flex;
+  flex-direction: row;
+  flex: 1;
+  height: 50px;
+  width: 15rem;
+  background-color: transparent;
+  align-items: center;
+  gap: 10px;
+}
+
+.col-img img {
+    background-color: transparent;
+    align-self: center;
+    height: 45px;
+    width: 45px;
+    border-radius: 50%;
+    padding-left: 0;
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+}
+
+.right-panel-text {
+  background-color: transparent;
+  color: white;
+  text-align: start;
+  font-weight: lighter;
+}
+
+ .right-panel-text2 {
+  background-color: transparent;
+  color: white;
+  font-weight: lighter;
+  font-size: 20px;
+  text-align: start;
+  width: 50rem;
+  height: 2rem;
+}
