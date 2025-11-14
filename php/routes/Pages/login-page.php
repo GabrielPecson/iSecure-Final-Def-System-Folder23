@@ -1,6 +1,6 @@
 <?php
 session_start();
-require_once 'audit_log.php';
+require 'audit_log.php';
 ?>
 <!DOCTYPE html>
 <html lang="en">

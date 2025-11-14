@@ -1,5 +1,5 @@
 <?php
-require_once __DIR__ . 'db_connect.php';
+require 'db_connect.php';
 
 function get_client_ip() {
     if (!empty($_SERVER['HTTP_CLIENT_IP'])) {
