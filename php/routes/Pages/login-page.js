@@ -114,8 +114,8 @@ document.addEventListener('DOMContentLoaded', function() {
       }
 
       // Send AJAX request
-      fetch("/iSecure-Final-Def-System-Folder/php/routes/Pages/login.php", {
-        method: 'POST',
+      fetch("login.php", {
+        method: "POST",
         body: formData,
         headers: {
           'X-Requested-With': 'XMLHttpRequest'
@@ -163,3 +163,4 @@ document.addEventListener('DOMContentLoaded', function() {
     });
   }
 });
+  
