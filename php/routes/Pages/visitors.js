@@ -184,10 +184,10 @@ document.addEventListener("DOMContentLoaded", () => {
     document.getElementById("vehicleModelCell").textContent = escapeHtml(visitor.vehicle_model || '');
     document.getElementById("vehicleColorCell").textContent = escapeHtml(visitor.vehicle_color || '');
     document.getElementById("plateNumberCell").textContent = escapeHtml(visitor.plate_number || '');
-    document.getElementById("visitorIDPhoto").src = "../routes/fetch_request_image.php?request_id=" + visitor.request_id + "&type=id";
-    document.getElementById("visitorSelfie").src = "../routes/fetch_request_image.php?request_id=" + visitor.request_id + "&type=selfie";
+    document.getElementById("visitorIDPhoto").src = "fetch_request_image.php?request_id=" + visitor.request_id + "&type=id";
+    document.getElementById("visitorSelfie").src = "fetch_request_image.php?request_id=" + visitor.request_id + "&type=selfie";
     document.getElementById("expectedPlateNumberDisplay").textContent = visitor.plate_number || '';
-    idTabImage.src = "../routes/fetch_request_image.php?request_id=" + visitor.request_id + "&type=id";
+    idTabImage.src = "fetch_request_image.php?request_id=" + visitor.request_id + "&type=id";
     currentVisitorId = visitor.id;
 
     const hasVehicle = visitor.plate_number && visitor.plate_number.trim() !== "";
@@ -309,9 +309,9 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   }
 
-  const loadExpectedVisitors = () => loadTable("../../php/routes/fetch_expected_visitors.php", expectedVisitorsTbody, 7);
-  const loadInsideVisitors = () => loadTable("../../php/routes/fetch_inside_visitors.php", insideVisitorsTbody, 9);
-  const loadExitedVisitors = () => loadTable("../../php/routes/fetch_exited_visitors.php", exitedVisitorsTbody, 9);
+  const loadExpectedVisitors = () => loadTable("fetch_expected_visitors.php", expectedVisitorsTbody, 7);
+  const loadInsideVisitors = () => loadTable("fetch_inside_visitors.php", insideVisitorsTbody, 9);
+  const loadExitedVisitors = () => loadTable("fetch_exited_visitors.php", exitedVisitorsTbody, 9);
 
   [nextToVerifyBtn, nextToFacialBtn, nextToVehicleBtn, nextToIdBtn, skipVehicleBtn].forEach(btn => {
     if (!btn) return;

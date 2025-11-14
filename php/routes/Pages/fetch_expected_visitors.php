@@ -1,6 +1,6 @@
 <?php
-require '../database/db_connect.php';
-require '../config/encryption_key.php';
+require 'db_connect.php';
+require 'encryption_key.php';
 header('Content-Type: application/json');
 
     // Note: visitors table stores data encrypted, decryption needed for display
