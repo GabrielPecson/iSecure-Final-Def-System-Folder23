@@ -1,6 +1,6 @@
 <?php
-require '../database/db_connect.php';
-require '../config/encryption_key.php';
+require 'db_connect.php';
+require 'encryption_key.php';
 
 try {
     $stmt = $pdo->query("SELECT * FROM users ORDER BY joined_date DESC");
