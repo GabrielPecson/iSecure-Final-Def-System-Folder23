@@ -92,7 +92,7 @@
        Background image setup
     ------------------------------ */
     #login-bg {
-      background-image: url('php/routes/Pages/login-page-bg.png');
+      background-image: url('http://isecured.online/Pages/php/routes/Pages/Pages/login-page-bg.png');
       background-size: cover;
       background-position: center;
     }
