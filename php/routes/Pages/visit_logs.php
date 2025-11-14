@@ -17,11 +17,11 @@ require 'audit_log.php';
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
 
   <!-- Favicon -->
-  <link rel="icon" type="image/png" href="../../images/logo/5thFighterWing-logo.png" />
+  <link rel="icon" type="image/png" href="5thFighterWing-logo.png" />
 
   <!-- Custom CSS -->
-  <link rel="stylesheet" href="../../stylesheet/admin.css" />
-  <link rel="stylesheet" href="../../stylesheet/sidebar.css" />
+  <link rel="stylesheet" href="admin.css" />
+  <link rel="stylesheet" href="/sidebar.css" />
 
   <!-- Date Picker -->
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css" />
@@ -114,8 +114,8 @@ require 'audit_log.php';
 <!-- JS -->
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
-<script src="../../scripts/sidebar.js"></script>
-<script src="../../scripts/session_check.js"></script>
+<script src="sidebar.js"></script>
+<script src="session_check.js"></script>
 <script>
 // Date Picker
 flatpickr("#logDate", {
