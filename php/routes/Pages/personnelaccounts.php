@@ -8,7 +8,7 @@ $role = 'Unknown Role';
 
 // Check if session token exists
 if (!isset($_SESSION['token'])) {
-    header("Location: Pages/login-page.php");
+    header("Location: login-page.php");
     exit;
 }
 
@@ -21,7 +21,7 @@ if (!$session) {
     // Session expired or invalid
     session_unset();
     session_destroy();
-    header("Location: Pages/login-page.php");
+    header("Location: login-page.php");
     exit;
 }
 
@@ -39,14 +39,14 @@ if (!empty($session['user_id'])) {
         // user record missing — log out to be safe
         session_unset();
         session_destroy();
-        header("Location: Pages/login-page.php");
+        header("Location: login-page.php");
         exit;
     }
 } else {
     // weird session row with no user_id — destroy and redirect
     session_unset();
     session_destroy();
-    header("Location: Pages/login-page.php");
+    header("Location: login-page.php");
     exit;
 }
 ?>
@@ -63,9 +63,9 @@ if (!empty($session['user_id'])) {
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
     <link rel="icon" type="image/png" href="../../images/logo/5thFighterWing-logo.png">
     <!-- Your existing CSS -->
-    <link rel="stylesheet" href="../../stylesheet/personnelaccounts.css">
-    <link rel="stylesheet" href="../../stylesheet/sidebar.css">
-    <link rel="stylesheet" href="../../stylesheet/notification.css">
+    <link rel="stylesheet" href="personnelaccounts.css">
+    <link rel="stylesheet" href="sidebar.css">
+    <link rel="stylesheet" href="notification.css">
 </head>
 <body>
 
@@ -286,10 +286,10 @@ if (!empty($session['user_id'])) {
 <div id="notification-container"></div>
 
 <!-- Scripts -->
-<script src="../../scripts/sidebar.js"></script>
-<script src="../../scripts/personnelaccount.js"></script>
-<script src="../../scripts/session_check.js"></script>
-<script src="../../scripts/notification.js"></script>
+<script src="sidebar.js"></script>
+<script src="personnelaccount.js"></script>
+<script src="session_check.js"></script>
+<script src="notification.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
