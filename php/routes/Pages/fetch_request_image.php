@@ -1,5 +1,5 @@
 <?php
-require '../database/db_connect.php';
+require 'db_connect.php';
 
 if (!isset($_GET['request_id'])) {
     http_response_code(400);
@@ -65,7 +65,7 @@ $file_path = str_replace('/', DIRECTORY_SEPARATOR, $file_path);
 // Check if the file exists
 if (!file_exists($file_path)) {
     // If no image found, serve a placeholder
-    $placeholder_path = __DIR__ . '/../../images/sample_id.png'; // Adjust path as needed
+    $placeholder_path = __DIR__ . 'sample_id.png'; // Adjust path as needed
     if (file_exists($placeholder_path)) {
         $file_path = $placeholder_path;
     } else {
