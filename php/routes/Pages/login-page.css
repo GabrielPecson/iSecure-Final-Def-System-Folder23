@@ -92,7 +92,7 @@
        Background image setup
     ------------------------------ */
     #login-bg {
-      background-image: url('../images/login-page-bg.png');
+      background-image: url('login-page-bg.png');
       background-size: cover;
       background-position: center;
     }
