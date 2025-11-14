@@ -1,7 +1,7 @@
 <?php
 require 'auth_check.php';
-require '../database/db_connect.php';
-require '../config/encryption_key.php';
+require 'db_connect.php';
+require 'encryption_key.php';
 
 header('Content-Type: application/json');
 
