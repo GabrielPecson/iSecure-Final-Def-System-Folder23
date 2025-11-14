@@ -1,6 +1,6 @@
 <?php
 session_start();
-require '../database/db_connect.php';
+require 'db_connect.php';
 
 // Default fallbacks
 $fullName = 'Unknown User';
@@ -8,7 +8,7 @@ $role     = 'Unknown Role';
 
 // ✅ 1. Check if session token exists
 if (empty($_SESSION['token'])) {
-    header("Location: ../../php/routes/Pages/login-page.php?not_logged_in=1");
+    header("Location: login-page.php?not_logged_in=1");
     exit;
 }
 
@@ -27,7 +27,7 @@ if (!$session) {
     // Token missing or expired (user logged in elsewhere or timed out)
     session_unset();
     session_destroy();
-    header("Location: ../../php/routes/Pages/login-page.php?expired=1");
+    header("Location: login-page.php?expired=1");
     exit;
 }
 
