@@ -1,6 +1,6 @@
 <?php
 require 'auth_check.php';
-require '../database/db_connect.php';
+require 'db_connect.php';
 
 // Fetch all clearance badges with visitor names
 $stmt = $pdo->query("SELECT cb.*, v.first_name, v.last_name FROM clearance_badges cb JOIN visitors v ON cb.visitor_id = v.id ORDER BY cb.issued_at DESC");
@@ -16,8 +16,8 @@ $badges = $stmt->fetchAll(PDO::FETCH_ASSOC);
     <link href="https://fonts.googleapis.com/css2?family=League+Spartan:wght@100..900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
     <link rel="icon" type="image/png" href="../../images/logo/5thFighterWing-logo.png">
-    <link rel="stylesheet" href="../../stylesheet/admin_maindashboard.css" />
-    <link rel="stylesheet" href="../../stylesheet/sidebar.css" />
+    <link rel="stylesheet" href="admin_maindashboard.css" />
+    <link rel="stylesheet" href="sidebar.css" />
 </head>
 <body>
 <div class="body">
@@ -90,6 +90,6 @@ $badges = $stmt->fetchAll(PDO::FETCH_ASSOC);
     </div>
     </div>
 </div>
-<script src="../../scripts/sidebar.js"></script>
+<script src="sidebar.js"></script>
 </body>
 </html>
