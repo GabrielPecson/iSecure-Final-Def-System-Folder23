@@ -1,6 +1,6 @@
 <?php
 session_start();
-require_once '../audit_log.php';
+require_once 'audit_log.php';
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -8,9 +8,9 @@ require_once '../audit_log.php';
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Login | iSecure</title>
-  <link rel="icon" type="image/png" href="../../../images/logo/5thFighterWing-logo.png">
-  <link href="../../../src/output.css" rel="stylesheet">
-  <link href="../../../stylesheet/login-page.css" rel="stylesheet">
+  <link rel="icon" type="image/png" href="5thFighterWing-logo.png">
+  <link href="output.css" rel="stylesheet">
+  <link href="login-page.css" rel="stylesheet">
 
 </head>
 
@@ -22,7 +22,7 @@ require_once '../audit_log.php';
     <div id="blue-panel"
     class="blue-panel bg-[#006682] h-[500px] flex flex-col justify-center items-center shadow-[0_5px_45px_21px_rgba(0,0,0,0.5)] z-20">
       <img id="logo" 
-      src="../../../images/logo/5thFighterWing-logo.png" alt="5thfighterwinglogo" 
+      src="5thFighterWing-logo.png" alt="5thfighterwinglogo" 
       class="h-[180px] w-[180px] mb-4 opacity-0">
       <h1 id="welcome" 
       class="welcome-text text-white text-3xl font-bold fade-in opacity-0">Welcome to iSecure,</h1>
@@ -37,7 +37,7 @@ require_once '../audit_log.php';
       class="text-[#006682] text-3xl font-bold mb-6">
       Login
       </h2>
-      <form action="../../../php/routes/login.php" method="POST"
+      <form action="login.php" method="POST"
       class="login-form flex flex-col w-3/4 space-y-4 fade-in opacity-0">
         <label
         class="text-sm text-[#006682] font-semibold">
@@ -101,7 +101,7 @@ require_once '../audit_log.php';
             <button type="button" class="custom-modal-close" id="closeModal">&times;</button>
           </div>
           <div class="custom-modal-body">
-            <form action="..\php\routes\forgot_password.php" method="POST">
+            <form action="forgot_password.php" method="POST">
               <div class="form-group">
                 <label for="resetEmail">Enter your email address</label>
                 <input type="email" id="resetEmail" name="email" required>
@@ -134,8 +134,8 @@ require_once '../audit_log.php';
   <?php endif; ?>
 
 
-  <script src="../../../scripts/login-page.js"></script>
-  <script src="../../../scripts/loginpage.js"></script>
+  <script src="login-page.js"></script>
+  <script src="loginpage.js"></script>
 
 </body>
 </html>
