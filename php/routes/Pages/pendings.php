@@ -10,7 +10,7 @@ $role = 'Unknown Role';
 
 // Check if session token exists
 if (!isset($_SESSION['token'])) {
-    header("Location: Pages/login-page.php");
+    header("Location: login-page.php");
     exit;
 }
 
