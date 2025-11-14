@@ -17,13 +17,13 @@
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 
   <!-- Favicon -->
-  <link rel="icon" type="image/png" href="../../images/logo/5thFighterWing-logo.png">
+  <link rel="icon" type="image/png" href="5thFighterWing-logo.png">
 
   <!-- Custom CSS -->
-  <link rel="stylesheet" href="../../stylesheet/admin.css">
-  <link rel="stylesheet" href="../../stylesheet/admin_maindashboard.css">
-  <link rel="stylesheet" href="../../stylesheet/sidebar.css">
-  <link rel="stylesheet" href="../../stylesheet/notification.css">
+  <link rel="stylesheet" href="admin.css">
+  <link rel="stylesheet" href="admin_maindashboard.css">
+  <link rel="stylesheet" href="sidebar.css">
+  <link rel="stylesheet" href="notification.css">
 </head>
 <body>
 <div class="body">
@@ -236,8 +236,8 @@
 <!-- JS -->
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-<script src="../../scripts/sidebardashboard.js"></script>
-<script src="../../scripts/admin.js"></script>
-<script src="../../scripts/notification.js"></script>
+<script src="sidebardashboard.js"></script>
+<script src="admin.js"></script>
+<script src="notification.js"></script>
 </body>
 </html>

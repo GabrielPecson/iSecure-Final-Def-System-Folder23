@@ -1,6 +1,6 @@
 <?php
 session_start();
-require_once __DIR__ . '/../database/db_connect.php';
+require_once __DIR__ . 'db_connect.php';
 require 'audit_log.php';
 
 // Check if request is AJAX
@@ -23,7 +23,7 @@ if (!$user || !password_verify($password, $user['password_hash'])) {
         exit;
     } else {
         $_SESSION['login_error'] = "Invalid email or password!";
-        header('Location: Pages/login-page.php');
+        header('Location: login-page.php');
         exit;
     }
 } else {
@@ -57,7 +57,7 @@ $_SESSION['role']    = $user['role'];
 
 // Route by role
 if ($user['role'] === 'Admin') {
-    $redirect = '../maindashboard.php';
+    $redirect = 'maindashboard.php';
 } else {
     $redirect = 'personnel_dashboard.php';
 }

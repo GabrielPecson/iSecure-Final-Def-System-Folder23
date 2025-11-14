@@ -94,7 +94,7 @@
         loaderText.textContent = 'Loading...';
 
         // Send AJAX request
-        fetch('../login.php', {
+        fetch('login.php', {
           method: 'POST',
           body: formData,
           headers: {
