@@ -114,7 +114,7 @@ document.addEventListener('DOMContentLoaded', function() {
       }
 
       // Send AJAX request
-      fetch("/php/routes/Pages/login.php", {
+      fetch("login.php", {
         method: 'POST',
         body: formData,
         headers: {
