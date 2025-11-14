@@ -1,6 +1,6 @@
 <?php
 require 'auth_check.php';
-require '../config/encryption_key.php';
+require 'encryption_key.php';
 
 // Default fallbacks
 $fullName = 'Unknown User';
@@ -8,7 +8,7 @@ $role = 'Unknown Role';
 
 // Check if session token exists
 if (!isset($_SESSION['token'])) {
-    header("Location: Pages/login-page.php");
+    header("Location: login-page.php");
     exit;
 }
 
@@ -20,7 +20,7 @@ $session = $stmt->fetch(PDO::FETCH_ASSOC);
 if (!$session) {
     session_unset();
     session_destroy();
-    header("Location: Pages/login-page.php");
+    header("Location: login-page.php");
     exit;
 }
 
@@ -45,9 +45,9 @@ if (!empty($session['user_id'])) {
   <link href="https://fonts.googleapis.com/css2?family=League+Spartan:wght@100..900&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
   <link rel="icon" type="image/png" href="../../images/logo/5thFighterWing-logo.png">
-  <link rel="stylesheet" href="../../stylesheet/vehicles.css">
-  <link rel="stylesheet" href="../../stylesheet/sidebar.css">
-  <link rel="stylesheet" href="../../stylesheet/notification.css">
+  <link rel="stylesheet" href="vehicles.css">
+  <link rel="stylesheet" href="sidebar.css">
+  <link rel="stylesheet" href="notification.css">
   <title>Vehicles</title>
 </head>
 <body>
@@ -163,10 +163,10 @@ if (!empty($session['user_id'])) {
 </div>
 <div id="notification-container"></div>
 
-<script src="../../scripts/sidebar.js"></script>
-<script src="../../scripts/vehicles.js"></script>
-<script src="../../scripts/session_check.js"></script>
-<script src="../../scripts/notification.js"></script>
+<script src="sidebar.js"></script>
+<script src="vehicles.js"></script>
+<script src="session_check.js"></script>
+<script src="notification.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>

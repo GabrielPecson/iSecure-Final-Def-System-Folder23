@@ -1,5 +1,5 @@
 <?php
-require '../database/db_connect.php';
+require 'db_connect.php';
 
 function resizeImage($source, $dest, $width, $height, $cropX = 0.5, $cropY = 0.5, $zoomLevel = 1.0) {
     list($origWidth, $origHeight, $type) = getimagesize($source);

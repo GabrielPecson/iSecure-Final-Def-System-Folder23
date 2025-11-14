@@ -3,7 +3,7 @@ const evtSource = new EventSource("session_watch.php");
 
 evtSource.addEventListener("logout", function(e) {
   showNotification("⚠️ Your session was terminated from the server. Please login again.", "warning", 0);
-  window.location.href = "../routes/Pages/login-page.php";
+  window.location.href = "login-page.php";
 });
 
 // Client-side idle timeout
@@ -19,14 +19,14 @@ evtSource.addEventListener("logout", function(e) {
   function logoutUser() {
     showNotification("⚠️ Your session has timed out due to inactivity. Please login again.", "warning", 0);
     // Call the logout script on the server to properly destroy the session
-    fetch('../logout.php', { method: 'POST' })
+    fetch('logout.php', { method: 'POST' })
       .then(() => {
-        window.location.href = "../routes/Pages/login-page.php";
+        window.location.href = "login-page.php";
       })
       .catch(error => {
         console.error('Failed to logout:', error);
         // Fallback redirect even if server logout fails
-        window.location.href = "../routes/Pages/login-page.php";
+        window.location.href = "login-page.php";
       });
   }
 

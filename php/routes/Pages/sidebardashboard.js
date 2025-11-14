@@ -1,5 +1,5 @@
 document.addEventListener('DOMContentLoaded', () => {
-  fetch('./partials/sidebar_dashboard.php')
+  fetch('sidebar_dashboard.php')
     .then(r => {
       if (!r.ok) throw new Error("Sidebar not found: " + r.status);
       return r.text();
