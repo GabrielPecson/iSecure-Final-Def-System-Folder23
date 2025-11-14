@@ -1,8 +1,8 @@
 <?php
 require 'auth_check.php';
 require 'audit_log.php';
-require '../database/db_connect.php';
-require '../config/encryption_key.php';
+require 'db_connect.php';
+require 'encryption_key.php';
 
 // Default fallbacks
 $fullName = 'Unknown User';
@@ -22,7 +22,7 @@ $session = $stmt->fetch(PDO::FETCH_ASSOC);
 if (!$session) {
     session_unset();
     session_destroy();
-    header("Location: Pages/login-page.php");
+    header("Location: login-page.php");
     exit;
 }
 
@@ -38,13 +38,13 @@ if (!empty($session['user_id'])) {
     } else {
         session_unset();
         session_destroy();
-        header("Location: Pages/login-page.php");
+        header("Location: login-page.php");
         exit;
     }
 } else {
     session_unset();
     session_destroy();
-    header("Location: Pages/login-page.php");
+    header("Location: login-page.php");
     exit;
 }
 
@@ -71,9 +71,9 @@ foreach ($requests as &$request) {
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet">
   <link href="https://fonts.googleapis.com/css2?family=League+Spartan:wght@100..900&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
-  <link rel="icon" type="image/png" href="../../images/logo/5thFighterWing-logo.png">
-  <link rel="stylesheet" href="../../stylesheet/pendings.css">
-  <link rel="stylesheet" href="../../stylesheet/sidebar.css">
+  <link rel="icon" type="image/png" href="5thFighterWing-logo.png">
+  <link rel="stylesheet" href="pendings.css">
+  <link rel="stylesheet" href="sidebar.css">
   <title>Pendings</title>
   <style>.modal img { max-width: 100%; height: auto; border: 1px solid #ddd; border-radius: 8px; }</style>
 </head>
@@ -649,6 +649,6 @@ document.addEventListener("click", (e) => {
 });
 
 </script>
-<script src="../../scripts/sidebar.js"></script>
+<script src="sidebar.js"></script>
 </body>
 </html>
