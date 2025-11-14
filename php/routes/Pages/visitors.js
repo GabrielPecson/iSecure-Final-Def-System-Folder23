@@ -572,4 +572,46 @@ document.addEventListener("DOMContentLoaded", () => {
 
   // safe to call showVisitorDetails here
 
+function showNotification(message, type = "info") {
+  const notif = document.createElement("div");
+  notif.className = `alert alert-${type}`;
+  notif.textContent = message;
+  notif.style.position = "fixed";
+  notif.style.top = "20px";
+  notif.style.right = "20px";
+  notif.style.zIndex = "9999";
+
+  document.body.appendChild(notif);
+
+  setTimeout(() => notif.remove(), 3000);
+}
+
+async function runOCR(imageSrc) {
+  ocrContent.innerHTML = `<div class="text-info">Running OCR...</div>`;
+
+  try {
+    const response = await fetch("run_ocr.php", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ image: imageSrc })
+    });
+
+    const data = await response.json();
+
+    if (data.success) {
+      ocrContent.innerHTML = `<pre>${data.text}</pre>`;
+    } else {
+      ocrContent.innerHTML = `<div class="text-danger">OCR failed: ${data.message}</div>`;
+    }
+  } catch (err) {
+    ocrContent.innerHTML = `<div class="text-danger">OCR error.</div>`;
+    console.error(err);
+  }
+}
+
+// ----- Load Data on Page Ready -----
+loadExpectedVisitors();
+loadInsideVisitors();
+loadExitedVisitors();
+
 });
