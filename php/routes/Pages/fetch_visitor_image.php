@@ -33,9 +33,9 @@ try {
 
         // Construct the file path relative to the current directory (php/routes/Pages/)
         if ($type === 'id') {
-            $full_path = __DIR__ . 'https://isecured.online/iSecure-Final-Def-System-Folder/php/Routes/Pages/uploads/ids/' . $file_path;
+            $full_path = __DIR__ . 'iSecure-Final-Def-System-Folder/php/Routes/Pages/uploads/ids/' . $file_path;
         } else {
-            $full_path = __DIR__ . 'https://isecured.online/iSecure-Final-Def-System-Folder/php/Routes/Pages/uploads/selfies/' . $file_path;
+            $full_path = __DIR__ . 'iSecure-Final-Def-System-Folder/php/Routes/Pages/uploads/selfies/' . $file_path;
         }
 
         // error_log("Trying to load: " . $full_path);

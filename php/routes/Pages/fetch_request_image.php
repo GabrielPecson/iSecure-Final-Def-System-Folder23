@@ -47,9 +47,9 @@ $filename = basename($photo_path);
 
 // Construct the file path relative to the current directory (php/routes/Pages/)
 if ($type === 'selfie') {
-    $file_path = __DIR__ . 'https://isecured.online/iSecure-Final-Def-System-Folder/php/Routes/Pages/uploads/selfies/' . $filename;
+    $file_path = __DIR__ . 'iSecure-Final-Def-System-Folder/php/Routes/Pages/uploads/selfies/' . $filename;
 } else {
-    $file_path = __DIR__ . 'https://isecured.online/iSecure-Final-Def-System-Folder/php/Routes/Pages/uploads/ids/' . $filename;
+    $file_path = __DIR__ . 'iSecure-Final-Def-System-Folder/php/Routes/Pages/uploads/ids/' . $filename;
 }
 
 // Check if the file exists
