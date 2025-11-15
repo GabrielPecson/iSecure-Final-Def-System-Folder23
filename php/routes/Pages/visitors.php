@@ -416,7 +416,7 @@ if (!empty($session['user_id'])) {
 
 <!-- Scripts -->
  <script src="sidebar.js"></script>
-<script src="visitors.js"></script>
+<script src="visitors.js?v=<?php echo time(); ?>"></script>
 <script src="session_check.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script>
 <script src="config.js"></script>
