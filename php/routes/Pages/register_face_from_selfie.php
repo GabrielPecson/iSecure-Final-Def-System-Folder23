@@ -1,6 +1,6 @@
 <?php
 header('Content-Type: application/json');
-require '../database/db_connect.php';
+require 'db_connect.php';
 
 // --- Helper function to find Python executable ---
 function find_python_executable() {

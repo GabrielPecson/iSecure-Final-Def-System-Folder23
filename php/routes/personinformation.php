@@ -60,7 +60,7 @@ if (!empty($session['user_id'])) {
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
     <link rel="icon" type="image/png" href="../../images/logo/5thFighterWing-logo.png">
     <link rel="stylesheet" href="../../stylesheet/personinformation.css">
-    <link rel="stylesheet" href="../../stylesheet/sidebar.css">
+    <link rel="stylesheet" href="../../stylesheweret/sidebar.css">
     <title>Main Dashboard</title>
 </head>
 <body>
