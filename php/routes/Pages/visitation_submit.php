@@ -43,7 +43,7 @@ function uploadIdFile($fileInput, $uploadDir = __DIR__ . "/uploads/ids/") {
 }
 
 // File upload function for selfies
-function uploadSelfieFile($fileInput, $uploadDir = __DIR__ . "/uploads/selfie/") {
+function uploadSelfieFile($fileInput, $uploadDir = __DIR__ . "/uploads/selfies/") {
     if (!isset($_FILES[$fileInput]) || $_FILES[$fileInput]['error'] !== UPLOAD_ERR_OK) {
         return null;
     }
@@ -56,7 +56,7 @@ function uploadSelfieFile($fileInput, $uploadDir = __DIR__ . "/uploads/selfie/")
     $targetFile = $uploadDir . $fileName;
 
     if (move_uploaded_file($_FILES[$fileInput]["tmp_name"], $targetFile)) {
-        return "uploads/selfie/" . $fileName; // Return relative path for database
+        return "uploads/selfies/" . $fileName; // Return relative path for database
     }
     return null;
 }
