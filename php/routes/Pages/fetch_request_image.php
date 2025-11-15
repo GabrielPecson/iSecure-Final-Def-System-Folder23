@@ -1,6 +1,6 @@
 <?php
 session_start();
-require __DIR__ . 'db_connect.php'; // Database connection
+require_once 'db_connect.php'; // Database connection
 
 // Basic validation for required parameters
 if ((!isset($_GET['request_id']) && !isset($_GET['visitor_id'])) || !isset($_GET['type'])) {
@@ -44,11 +44,11 @@ try {
         exit;
     }
 
-    // Construct the full, absolute path to the image file
-    // The uploads folder is relative to the 'Pages' directory.
+    // Debugging: Output the constructed file path and check if it exists
     $basePath = __DIR__; // Current directory: /php/routes/Pages
-    // The path from the DB is like 'uploads/ids/...'
     $filePath = $basePath . DIRECTORY_SEPARATOR . $result[$column];
+    error_log("DEBUG: Constructed filePath: " . $filePath);
+    error_log("DEBUG: file_exists('$filePath'): " . (file_exists($filePath) ? 'true' : 'false'));
 
     if (!file_exists($filePath)) {
         http_response_code(404);
