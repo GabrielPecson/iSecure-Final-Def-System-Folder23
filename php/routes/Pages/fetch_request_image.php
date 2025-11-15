@@ -45,8 +45,13 @@ try {
     }
 
     // Debugging: Output the constructed file path and check if it exists
-    $basePath = __DIR__; // Current directory: /php/routes/Pages
-    $filePath = $basePath . DIRECTORY_SEPARATOR . $result[$column];
+    $basePath = __DIR__ . DIRECTORY_SEPARATOR . 'uploads'; // Base path to the uploads directory within Pages
+    $dbPath = $result[$column];
+
+    // Remove any leading 'uploads/' or 'public/uploads/' if present in the database path
+    $dbPath = preg_replace('/^(public\/)?uploads\//', '', $dbPath);
+
+    $filePath = $basePath . DIRECTORY_SEPARATOR . $dbPath;
     error_log("DEBUG: Constructed filePath: " . $filePath);
     error_log("DEBUG: file_exists('$filePath'): " . (file_exists($filePath) ? 'true' : 'false'));
 
