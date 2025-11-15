@@ -3,12 +3,27 @@ require 'auth_check.php';
 require 'db_connect.php';
 
 // Fetch all clearance badges with visitor names
-$stmt = $pdo->query("SELECT cb.*, v.first_name, v.last_name FROM clearance_badges cb JOIN visitors v ON cb.visitor_id = v.id ORDER BY cb.issued_at DESC");
-$badges = $stmt->fetchAll(PDO::FETCH_ASSOC);
+$badges = [];
+$audit_logs = [];
+$error_message = '';
 
-// Fetch audit logs
-$stmt_logs = $pdo->query("SELECT id, username, action, details, timestamp FROM audit_log ORDER BY timestamp DESC LIMIT 200");
-$audit_logs = $stmt_logs->fetchAll(PDO::FETCH_ASSOC);
+try {
+    // Use LEFT JOIN to ensure all badges are shown, even if unassigned (visitor_id is NULL)
+    $stmt = $pdo->query("
+        SELECT cb.*, v.first_name, v.last_name 
+        FROM clearance_badges cb 
+        LEFT JOIN visitors v ON cb.visitor_id = v.id 
+        ORDER BY cb.issued_at DESC
+    ");
+    $badges = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+    // Fetch audit logs
+    $stmt_logs = $pdo->query("SELECT id, username, action, details, timestamp FROM audit_log ORDER BY timestamp DESC LIMIT 200");
+    $audit_logs = $stmt_logs->fetchAll(PDO::FETCH_ASSOC);
+} catch (PDOException $e) {
+    // If a query fails (e.g., table doesn't exist), show an error instead of a 500 page.
+    $error_message = "Database Error: " . $e->getMessage();
+}
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -51,6 +66,13 @@ $audit_logs = $stmt_logs->fetchAll(PDO::FETCH_ASSOC);
         </div>
     </div>
     <div class="container-fluid mt-4">
+        <?php if ($error_message): ?>
+            <div class="alert alert-danger">
+                <h4>An Error Occurred</h4>
+                <p><?php echo htmlspecialchars($error_message); ?></p>
+                <p>Please ensure the 'clearance_badges' and 'audit_log' tables exist in your database.</p>
+            </div>
+        <?php else: ?>
         <h2>All Issued Key Cards</h2>
         <div class="table-responsive">
             <table class="table table-striped table-bordered key-card-list-table">
@@ -70,14 +92,14 @@ $audit_logs = $stmt_logs->fetchAll(PDO::FETCH_ASSOC);
                 <tbody>
                     <?php if (empty($badges)): ?>
                         <tr>
-                            <td colspan="8" class="text-center">No key cards found.</td>
+                            <td colspan="9" class="text-center">No key cards found.</td>
                         </tr>
                     <?php else: ?>
                         <?php foreach ($badges as $badge): ?>
                             <tr>
                                 <td><?php echo htmlspecialchars($badge['id']); ?></td>
-                                <td><?php echo htmlspecialchars($badge['first_name']); ?></td>
-                                <td><?php echo htmlspecialchars($badge['last_name']); ?></td>
+                                <td><?php echo htmlspecialchars($badge['first_name'] ?? 'N/A'); ?></td>
+                                <td><?php echo htmlspecialchars($badge['last_name'] ?? 'N/A'); ?></td>
                                 <td><?php echo htmlspecialchars($badge['key_card_number']); ?></td>
                                 <td><?php echo date('Y-m-d h:i:s A', strtotime($badge['validity_start'])); ?></td>
                                 <td><?php echo date('Y-m-d h:i:s A', strtotime($badge['validity_end'])); ?></td>
@@ -120,6 +142,7 @@ $audit_logs = $stmt_logs->fetchAll(PDO::FETCH_ASSOC);
                 </tbody>
             </table>
         </div>
+        <?php endif; ?>
     </div>
     </div>
     </div>

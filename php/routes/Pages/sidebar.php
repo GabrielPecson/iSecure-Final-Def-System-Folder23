@@ -11,7 +11,7 @@
           <h6>DATA MANAGEMENT</h6>
           <li><i class="fa-solid fa-image-portrait"></i><a href="personnelaccounts.php"> Personnel Accounts</a></li>
           <li><i class="fa-solid fa-image-portrait"></i><a href="key_card.php"> Key Card</a></li>
-          <li><i class="fa-solid fa-image-portrait"></i><a href="key_card_list.php"> Key Cad List</a></li>
+          <li><i class="fa-solid fa-image-portrait"></i><a href="key_card_list.php"> Key Card List</a></li>
           <li><i class="fa-solid fa-image-portrait"></i><a href="visit_logs.php"> Visit Log</a></li>
         </ul>
       </div>
