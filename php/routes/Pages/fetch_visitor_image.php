@@ -1,6 +1,6 @@
 <?php
 session_start();
-require '../database/db_connect.php';
+require 'db_connect.php';
 
 // Basic security check: ensure user is logged in
 if (!isset($_SESSION['user_id'])) {
