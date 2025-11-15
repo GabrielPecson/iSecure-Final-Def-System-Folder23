@@ -1,6 +1,6 @@
 <?php
 session_start();
-require __DIR__ . '/db_connect.php'; // Database connection
+require __DIR__ . 'db_connect.php'; // Database connection
 
 // Basic validation for required parameters
 if ((!isset($_GET['request_id']) && !isset($_GET['visitor_id'])) || !isset($_GET['type'])) {
