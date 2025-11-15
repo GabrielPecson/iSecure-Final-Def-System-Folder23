@@ -42,13 +42,17 @@ if (preg_match('/^data:image\/(\w+);base64,/', $photo_path, $matches)) {
     exit;
 }
 
-// Construct the file path relative to the Pages directory using the path from the database
-$file_path = __DIR__ . '/' . $photo_path;
+// Construct the file path by prepending the uploads directory based on type
+if ($type === 'selfie') {
+    $file_path = __DIR__ . '/uploads/selfies/' . $photo_path;
+} else {
+    $file_path = __DIR__ . '/uploads/ids/' . $photo_path;
+}
 
 // Check if the file exists
 if (!file_exists($file_path)) {
     // If no image found, serve a placeholder
-    $placeholder_path = __DIR__ . '/uploads/sample_id.png';
+    $placeholder_path = __DIR__ . '/sample_id.png';
     if (file_exists($placeholder_path)) {
         $file_path = $placeholder_path;
     } else {
