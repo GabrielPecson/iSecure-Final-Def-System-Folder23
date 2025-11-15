@@ -1,4 +1,4 @@
-e<?php
+<?php
 require 'db_connect.php';
 
 if (!isset($_GET['request_id'])) {
@@ -42,11 +42,11 @@ if (preg_match('/^data:image\/(\w+);base64,/', $photo_path, $matches)) {
     exit;
 }
 
-// Construct the file path by prepending the uploads directory based on type
+// Construct the file path by prepending the uploads directory based on type, using basename to get the filename
 if ($type === 'selfie') {
-    $file_path = __DIR__ . '/uploads/selfies/' . $photo_path;
+    $file_path = __DIR__ . '/uploads/selfies/' . basename($photo_path);
 } else {
-    $file_path = __DIR__ . '/uploads/ids/' . $photo_path;
+    $file_path = __DIR__ . '/uploads/ids/' . basename($photo_path);
 }
 
 // Check if the file exists
