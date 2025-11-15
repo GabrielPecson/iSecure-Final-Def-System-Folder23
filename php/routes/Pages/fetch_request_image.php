@@ -45,9 +45,9 @@ try {
     }
 
     // Construct the full, absolute path to the image file
-    // The base path is the project root.
-    $basePath = dirname(__FILE__, 4); // Go up 4 levels from /php/routes/Pages/ to the root
-    // Use the file path directly from the database
+    // The uploads folder is relative to the 'Pages' directory.
+    $basePath = __DIR__; // Current directory: /php/routes/Pages
+    // The path from the DB is like 'uploads/ids/...'
     $filePath = $basePath . DIRECTORY_SEPARATOR . $result[$column];
 
     if (!file_exists($filePath)) {
