@@ -53,10 +53,10 @@ $project_folder = 'iSecure-Final-Def-System-Folder';
 if ($type === 'selfie') {
     // Selfie paths are like "public/uploads/selfies/..."
     // We need to construct the full path from the document root
-    $file_path = $document_root . '/' . $project_folder . '/' . $photo_path;
+    $file_path = $document_root . '/' . $project_folder . '/php/routes/Pages/uploads/selfies/' . $photo_path;
 } else {
     // ID paths are just filenames, e.g., "1762747328_id.jpg"
-    $file_path = $document_root . '/' . $project_folder . '/php/uploads/ids/' . $filename;
+    $file_path = $document_root . '/' . $project_folder . '/php/routes/Pages/uploads/ids/' . $filename;
 }
 
 // Normalize the path to use correct directory separators

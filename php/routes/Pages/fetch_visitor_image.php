@@ -30,16 +30,21 @@ try {
 
     if ($row) {
         $file_path = $row[$column];
-        
+
         // IMPORTANT: The path stored in the DB is relative to the project root.
         // We need to construct the full server file path.
         // realpath() resolves all symbolic links and '..' etc.
-        $base_dir = realpath(__DIR__ . 'php/routes/Pages/uploads/ids');
+
+        $document_root = $_SERVER['DOCUMENT_ROOT'];
+        $project_folder = 'iSecure-Final-Def-System-Folder';
+
         if ($type === 'id') {
-            $full_path = $base_dir . DIRECTORY_SEPARATOR . 'php' . DIRECTORY_SEPARATOR . 'routes' . DIRECTORY_SEPARATOR . 'Pages' DIRECTORY_SEPARATOR . 'uploads' . DIRECTORY_SEPARATOR . 'ids' . DIRECTORY_SEPARATOR . $file_path;
+            $full_path = $document_root . '/' . $project_folder . '/php/routes/Pages/uploads/ids/' . $file_path;
         } else {
-            $full_path = $base_dir . DIRECTORY_SEPARATOR . $file_path;
+            $full_path = $document_root . '/' . $project_folder . '/php/routes/Pages/uploads/selfies/' . $file_path;
         }
+        
+        $full_path = str_replace('/', DIRECTORY_SEPARATOR, $full_path);
 
         // error_log("Trying to load: " . $full_path);
         // error_log("File exists: " . (file_exists($full_path) ? 'yes' : 'no'));
