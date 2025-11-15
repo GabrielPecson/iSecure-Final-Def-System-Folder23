@@ -55,7 +55,7 @@ function uploadSelfieFile($fileInput, $uploadDir = __DIR__ . "/uploads/selfies/"
     $targetFile = $uploadDir . $fileName;
 
     if (move_uploaded_file($_FILES[$fileInput]["tmp_name"], $targetFile)) {
-        return "uploads/selfies/" . $fileName; // Return relative path for database
+        return $fileName; // Return filename for database
     }
     return null;
 }

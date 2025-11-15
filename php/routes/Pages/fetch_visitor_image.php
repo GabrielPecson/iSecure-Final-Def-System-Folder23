@@ -45,11 +45,8 @@ try {
             $cleaned_file_path = substr($cleaned_file_path, strlen('selfies/'));
         }
 
-        if ($type === 'id') {
-            $full_path = $base_upload_dir . 'ids/' . $cleaned_file_path;
-        } elseif ($type === 'selfie') {
-            $full_path = $base_upload_dir . 'selfies/' . $cleaned_file_path;
-        } else {
+        // Construct the full path
+        $full_path = $base_upload_dir . $type . 's/' . $cleaned_file_path; else {
             http_response_code(400);
             echo "Invalid image type for path construction.";
             exit;

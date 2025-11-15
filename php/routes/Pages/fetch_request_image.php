@@ -45,10 +45,8 @@ try {
 
     // Use the path from the database directly
     $file_path_from_db = $result[$column];
-    error_log("DEBUG: file_path_from_db = " . $file_path_from_db);
     $base_upload_dir = __DIR__ . '/../uploads/'; // This resolves to php/routes/uploads/
     $full_path = '';
-    error_log("DEBUG: base_upload_dir = " . $base_upload_dir);
 
     // Clean the file path from the database to remove any redundant 'uploads/' or 'uploads/ids/' prefixes
     $cleaned_file_path = $file_path_from_db;
@@ -62,11 +60,8 @@ try {
         $cleaned_file_path = substr($cleaned_file_path, strlen('selfies/'));
     }
 
-    if ($imageType === 'id') {
-        $full_path = $base_upload_dir . 'ids/' . $cleaned_file_path;
-    } elseif ($imageType === 'selfie') {
-        $full_path = $base_upload_dir . 'selfies/' . $cleaned_file_path;
-    } else {
+    // Construct the full path
+    $full_path = $base_upload_dir . $imageType . 's/' . $cleaned_file_path; else {
         http_response_code(400);
         echo "Invalid image type for path construction.";
         exit;
