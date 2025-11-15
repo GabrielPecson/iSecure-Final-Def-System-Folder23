@@ -64,9 +64,9 @@ require 'audit_log.php';
       </div>
 
       <!-- Date Filter -->
-      <div class="mb-3">
-        <label for="logDate" class="form-label">Select Date:</label>
-        <input type="text" id="logDate" class="form-control" placeholder="Select date" />
+      <div class="date-filter-block">
+        <label for="logDateInput" class="form-label">Select Date:</label>
+        <input type="text" id="logDateInput" class="form-control" placeholder="Select date" />
       </div>
 
       <!-- Search Bar -->
