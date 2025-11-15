@@ -1,6 +1,6 @@
 <?php
 session_start();
-require '../database/db_connect.php';
+require 'db_connect.php';
 require 'audit_log.php'; // <-- include your logging function
 
 // Capture user before clearing session
@@ -30,10 +30,10 @@ session_destroy();
 // Check if AJAX request
 if (isset($_SERVER['HTTP_X_REQUESTED_WITH']) && strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) === 'xmlhttprequest') {
     // Return JSON for AJAX
-    echo json_encode(['success' => true, 'redirect' => 'Pages/login-page.php?logged_out=1']);
+    echo json_encode(['success' => true, 'redirect' => 'login-page.php?logged_out=1']);
     exit;
 } else {
     // Normal redirect
-    header("Location: Pages/login-page.php?logged_out=1");
+    header("Location: login-page.php?logged_out=1");
     exit;
 }
