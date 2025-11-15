@@ -18,7 +18,7 @@ try {
     $badges = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
     // Fetch audit logs
-    $stmt_logs = $pdo->query("SELECT id, username, action, details, timestamp FROM access_log ORDER BY timestamp DESC LIMIT 200");
+    $stmt_logs = $pdo->query("SELECT log_id, uid, door, status, reason, timestamp FROM access_log ORDER BY timestamp DESC LIMIT 200");
     $audit_logs = $stmt_logs->fetchAll(PDO::FETCH_ASSOC);
 } catch (PDOException $e) {
     // If a query fails (e.g., table doesn't exist), show an error instead of a 500 page.
@@ -70,7 +70,7 @@ try {
             <div class="alert alert-danger">
                 <h4>An Error Occurred</h4>
                 <p><?php echo htmlspecialchars($error_message); ?></p>
-                <p>Please ensure the 'clearance_badges' and 'audit_log' tables exist in your database.</p>
+                <p>Please ensure the 'clearance_badges' and 'access_log' tables exist in your database.</p>
             </div>
         <?php else: ?>
         <h2>All Issued Key Cards</h2>
@@ -119,8 +119,9 @@ try {
                 <thead class="table-light" style="position: sticky; top: 0;">
                     <tr>
                         <th>Timestamp</th>
-                        <th>Admin</th>
-                        <th>Action</th>
+                        <th>Card UID</th>
+                        <th>Door</th>
+                        <th>Status</th>
                         <th>Details</th>
                     </tr>
                 </thead>
@@ -133,9 +134,10 @@ try {
                         <?php foreach ($audit_logs as $log): ?>
                             <tr>
                                 <td><?php echo htmlspecialchars(date('Y-m-d H:i:s', strtotime($log['timestamp']))); ?></td>
-                                <td><?php echo htmlspecialchars($log['username']); ?></td>
-                                <td><span class="badge bg-secondary"><?php echo htmlspecialchars($log['action']); ?></span></td>
-                                <td><?php echo htmlspecialchars($log['details']); ?></td>
+                                <td><?php echo htmlspecialchars($log['uid']); ?></td>
+                                <td><?php echo htmlspecialchars($log['door']); ?></td>
+                                <td><span class="badge bg-<?php echo $log['status'] === 'GRANTED' ? 'success' : 'danger'; ?>"><?php echo htmlspecialchars($log['status']); ?></span></td>
+                                <td><?php echo htmlspecialchars($log['reason']); ?></td>
                             </tr>
                         <?php endforeach; ?>
                     <?php endif; ?>
