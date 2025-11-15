@@ -5,7 +5,7 @@
 $DB_HOST = "localhost";
 $DB_USER = "root";
 $DB_PASS = "";
-$DB_NAME = "doorlock";
+$DB_NAME = "isecure";
 $TIMEZONE = "Asia/Manila";
 $LOG_FILE = __DIR__ . "/debug.log";
 
