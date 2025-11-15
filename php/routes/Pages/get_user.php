@@ -1,7 +1,7 @@
 <?php
-require '../database/db_connect.php';
+require 'db_connect.php';
 
-define('ENC_KEY', 'your-32-character-secret-key');
+define('ENC_KEY', 'MPLC7l9UHbSCjgWOg19TtBj4VPz2leQb');
 
 /**
  * Try to decrypt if data is encrypted, otherwise return as-is.
