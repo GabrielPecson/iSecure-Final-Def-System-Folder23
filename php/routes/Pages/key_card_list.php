@@ -18,7 +18,7 @@ try {
     $badges = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
     // Fetch audit logs
-    $stmt_logs = $pdo->query("SELECT log_id, uid, door, status, reason, timestamp FROM access_log ORDER BY timestamp DESC LIMIT 200");
+    $stmt_logs = $pdo->query("SELECT log_id, uid, door, status, reason, timestamp FROM access_logs ORDER BY timestamp DESC LIMIT 200");
     $audit_logs = $stmt_logs->fetchAll(PDO::FETCH_ASSOC);
 } catch (PDOException $e) {
     // If a query fails (e.g., table doesn't exist), show an error instead of a 500 page.
@@ -70,7 +70,7 @@ try {
             <div class="alert alert-danger">
                 <h4>An Error Occurred</h4>
                 <p><?php echo htmlspecialchars($error_message); ?></p>
-                <p>Please ensure the 'clearance_badges' and 'access_log' tables exist in your database.</p>
+                <p>Please ensure the 'clearance_badges' and 'access_logs' tables exist in your database.</p>
             </div>
         <?php else: ?>
         <h2>All Issued Key Cards</h2>
