@@ -184,10 +184,10 @@ document.addEventListener("DOMContentLoaded", () => {
     document.getElementById("vehicleModelCell").textContent = escapeHtml(visitor.vehicle_model || '');
     document.getElementById("vehicleColorCell").textContent = escapeHtml(visitor.vehicle_color || '');
     document.getElementById("plateNumberCell").textContent = escapeHtml(visitor.plate_number || '');
-    document.getElementById("visitorIDPhoto").src = "fetch_request_image.php?request_id=" + visitor.request_id + "&type=id";
-    document.getElementById("visitorSelfie").src = "fetch_request_image.php?request_id=" + visitor.request_id + "&type=selfie";
+    document.getElementById("visitorIDPhoto").src = "/fetch_request_image.php?request_id=" + visitor.request_id + "&type=id";
+    document.getElementById("visitorSelfie").src = "/fetch_request_image.php?request_id=" + visitor.request_id + "&type=selfie";
     document.getElementById("expectedPlateNumberDisplay").textContent = visitor.plate_number || '';
-    idTabImage.src = "fetch_request_image.php?request_id=" + visitor.request_id + "&type=id";
+    idTabImage.src = "/fetch_request_image.php?request_id=" + visitor.request_id + "&type=id";
     currentVisitorId = visitor.id;
 
     const hasVehicle = visitor.plate_number && visitor.plate_number.trim() !== "";
@@ -564,50 +564,6 @@ document.addEventListener("DOMContentLoaded", () => {
       ocrContent.innerHTML = `<p class="text-danger">Error processing image: ${error.message}</p>`;
     }
   }
-
-  // ----- Initial Load -----
-  loadExpectedVisitors();
-  loadInsideVisitors();
-  loadExitedVisitors();
-
-  // safe to call showVisitorDetails here
-
-function showNotification(message, type = "info") {
-  const notif = document.createElement("div");
-  notif.className = `alert alert-${type}`;
-  notif.textContent = message;
-  notif.style.position = "fixed";
-  notif.style.top = "20px";
-  notif.style.right = "20px";
-  notif.style.zIndex = "9999";
-
-  document.body.appendChild(notif);
-
-  setTimeout(() => notif.remove(), 3000);
-}
-
-async function runOCR(imageSrc) {
-  ocrContent.innerHTML = `<div class="text-info">Running OCR...</div>`;
-
-  try {
-    const response = await fetch("run_ocr.php", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ image: imageSrc })
-    });
-
-    const data = await response.json();
-
-    if (data.success) {
-      ocrContent.innerHTML = `<pre>${data.text}</pre>`;
-    } else {
-      ocrContent.innerHTML = `<div class="text-danger">OCR failed: ${data.message}</div>`;
-    }
-  } catch (err) {
-    ocrContent.innerHTML = `<div class="text-danger">OCR error.</div>`;
-    console.error(err);
-  }
-}
 
 // ----- Load Data on Page Ready -----
 loadExpectedVisitors();
