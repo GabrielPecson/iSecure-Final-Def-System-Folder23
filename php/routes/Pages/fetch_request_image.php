@@ -45,9 +45,9 @@ if (preg_match('/^data:image\/(\w+);base64,/', $photo_path, $matches)) {
 // Construct the file path by prepending the uploads directory based on type, using basename to get the filename
 // The path is constructed relative to the project root, assuming this script is at /php/routes/Pages/
 if ($type === 'selfie') {
-    $file_path = realpath(__DIR__ . '/../../../../uploads/selfies') . DIRECTORY_SEPARATOR . basename($photo_path);
+    $file_path = realpath(__DIR__ . '/uploads/selfies') . DIRECTORY_SEPARATOR . basename($photo_path);
 } else {
-    $file_path = realpath(__DIR__ . '/../../../../uploads/ids') . DIRECTORY_SEPARATOR . basename($photo_path);
+    $file_path = realpath(__DIR__ . '/uploads/ids') . DIRECTORY_SEPARATOR . basename($photo_path);
 }
 
 // Check if the file exists
