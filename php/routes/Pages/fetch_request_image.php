@@ -46,7 +46,8 @@ try {
 
     // Debugging: Output the constructed file path and check if it exists
     $basePath = dirname(__DIR__) . DIRECTORY_SEPARATOR . 'uploads'; // Base path to the uploads directory within routes
-    $dbFileName = $result[$column];
+    $dbFullImagePath = $result[$column];
+    $dbFileName = basename($dbFullImagePath);
 
     $subDirectory = '';
     if ($imageType === 'id') {
