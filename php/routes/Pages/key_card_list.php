@@ -18,7 +18,7 @@ try {
     $badges = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
     // Fetch audit logs
-    $stmt_logs = $pdo->query("SELECT id, username, action, details, timestamp FROM audit_log ORDER BY timestamp DESC LIMIT 200");
+    $stmt_logs = $pdo->query("SELECT id, username, action, details, timestamp FROM access_log ORDER BY timestamp DESC LIMIT 200");
     $audit_logs = $stmt_logs->fetchAll(PDO::FETCH_ASSOC);
 } catch (PDOException $e) {
     // If a query fails (e.g., table doesn't exist), show an error instead of a 500 page.
