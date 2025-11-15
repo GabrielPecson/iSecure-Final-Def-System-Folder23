@@ -175,7 +175,7 @@ def register_face_endpoint():
     # Get the project root to build a reliable path
     project_root = sys.path[0]
     # Define the relative path for DB and URL, ensuring forward slashes for web compatibility
-    relative_upload_dir = "public/uploads/selfies"
+    relative_upload_dir = "php/routes/Pages/uploads/selfies"
     # Define the absolute path for saving the file on the server
     absolute_upload_dir = os.path.join(project_root, relative_upload_dir)
     os.makedirs(absolute_upload_dir, exist_ok=True)
@@ -259,8 +259,7 @@ def register_visitor_endpoint():
 
     # Get the project root to build a reliable path
     project_root = sys.path[0]
-    # Define the relative path for DB and URL, ensuring forward slashes for web compatibility
-    relative_upload_dir = "public/uploads/selfies"
+    relative_upload_dir = "php/routes/Pages/uploads/selfies"
     # Define the absolute path for saving the file on the server
     absolute_upload_dir = os.path.join(project_root, relative_upload_dir)
     os.makedirs(absolute_upload_dir, exist_ok=True)
