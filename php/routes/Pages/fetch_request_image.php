@@ -36,9 +36,10 @@ try {
     }
 
     // Construct the full, absolute path to the image file
-    // Assumes the paths stored in the DB are relative to the project's 'uploads' folder
+    // The base path is the project root.
     $basePath = dirname(__FILE__, 4); // Go up 4 levels from /php/routes/Pages/ to the root
-    $filePath = $basePath . DIRECTORY_SEPARATOR . $result[$column];
+    // The path from the DB is relative to the 'pages' folder, so we prepend it.
+    $filePath = $basePath . DIRECTORY_SEPARATOR . 'pages' . DIRECTORY_SEPARATOR . $result[$column];
 
     if (!file_exists($filePath)) {
         http_response_code(404);

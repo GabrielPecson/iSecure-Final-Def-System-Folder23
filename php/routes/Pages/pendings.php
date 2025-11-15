@@ -431,8 +431,8 @@ const requestModal = new bootstrap.Modal(document.getElementById("requestModal")
             document.getElementById("modalVehicleModelCell").textContent = btn.dataset.vehiclemodel;
             document.getElementById("modalVehicleColorCell").textContent = btn.dataset.vehiclecolor;
             document.getElementById("modalPlateNumberCell").textContent = btn.dataset.platenumber;
-            document.getElementById("modalValidId").src = "/iSecure-Final-Def-System-Folder - Copy - Copy - Copy/php/routes/Pages/fetch_request_image.php?request_id=" + btn.dataset.id + "&type=id";
-            document.getElementById("modalSelfie").src = "/iSecure-Final-Def-System-Folder - Copy - Copy - Copy/php/routes/Pages/fetch_request_image.php?request_id=" + btn.dataset.id + "&type=selfie";
+            document.getElementById("modalValidId").src = "fetch_request_image.php?request_id=" + btn.dataset.id + "&type=id";
+            document.getElementById("modalSelfie").src = "fetch_request_image.php?request_id=" + btn.dataset.id + "&type=selfie";
             document.getElementById("modalRequestId").value = btn.dataset.id;
 
     // Hide approve/reject buttons if not pending
@@ -446,7 +446,7 @@ const requestModal = new bootstrap.Modal(document.getElementById("requestModal")
     } else if (btn.dataset.status === "Approved") {
       approveBtn.style.display = "none";
       rejectBtn.style.display = "none";
-      cancelBtn.style.display = "inline-block";
+      cancelBtn.style.display = "inline-block";1
     } else {
       approveBtn.style.display = "none";
       rejectBtn.style.display = "none";
