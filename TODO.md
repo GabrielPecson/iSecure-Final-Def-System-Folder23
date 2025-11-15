@@ -1,1 +1,2 @@
 - [x] Modify fetch_request_image.php to use the file path directly from the database instead of constructing a hardcoded path.
+- [x] Test the changes to ensure images are served correctly.
