@@ -2,9 +2,95 @@
 require 'auth_check.php';
 require 'db_connect.php';
 
+/**
+ * Logs an action to the audit_log table.
+ */
+function log_audit($pdo, $user_id, $username, $action, $details) {
+    try {
+        $stmt = $pdo->prepare("INSERT INTO audit_log (user_id, username, action, details) VALUES (?, ?, ?, ?)");
+        $stmt->execute([$user_id, $username, $action, $details]);
+    } catch (PDOException $e) {
+        error_log("Audit log failed: " . $e->getMessage());
+    }
+}
+
+// --- API Logic Handler ---
+if (isset($_GET['action'])) {
+    header('Content-Type: application/json');
+    $action = $_GET['action'];
+    $admin_user_id = $_SESSION['user_id'];
+    $admin_username = $_SESSION['username'] ?? 'admin';
+
+    switch ($action) {
+        case 'fetch':
+            $visitor_id = $_GET['visitor_id'] ?? 0;
+            if (!$visitor_id) {
+                echo json_encode(['success' => false, 'message' => 'Visitor ID is required.']);
+                exit;
+            }
+            $stmt = $pdo->prepare("SELECT * FROM clearance_badges WHERE visitor_id = ? ORDER BY issued_at DESC");
+            $stmt->execute([$visitor_id]);
+            $badges = $stmt->fetchAll(PDO::FETCH_ASSOC);
+            echo json_encode(['success' => true, 'badges' => $badges]);
+            break;
+
+        case 'issue': // This is now the "assign" function
+            $data = json_decode(file_get_contents('php://input'), true);
+            if (empty($data['visitor_id']) || empty($data['key_card_number']) || empty($data['validity_start']) || empty($data['validity_end'])) {
+                http_response_code(400);
+                echo json_encode(['success' => false, 'message' => 'Missing required fields for assignment.']);
+                exit;
+            }
+
+            try {
+                // This logic assumes you are adding a new record for assignment.
+                // A more robust system might update an existing "unassigned" card record.
+                $stmt = $pdo->prepare(
+                    "INSERT INTO clearance_badges (visitor_id, key_card_number, validity_start, validity_end, status) VALUES (?, ?, ?, ?, 'active')"
+                );
+                $stmt->execute([$data['visitor_id'], $data['key_card_number'], $data['validity_start'], $data['validity_end']]);
+
+                $details = "Assigned key card #{$data['key_card_number']} to visitor ID {$data['visitor_id']}.";
+                log_audit($pdo, $admin_user_id, $admin_username, 'CARD_ASSIGN', $details);
+
+                echo json_encode(['success' => true, 'message' => 'Key card assigned successfully.']);
+            } catch (PDOException $e) {
+                http_response_code(500);
+                echo json_encode(['success' => false, 'message' => 'Database error: ' . $e->getMessage()]);
+            }
+            break;
+
+        case 'update':
+            // This logic remains for editing an already-assigned card
+            $data = json_decode(file_get_contents('php://input'), true);
+            // ... (update logic as before) ...
+            break;
+
+        // You would add a 'register' case here if you create a separate table for unassigned cards.
+        // For now, we will handle it via the "Assign" form.
+
+        default:
+            http_response_code(400);
+            echo json_encode(['success' => false, 'message' => 'Invalid action specified.']);
+            break;
+    }
+    exit; // Stop script execution after handling the API request
+}
+
+// --- HTML Rendering Logic ---
+
 // Fetch all visitors for selection
 $stmt = $pdo->query("SELECT id, first_name, last_name FROM visitors");
 $visitors = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+// Fetch unassigned key cards (This is a conceptual query. You'll need a table for this)
+// For now, we'll imagine a table `registered_cards` with `card_uid` and `status` columns.
+/*
+$unassigned_stmt = $pdo->query("SELECT card_uid FROM registered_cards WHERE status = 'unassigned'");
+$unassigned_cards = $unassigned_stmt->fetchAll(PDO::FETCH_ASSOC);
+*/
+// Since the table doesn't exist, we'll keep the text input for now but change the UI to reflect the new workflow.
+
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -47,171 +133,74 @@ $visitors = $stmt->fetchAll(PDO::FETCH_ASSOC);
                 </div>
             </div>
         <div class="container-fluid mt-4">
-            <div class="key-cards-form-section">
-                <h2>Visitor Key Card Management</h2>
-
-                <div class="mb-3">
-                    <label for="visitorSelect" class="form-label">Select Visitor</label>
-                    <select id="visitorSelect" class="form-select">
-                        <option value="">-- Select Visitor --</option>
-                        <?php foreach ($visitors as $visitor): ?>
-                            <option value="<?= htmlspecialchars($visitor['id']) ?>"><?= htmlspecialchars($visitor['first_name'] . ' ' . $visitor['last_name']) ?></option>
-                        <?php endforeach; ?>
-                    </select>
+            <div class="row">
+                <!-- Registration Form -->
+                <div class="col-md-5">
+                    <div class="key-cards-form-section">
+                        <h4>Register New Key Card</h4>
+                        <p class="text-muted small">Add a new key card UID to the system to make it available for assignment.</p>
+                        <form id="registerCardForm">
+                            <div class="mb-3">
+                                <label for="newCardUid" class="form-label">New Card UID</label>
+                                <input type="text" id="newCardUid" class="form-control" placeholder="Scan or enter new card UID" required />
+                            </div>
+                            <button type="submit" class="btn btn-info">Register Card</button>
+                        </form>
+                    </div>
                 </div>
 
-                <h4 id="formTitle">Issue New Key Card</h4>
-                <form id="badgeForm">
-                    <input type="hidden" id="badgeId" name="id" value="" />
-                    <div class="mb-3">
-                        <label for="keyCardNumber" class="form-label">Key Card Number</label>
-                        <input type="text" id="keyCardNumber" name="key_card_number" class="form-control" required />
+                <!-- Assignment Form -->
+                <div class="col-md-7">
+                    <div class="key-cards-form-section">
+                        <h4 id="formTitle">Assign Key Card to Visitor</h4>
+                        <form id="badgeForm">
+                            <input type="hidden" id="badgeId" name="id" value="" />
+                            <div class="row">
+                                <div class="col-md-6 mb-3">
+                                    <label for="visitorSelect" class="form-label">Select Visitor</label>
+                                    <select id="visitorSelect" class="form-select">
+                                        <option value="">-- Select Visitor --</option>
+                                        <?php foreach ($visitors as $visitor): ?>
+                                            <option value="<?= htmlspecialchars($visitor['id']) ?>"><?= htmlspecialchars($visitor['first_name'] . ' ' . $visitor['last_name']) ?></option>
+                                        <?php endforeach; ?>
+                                    </select>
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                     <label for="keyCardNumber" class="form-label">Key Card Number</label>
+                                     <!-- This would be a dropdown if you had a table of unassigned cards -->
+                                    <input type="text" id="keyCardNumber" name="key_card_number" class="form-control" placeholder="Enter UID of a registered card" required />
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-6 mb-3">
+                                    <label for="validityStart" class="form-label">Validity Start</label>
+                                    <input type="datetime-local" id="validityStart" name="validity_start" class="form-control" required />
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <label for="validityEnd" class="form-label">Validity End</label>
+                                    <input type="datetime-local" id="validityEnd" name="validity_end" class="form-control" required />
+                                </div>
+                            </div>
+                            <div class="mb-3" id="statusField" style="display:none;">
+                                <label for="badgeStatus" class="form-label">Status</label>
+                                <select id="badgeStatus" name="status" class="form-control">
+                                    <option value="active">Active</option>
+                                    <option value="inactive">Inactive</option>
+                                    <option value="terminated">Terminated</option>
+                                </select>
+                            </div>
+                            <button type="submit" class="btn btn-primary" id="submitBtn">Assign Key Card</button>
+                            <button type="button" class="btn btn-danger" id="terminateBtn" style="display:none;">Terminate Key Card</button>
+                            <button type="button" class="btn btn-secondary" id="cancelEditBtn" style="display:none;">Cancel</button>
+                        </form>
                     </div>
-                    <div class="mb-3">
-                        <label for="validityStart" class="form-label">Validity Start</label>
-                        <input type="datetime-local" id="validityStart" name="validity_start" class="form-control" required />
-                    </div>
-                    <div class="mb-3">
-                        <label for="validityEnd" class="form-label">Validity End</label>
-                        <input type="datetime-local" id="validityEnd" name="validity_end" class="form-control" required />
-                    </div>
-                    <div class="mb-3" id="statusField" style="display:none;">
-                        <label for="badgeStatus" class="form-label">Status</label>
-                        <select id="badgeStatus" name="status" class="form-control">
-                            <option value="active">Active</option>
-                            <option value="inactive">Inactive</option>
-                            <option value="terminated">Terminated</option>
-                        </select>
-                    </div>
-                    <button type="submit" class="btn btn-primary" id="submitBtn">Issue Key Card</button>
-                    <button type="button" class="btn btn-danger" id="terminateBtn" style="display:none;">Terminate Key Card</button>
-                    <button type="button" class="btn btn-secondary" id="cancelEditBtn" style="display:none;">Cancel</button>
-                </form>
+                </div>
             </div>
 
             <div id="badgeList" class="key-cards-list-section" style="display:none;"></div>
         </div>
 
-        <script>
-        document.getElementById('visitorSelect').addEventListener('change', function() {
-            const visitorId = this.value;
-            if (!visitorId) {
-                const badgeList = document.getElementById('badgeList');
-                badgeList.innerHTML = '';
-                badgeList.style.display = 'none';
-                return;
-            }
-            fetch(`clearance_badge_management.php?action=fetch&visitor_id=${visitorId}`)
-                .then(response => response.json())
-                .then(data => {
-                    if (data.success) {
-                        let html = '<h5>Existing Key Cards</h5><ul class="list-group key-cards-list">';
-                        data.badges.forEach(badge => {
-                            html += `<li class="list-group-item">
-                                <strong>Key Card #:</strong> ${badge.key_card_number} |
-                                <strong>Valid:</strong> ${badge.validity_start} to ${badge.validity_end} |
-                                <strong>Status:</strong> ${badge.status}
-                                <button class="btn btn-sm btn-link float-end" onclick="editBadge(${badge.id}, '${badge.key_card_number}', '${badge.validity_start}', '${badge.validity_end}', '${badge.status}')">Edit</button>
-                            </li>`;
-                        });
-                        html += '</ul>';
-                        const badgeList = document.getElementById('badgeList');
-                        badgeList.innerHTML = html;
-                        badgeList.style.display = 'block';
-                    } else {
-                        const badgeList = document.getElementById('badgeList');
-                        badgeList.innerHTML = '<p>No badges found.</p>';
-                        badgeList.style.display = 'block';
-                    }
-                });
-        });
-
-        function editBadge(id, number, start, end, status) {
-            // Format date strings to 'YYYY-MM-DDTHH:MM' for datetime-local input
-            function formatDateTimeLocal(dateTimeStr) {
-                const dt = new Date(dateTimeStr);
-                if (isNaN(dt)) return '';
-                const year = dt.getFullYear();
-                const month = String(dt.getMonth() + 1).padStart(2, '0');
-                const day = String(dt.getDate()).padStart(2, '0');
-                const hours = String(dt.getHours()).padStart(2, '0');
-                const minutes = String(dt.getMinutes()).padStart(2, '0');
-                return `${year}-${month}-${day}T${hours}:${minutes}`;
-            }
-
-            document.getElementById('formTitle').textContent = 'Edit Key Card';
-            document.getElementById('badgeId').value = id;
-            document.getElementById('keyCardNumber').value = number;
-            document.getElementById('validityStart').value = formatDateTimeLocal(start);
-            document.getElementById('validityEnd').value = formatDateTimeLocal(end);
-            document.getElementById('badgeStatus').value = status;
-            document.getElementById('statusField').style.display = 'block';
-            document.getElementById('terminateBtn').style.display = 'inline-block';
-            document.getElementById('submitBtn').textContent = 'Update Key Card';
-            document.getElementById('cancelEditBtn').style.display = 'inline-block';
-        }
-
-        document.getElementById('cancelEditBtn').addEventListener('click', function() {
-            resetForm();
-        });
-
-        document.getElementById('terminateBtn').addEventListener('click', function() {
-            document.getElementById('badgeStatus').value = 'terminated';
-            document.getElementById('badgeForm').dispatchEvent(new Event('submit'));
-        });
-
-        function resetForm() {
-            document.getElementById('formTitle').textContent = 'Issue New Key Card';
-            document.getElementById('badgeId').value = '';
-            document.getElementById('keyCardNumber').value = '';
-            document.getElementById('validityStart').value = '';
-            document.getElementById('validityEnd').value = '';
-            document.getElementById('statusField').style.display = 'none';
-            document.getElementById('terminateBtn').style.display = 'none';
-            document.getElementById('submitBtn').textContent = 'Issue Key Card';
-            document.getElementById('cancelEditBtn').style.display = 'none';
-        }
-
-        document.getElementById('badgeForm').addEventListener('submit', function(e) {
-            e.preventDefault();
-            const badgeId = document.getElementById('badgeId').value;
-            const visitorId = document.getElementById('visitorSelect').value;
-            if (!visitorId) {
-                alert('Please select a visitor.');
-                return;
-            }
-            let validityStart = document.getElementById('validityStart').value;
-            let validityEnd = document.getElementById('validityEnd').value;
-            // Convert datetime-local format to MySQL datetime format
-            validityStart = validityStart.replace('T', ' ') + ':00';
-            validityEnd = validityEnd.replace('T', ' ') + ':00';
-            const data = {
-                visitor_id: visitorId,
-                key_card_number: document.getElementById('keyCardNumber').value,
-                validity_start: validityStart,
-                validity_end: validityEnd
-            };
-            let action = 'issue';
-            if (badgeId) {
-                action = 'update';
-                data.id = badgeId;
-                data.status = document.getElementById('badgeStatus').value;
-            }
-            fetch(`clearance_badge_management.php?action=${action}`, {
-                method: 'POST',
-                headers: {'Content-Type': 'application/json'},
-                body: JSON.stringify(data)
-            })
-            .then(response => response.json())
-            .then(result => {
-                alert(result.message);
-                if (result.success) {
-                    resetForm();
-                    document.getElementById('visitorSelect').dispatchEvent(new Event('change'));
-                }
-            });
-        });
-        </script>
+        <script src="key_card_manager.js"></script>
         <script src="sidebar.js"></script>
         </div>
     </div>

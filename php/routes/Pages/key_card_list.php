@@ -5,6 +5,10 @@ require 'db_connect.php';
 // Fetch all clearance badges with visitor names
 $stmt = $pdo->query("SELECT cb.*, v.first_name, v.last_name FROM clearance_badges cb JOIN visitors v ON cb.visitor_id = v.id ORDER BY cb.issued_at DESC");
 $badges = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+// Fetch audit logs
+$stmt_logs = $pdo->query("SELECT id, username, action, details, timestamp FROM audit_log ORDER BY timestamp DESC LIMIT 200");
+$audit_logs = $stmt_logs->fetchAll(PDO::FETCH_ASSOC);
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -80,6 +84,36 @@ $badges = $stmt->fetchAll(PDO::FETCH_ASSOC);
                                 <td><?php echo htmlspecialchars($badge['status']); ?></td>
                                 <td><?php echo date('Y-m-d h:i:s A', strtotime($badge['issued_at'])); ?></td>
                                 <td><?php echo date('Y-m-d h:i:s A', strtotime($badge['updated_at'])); ?></td>
+                            </tr>
+                        <?php endforeach; ?>
+                    <?php endif; ?>
+                </tbody>
+            </table>
+        </div>
+
+        <h2 class="mt-5">Key Card Audit Log</h2>
+        <div class="table-responsive" style="max-height: 400px; overflow-y: auto;">
+            <table class="table table-sm table-hover">
+                <thead class="table-light" style="position: sticky; top: 0;">
+                    <tr>
+                        <th>Timestamp</th>
+                        <th>Admin</th>
+                        <th>Action</th>
+                        <th>Details</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <?php if (empty($audit_logs)): ?>
+                        <tr>
+                            <td colspan="4" class="text-center">No audit logs found.</td>
+                        </tr>
+                    <?php else: ?>
+                        <?php foreach ($audit_logs as $log): ?>
+                            <tr>
+                                <td><?php echo htmlspecialchars(date('Y-m-d H:i:s', strtotime($log['timestamp']))); ?></td>
+                                <td><?php echo htmlspecialchars($log['username']); ?></td>
+                                <td><span class="badge bg-secondary"><?php echo htmlspecialchars($log['action']); ?></span></td>
+                                <td><?php echo htmlspecialchars($log['details']); ?></td>
                             </tr>
                         <?php endforeach; ?>
                     <?php endif; ?>

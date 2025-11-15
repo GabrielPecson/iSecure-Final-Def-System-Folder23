@@ -1,237 +1,218 @@
-# iSecure - Deployment Guide for Hostinger VPS
+Excellent question! You've hit on a crucial concept for deploying Python applications. You are absolutely right: you should not commit your .venv folder to your Git repository.
 
-This guide outlines the steps to deploy the iSecure Flask application and its PHP frontend on a Hostinger Virtual Private Server (VPS). This approach uses a production-ready WSGI server (Gunicorn) behind a reverse proxy (Nginx) for optimal performance and security.
+The virtual environment contains Python interpreters and libraries specific to the operating system you built it on (like Windows). Your VPS will likely be running Linux, so that .venv folder wouldn't work anyway.
 
-## 1. Prepare Your Flask Application
+The correct workflow is to use your GitHub repository to transfer your code, and then recreate the environment on the server using a list of your project's dependencies.
 
-Before deployment, ensure your Flask application is ready for a production environment.
+Here is the step-by-step professional workflow:
 
-**Disable Debug Mode:**
-Locate `app/main.py` and change the `debug` flag to `False`. Running with `debug=True` in production is a severe security risk.
+Step 1: On Your Local Machine (Prepare Your Repository)
+Before you push to GitHub, you need to make sure two important files are correct in your project.
 
-```python
-if __name__ == '__main__':
-    app.run(host='localhost', port=8000, debug=False) # Change to False
-```
+1. Create/Update .gitignore
+This file tells Git which files and folders to ignore. It's essential for keeping your repository clean. If you don't have one, create a file named .gitignore in your project's root directory.
 
-## 2. Server Setup (SSH into your Hostinger VPS)
+New file: .gitignore
++10
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
 
-Connect to your VPS using SSH. The following steps assume an Ubuntu/Debian-based Linux distribution. Adjust package names if you are using a different OS.
+# Virtual Environment
+venv/
+.venv/
 
-### 2.1 Update System & Install Core Packages
 
-```bash
-sudo apt update && sudo apt upgrade -y
-sudo apt install python3 python3-pip python3-venv nginx -y
-```
+This ensures your virtual environment folder (venv or .venv) and Python cache files are never committed.
 
-### 2.2 Install OpenCV Dependencies
+2. Generate requirements.txt
+This file is the "recipe" for your virtual environment. It lists all the Python packages your project needs.
 
-For `cv2` (OpenCV) to function correctly in a headless server environment, you might need to install additional display-related libraries, even if you don't have a GUI. These help with image processing functionalities.
+Activate your local virtual environment.
+From your project's root directory in your terminal, run:
+bash
+pip freeze > requirements.txt
+This creates or overwrites requirements.txt with all the necessary libraries (Flask, OpenCV, DeepFace, etc.).
+Now, commit both .gitignore and requirements.txt to your repository and push them to GitHub.
 
-```bash
-# Essential for many OpenCV functions, especially if dealing with images
-sudo apt install libgl1-mesa-glx -y
-sudo apt install libsm6 libxext6 libxrender-dev -y
-```
-*(Verify these specific packages are correct for your exact OS version if issues arise)*
+bash
+git add .gitignore requirements.txt
+git commit -m "Add gitignore and project dependencies"
+git push origin main
+Step 2: On Your VPS (Deploying from GitHub)
+Now, on your VPS, you'll pull the code and build a fresh, clean virtual environment specifically for the server.
 
-### 2.3 Upload Your Project
+Connect to your VPS via SSH.
 
-Transfer your entire project folder (`iSecure-Final-Def-System-Folder`) to your VPS. A common location is `/var/www/html/` or `/home/your_username/`.
+Clone Your Repository (if you haven't already):
 
-For example, if you upload it to `/var/www/html/`:
-```
-/var/www/html/iSecure-Final-Def-System-Folder/
-├── app/
-├── php/
-├── public/
-├── scripts/
-├── ...
-```
+bash
+git clone your-github-repository-url.git /var/www/html/iSecure-Final-Def-System-Folder
+If you've already cloned it, pull the latest changes:
 
-### 2.4 Set Up Python Virtual Environment & Dependencies
+bash
+cd /var/www/html/iSecure-Final-Def-System-Folder
+git pull origin main
+Create a New Virtual Environment: Navigate to your project directory and create a new venv for the server.
 
-Navigate to your project root directory on the VPS (e.g., `/var/www/html/iSecure-Final-Def-System-Folder`).
-
-```bash
+bash
 cd /var/www/html/iSecure-Final-Def-System-Folder
 python3 -m venv venv
+Activate the Environment:
+
+bash
 source venv/bin/activate
-pip install -r app/requirements.txt
-pip install gunicorn
-deactivate
-```
+Your command prompt should now show (venv) at the beginning.
 
-## 3. Configure Gunicorn (WSGI Server)
+Install Dependencies: This is the key step. Use the requirements.txt file you pushed to GitHub to install all the same packages on your server.
 
-Gunicorn will run your Flask application.
+bash
+pip install -r requirements.txt
+That's it! You now have a perfect copy of the necessary environment, built specifically for your VPS. You can now run your application using a production server like Gunicorn as we discussed previously.\
 
-### 3.1 Create a Gunicorn Service File
+This is especially important for your Gunicorn service on the VPS. The best practice is to use a .env file to store these variables and then tell your systemd service to load them. This keeps your secrets out of your Git repository and makes configuration much easier to manage.
 
-Create a `systemd` service file to manage Gunicorn. This ensures your application starts on boot and restarts if it crashes.
+Here’s the complete, step-by-step guide.
 
-```bash
+Step 1: Create a .env File on Your VPS
+First, create a file named .env in the root directory of your project on the VPS. This file will hold all your configuration variables.
+
+Connect to your VPS via SSH and navigate to your project directory:
+
+bash
+cd /var/www/html/iSecure-Final-Def-System-Folder
+Create and edit the .env file:
+
+bash
+nano .env
+Add your configuration variables to this file. Based on your application's needs, it should look something like this. Be sure to replace the placeholder values with your actual production credentials.
+
+ini
+# .env file for iSecure Application
+
+# --- Flask Configuration ---
+# Set to 'production' for security and performance
+FLASK_ENV=production
+FLASK_DEBUG=False
+
+# --- Database Connection (for your Python app) ---
+DB_HOST="localhost"
+DB_USER="your_production_db_user"
+DB_PASSWORD="YourStrongPassword123!"
+DB_NAME="your_production_db_name"
+
+# --- Application Specific Paths ---
+# A secure, writable directory for image captures
+CAPTURE_DIR="/var/www/isecure_data/captures"
+Important: The CAPTURE_DIR should be a directory that your service's user (e.g., www-data) has permission to write to. You may need to create it and set permissions:
+bash
+sudo mkdir -p /var/www/isecure_data/captures
+sudo chown -R www-data:www-data /var/www/isecure_data
+Step 2: Ensure .env is in .gitignore
+You've already done this, which is perfect! Your .gitignore file correctly lists .env, ensuring your secret credentials will never be accidentally committed to your GitHub repository.
+
+.gitignore
+-0
++1
+*.pyo
+*.pyd
+.env
+.env.*
+.DS_Store
+Thumbs.db
+node_modules/
+
+Self-correction: I've added .env.* to also ignore files like .env.local or .env.production, which is a common pattern.
+
+Step 3: Update Your Gunicorn systemd Service
+Now, you need to tell your systemd service (isecure.service) to load the variables from the .env file you just created.
+
+Edit the service file:
+
+bash
 sudo nano /etc/systemd/system/isecure.service
-```
+Add the EnvironmentFile directive inside the [Service] section. It should point to the absolute path of your .env file.
 
-Paste the following content, *replacing `your_username` with your actual SSH username on the VPS, and `/path/to/your/project/` with the absolute path to `iSecure-Final-Def-System-Folder`*.
-
-```ini
+ini
 [Unit]
-Description=Gunicorn instance for iSecure Flask App
+Description=Gunicorn instance to serve iSecure Flask app
 After=network.target
 
 [Service]
-User=your_username
-Group=www-data # Or the group Nginx runs under, usually www-data
-WorkingDirectory=/path/to/your/project/iSecure-Final-Def-System-Folder
-Environment="PATH=/path/to/your/project/iSecure-Final-Def-System-Folder/venv/bin"
-# --- Important: Set your Mindee API Key as an Environment Variable ---
-Environment="MINDEE_API_KEY=YOUR_MINDEE_API_KEY_HERE"
-ExecStart=gunicorn -w 4 -b 127.0.0.1:8000 app.main:app
-Restart=always
+User=www-data
+Group=www-data
+WorkingDirectory=/var/www/html/iSecure-Final-Def-System-Folder
+
+# Load environment variables from the .env file
+EnvironmentFile=/var/www/html/iSecure-Final-Def-System-Folder/.env
+
+# Path to the virtual environment's executables
+Environment="PATH=/var/www/html/iSecure-Final-Def-System-Folder/venv/bin"
+
+ExecStart=/var/www/html/iSecure-Final-Def-System-Folder/venv/bin/gunicorn --workers 3 --bind unix:isecure.sock -m 007 wsgi:app
 
 [Install]
 WantedBy=multi-user.target
-```
-**Important:**
-*   Replace `YOUR_MINDEE_API_KEY_HERE` with your actual Mindee API key. This is the secure way to provide it to your Flask app.
-*   The `Environment="PATH=..."` line ensures `gunicorn` from your virtual environment is used. Double-check the absolute path.
+Step 4: Reload and Restart the Service
+For the changes to take effect, you must reload the systemd daemon and restart your Gunicorn service.
 
-Save and close the file (Ctrl+X, Y, Enter for Nano).
-
-### 3.2 Enable and Start Gunicorn Service
-
-```bash
+bash
+# Reload systemd to read the modified service file
 sudo systemctl daemon-reload
-sudo systemctl start isecure
-sudo systemctl enable isecure
-```
 
-You can check the status with `sudo systemctl status isecure`.
+# Restart your application
+sudo systemctl restart isecure.service
 
-## 4. Configure Nginx (Reverse Proxy)
+# Check the status to ensure it started correctly
+sudo systemctl status isecure.service
+Step 5: Use the Environment Variables in Your Code
+The final step is to make sure your Python code is reading these variables. Your main.py already does this for the Flask configuration. Here's how you would adapt it for the database connection and file paths.
 
-Nginx will serve your PHP frontend, static files, and proxy requests to your Flask backend.
+I'll update app/main.py to use the CAPTURE_DIR variable we defined.
 
-### 4.1 Remove Default Nginx Configuration
+main.py
+-6
++7
+        if frame is None:
+            abort(500, description="Could not capture frame from vehicle camera.")
 
-```bash
-sudo rm /etc/nginx/sites-enabled/default
-```
+        # Save the captured frame for auditing
+        output_dir = "ID' Data for ocr/"
+        # Use environment variable for a configurable, secure output directory
+        output_dir = os.getenv("CAPTURE_DIR", "captures")
+        os.makedirs(output_dir, exist_ok=True)
+        timestamp = time.strftime("%Y%m%d-%H%M%S")
+        filename = f"{timestamp}_capture.jpg"
+        filepath = os.path.join(output_dir, filename)
+        filepath = os.path.join(output_dir, "vehicles", filename)
+        cv2.imwrite(filepath, frame)
 
-### 4.2 Create Nginx Configuration for iSecure
+        ret, buffer = cv2.imencode('.jpg', frame)
+        vehicle_type = recognition_result.get('vehicle_type') if recognition_result else "Not found"
 
-```bash
-sudo nano /etc/nginx/sites-available/isecure
-```
+        # --- New: Save the recognized data to a JSON file ---
+        json_output_folder = "License Plate Data/"
+        json_output_folder = os.path.join(output_dir, "license_plates")
+        os.makedirs(json_output_folder, exist_ok=True)
 
-Paste the following content, *replacing `yourdomain.com` with your actual domain or VPS IP, and `/path/to/your/project/` with the absolute path to `iSecure-Final-Def-System-Folder`*.
+        plate_data = {
+        if frame is None:
+            abort(500, description="Could not capture frame from vehicle camera.")
 
-```nginx
-server {
-    listen 80;
-    server_name yourdomain.com; # Replace with your domain or VPS IP
+        output_dir = "ID' Data for ocr/"
+        # Use environment variable for a configurable, secure output directory
+        output_dir = os.getenv("CAPTURE_DIR", "captures")
+        os.makedirs(output_dir, exist_ok=True)
+        timestamp = time.strftime("%Y%m%d-%H%M%S")
+        filename = f"{timestamp}_vehicle_capture.jpg"
+        filepath = os.path.join(output_dir, filename)
+        filepath = os.path.join(output_dir, "vehicles", filename)
+        cv2.imwrite(filepath, frame)
 
-    root /path/to/your/project/iSecure-Final-Def-System-Folder/php/routes; # Your PHP frontend root
-    index index.php index.html;
+        return jsonify({"message": "Vehicle image captured successfully.", "filepath": filepath})
 
-    location / {
-        try_files $uri $uri/ /index.php?$query_string;
-    }
+You would do the same in your app/db.py file to get the database credentials, making your application secure and configurable.
 
-    # Proxy API requests to Flask/Gunicorn
-    location /api/ {
-        proxy_pass http://127.0.0.1:8000/;
-        proxy_set_header Host $host;
-        proxy_set_header X-Real-IP $remote_addr;
-        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
-        proxy_set_header X-Forwarded-Proto $scheme;
-        # Required for camera streaming, prevent buffering
-        proxy_buffering off;
-        proxy_cache off;
-        proxy_redirect off;
-        proxy_set_header Connection ""; # Disable Connection header for HTTP/1.1 keep-alive
-    }
-
-    # Process PHP files
-    location ~ \.php$ {
-        include snippets/fastcgi-php.conf;
-        fastcgi_pass unix:/var/run/php/php8.1-fpm.sock; # Adjust PHP version (e.g., php7.4-fpm.sock or php8.2-fpm.sock)
-        fastcgi_param SCRIPT_FILENAME $document_root$fastcgi_script_name;
-        include fastcgi_params;
-    }
-
-    # Serve static assets directly from their folders
-    location /images/ {
-        alias /path/to/your/project/iSecure-Final-Def-System-Folder/images/;
-        expires 30d;
-        add_header Cache-Control "public, no-transform";
-    }
-    location /scripts/ {
-        alias /path/to/your/project/iSecure-Final-Def-System-Folder/scripts/;
-        expires 30d;
-        add_header Cache-Control "public, no-transform";
-    }
-    location /stylesheet/ {
-        alias /path/to/your/project/iSecure-Final-Def-System-Folder/stylesheet/;
-        expires 30d;
-        add_header Cache-Control "public, no-transform";
-    }
-    location /public/ {
-        alias /path/to/your/project/iSecure-Final-Def-System-Folder/public/;
-        expires 30d;
-        add_header Cache-Control "public, no-transform";
-    }
-}
-```
-**Important:**
-*   Adjust `root` to the correct path of your PHP `routes` directory.
-*   Update `fastcgi_pass` to match your installed PHP-FPM socket (`php8.1-fpm.sock` is an example; check `ls /var/run/php/` for actual).
-*   Correctly set `alias` for all your static content locations (`images/`, `scripts/`, `stylesheet/`, `public/`).
-
-Save and close the file.
-
-### 4.3 Enable Nginx Configuration & Restart
-
-```bash
-sudo ln -s /etc/nginx/sites-available/isecure /etc/nginx/sites-enabled/
-sudo nginx -t # Test Nginx configuration for syntax errors
-sudo systemctl restart nginx
-```
-
-## 5. Important Considerations for Camera Setup on VPS
-
-This Flask application relies heavily on `cv2.VideoCapture` to access camera feeds for facial and vehicle recognition. Deploying this on a remote VPS introduces specific challenges compared to running it on a local machine.
-
-### 5.1 Physical Webcams Connected to the VPS (Rare for Remote Servers)
-*   **Direct Access is Unlikely:** For a typical remote VPS, connecting physical webcams is usually not feasible or practical unless the VPS is a local machine configured as a server.
-*   **Device Permissions:** If, by any chance, you *do* have physical webcams directly connected, ensure the Linux user running your Gunicorn service (e.g., `your_username` or `www-data`) has read/write permissions to the camera devices, typically `/dev/video0`, `/dev/video1`, etc. You can check permissions with `ls -l /dev/video*`. You might need to add the user to the `video` group: `sudo usermod -aG video your_username`.
-*   **USB Passthrough (Virtualization):** If your VPS is a virtual machine and you're *trying* to pass through a USB webcam from the host, this is a complex virtualization setup and often unreliable.
-
-### 5.2 CCTV/IP Cameras (Most Common for Remote VPS)
-This is the most common and recommended approach for a remote server.
-
-*   **Network Accessibility:** Your VPS must have direct network access to the CCTV/IP camera streams.
-    *   **Public IP/Domain:** If your CCTV stream is exposed to the internet, ensure it's secured (authentication, limited VPN access) and accessible by the VPS's public IP.
-    *   **Private Network/VPN:** Ideally, your CCTV cameras and VPS would be on the same private network or connected via a VPN to ensure security and low latency.
-*   **Stream URLs (`rtsp://`, `http://`, `https://`):**
-    *   `cv2.VideoCapture` can open various network streams using their URLs (e.g., `rtsp://user:pass@192.168.1.100/stream`).
-    *   You will need to know the exact stream URL provided by your IP camera or NVR (Network Video Recorder). Consult your camera's documentation.
-    *   Ensure the Flask application receives these correct URLs from the frontend via the `/camera/source` endpoint.
-*   **Firewall Rules:** Ensure your VPS firewall (e.g., `ufw`) allows outgoing connections to the CCTV camera's IP and port. Conversely, if the cameras are behind a firewall, ensure that traffic from your VPS can reach them.
-*   **Latency & Bandwidth:** Streaming live video over the internet can introduce latency and consume significant bandwidth. Optimize camera settings (resolution, frame rate) to balance quality with performance.
-*   **Codecs and `ffmpeg`:** OpenCV relies on `ffmpeg` (or similar libraries) for decoding video streams. While `opencv-python` usually comes with pre-compiled `ffmpeg` support, if you encounter issues, you might need to install `ffmpeg` explicitly on your VPS: `sudo apt install ffmpeg -y`.
-
-### 5.3 Defaulting to Webcam (When no CCTV is linked for a type)
-*   **Facial Camera (`camera_facial`):** Defaults to webcam index `0`. If running on a remote VPS without a real webcam, this will likely fail to initialize and fall back to `DummyCamera`.
-*   **Vehicle Camera (`camera_vehicle`):** Defaults to webcam index `1`. Similarly, this will likely fail on a remote VPS without physical webcams.
-
-**Recommendation:** For a remote Hostinger VPS, plan to use **CCTV/IP camera URLs** exclusively. Ensure these URLs are robust and accessible from your VPS. The webcam fallback (`source=0` or `source=1`) will likely only work if a physical webcam is directly connected to the server or if you're running this on a local machine. If only CCTV is intended, you might consider removing the "webcam" option from the frontend dropdowns for clarity and to avoid user confusion on a remote server. You can also explicitly configure fixed IP camera URLs in `app/config.py` instead of the `0` or `1` index if dedicated webcams are not expected.
-
-## 6. Access Your Application
-
-After completing these steps, your Flask API should be running via Gunicorn, Nginx should handle your PHP frontend and static files, and all API requests should be correctly proxied.
-
-You can then access your application via your configured domain or VPS IP in a web browser.
+You have now successfully configured your Gunicorn service to use environment variables, which is the standard and most secure way to manage configuration in a production environment.
