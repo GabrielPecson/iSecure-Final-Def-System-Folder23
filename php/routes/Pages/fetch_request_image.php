@@ -42,15 +42,8 @@ if (preg_match('/^data:image\/(\w+);base64,/', $photo_path, $matches)) {
     exit;
 }
 
-// Extract filename from path if it contains directory prefixes
-$filename = basename($photo_path);
-
-// Construct the file path relative to the current directory (php/routes/Pages/)
-if ($type === 'selfie') {
-    $file_path = __DIR__ . 'var/www/html/iSecure-Final-Def-System-Folder/php/Routes/Pages/uploads/selfies/' . $filename;
-} else {
-    $file_path = __DIR__ . 'var/www/html/iSecure-Final-Def-System-Folder/php/Routes/Pages/uploads/ids/' . $filename;
-}
+// Use the file path directly as saved in the database
+$file_path = $photo_path;
 
 // Check if the file exists
 if (!file_exists($file_path)) {
