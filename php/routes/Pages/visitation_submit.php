@@ -1,7 +1,7 @@
 <?php
 session_start();
-require '../database/db_connect.php';
-require '../config/encryption_key.php';
+require 'db_connect.php';
+require 'encryption_key.php';
 require 'audit_log.php';
 
 // File upload function
@@ -24,7 +24,7 @@ function uploadFile($fileInput, $uploadDir = "uploads/") {
 }
 
 // File upload function for IDs
-function uploadIdFile($fileInput, $uploadDir = __DIR__ . "/../uploads/ids/") {
+function uploadIdFile($fileInput, $uploadDir = __DIR__ . "uploads/ids/") {
     if (!isset($_FILES[$fileInput]) || $_FILES[$fileInput]['error'] !== UPLOAD_ERR_OK) {
         return null;
     }
@@ -144,7 +144,7 @@ if ($success) {
     log_landing_action($pdo, $token, "Submitted visitation request form");
 
     // Notify admins/personnel if visitor has history
-    require '../utils/notify.php';
+    require 'notify.php';
     notify_admin_about_visitor_history($pdo, [
         'first_name' => $first_name,
         'middle_name' => $middle_name,

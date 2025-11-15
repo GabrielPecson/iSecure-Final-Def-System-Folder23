@@ -34,9 +34,9 @@ try {
         // IMPORTANT: The path stored in the DB is relative to the project root.
         // We need to construct the full server file path.
         // realpath() resolves all symbolic links and '..' etc.
-        $base_dir = realpath(__DIR__ . '/../../');
+        $base_dir = realpath(__DIR__ . 'php/routes/Pages/uploads/ids');
         if ($type === 'id') {
-            $full_path = $base_dir . DIRECTORY_SEPARATOR . 'php' . DIRECTORY_SEPARATOR . 'uploads' . DIRECTORY_SEPARATOR . 'ids' . DIRECTORY_SEPARATOR . $file_path;
+            $full_path = $base_dir . DIRECTORY_SEPARATOR . 'php' . DIRECTORY_SEPARATOR . 'routes' . DIRECTORY_SEPARATOR . 'Pages' DIRECTORY_SEPARATOR . 'uploads' . DIRECTORY_SEPARATOR . 'ids' . DIRECTORY_SEPARATOR . $file_path;
         } else {
             $full_path = $base_dir . DIRECTORY_SEPARATOR . $file_path;
         }
