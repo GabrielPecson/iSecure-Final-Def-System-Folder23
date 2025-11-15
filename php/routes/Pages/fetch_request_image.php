@@ -36,11 +36,13 @@ try {
     }
 
     // Construct the full, absolute path to the image file
-    // Images are stored in Pages/uploads/ for both ID and selfie
+    // The base path is the project root.
+    $basePath = dirname(__FILE__, 4); // Go up 4 levels from /php/routes/Pages/ to the root
+    // Images are stored in different directories based on type
     if ($imageType === 'id') {
-        $filePath = __DIR__ . DIRECTORY_SEPARATOR . 'uploads' . DIRECTORY_SEPARATOR . 'ids' . DIRECTORY_SEPARATOR . basename($result[$column]);
+        $filePath = $basePath . DIRECTORY_SEPARATOR . 'php' . DIRECTORY_SEPARATOR . $result[$column];
     } else {
-        $filePath = __DIR__ . DIRECTORY_SEPARATOR . 'uploads' . DIRECTORY_SEPARATOR . 'selfies' . DIRECTORY_SEPARATOR . basename($result[$column]);
+        $filePath = $basePath . DIRECTORY_SEPARATOR . 'public' . DIRECTORY_SEPARATOR . $result[$column];
     }
 
     if (!file_exists($filePath)) {
