@@ -2,19 +2,19 @@
 session_start();
 require_once 'db_connect.php'; // Database connection
 
-// Basic validation for required parameters
+// Validate required parameters
 if ((!isset($_GET['request_id']) && !isset($_GET['visitor_id'])) || !isset($_GET['type'])) {
     http_response_code(400); // Bad Request
     echo "Error: Missing required parameters.";
     exit;
 }
 
-// Determine if we are fetching for a request or an existing visitor
+// Determine if fetching a request or a visitor
 $isRequest = isset($_GET['request_id']);
 $id = $isRequest ? $_GET['request_id'] : $_GET['visitor_id'];
 $imageType = $_GET['type'];
 
-// Validate image type to prevent security issues
+// Validate image type
 $allowedTypes = ['id', 'selfie'];
 if (!in_array($imageType, $allowedTypes)) {
     http_response_code(400);
@@ -22,18 +22,17 @@ if (!in_array($imageType, $allowedTypes)) {
     exit;
 }
 
+// Determine table and column
 if ($isRequest) {
-    // For visitation_requests table
     $table = 'visitation_requests';
     $column = ($imageType === 'id') ? 'valid_id_path' : 'selfie_photo_path';
 } else {
-    // For visitors table
     $table = 'visitors';
     $column = ($imageType === 'id') ? 'id_photo_path' : 'selfie_photo_path';
 }
 
 try {
-    // Prepare and execute the query to get the image path
+    // Fetch image path from DB
     $stmt = $pdo->prepare("SELECT {$column} FROM {$table} WHERE id = :id");
     $stmt->execute([':id' => $id]);
     $result = $stmt->fetch(PDO::FETCH_ASSOC);
@@ -44,15 +43,17 @@ try {
         exit;
     }
 
-    // Debugging: Output the constructed file path and check if it exists
-    $basePath = __DIR__ . DIRECTORY_SEPARATOR; // Base path to the current directory
-    $dbFullImagePath = $result[$column];
-    $dbFileName = basename($dbFullImagePath);
+    // Use the path from the database directly
+    $filePath = $result[$column];
 
-    $filePath = $basePath . $dbFileName;
-    error_log("DEBUG: Constructed filePath: " . $filePath);
+    // Optional: If DB stores relative paths, uncomment below
+    // $filePath = __DIR__ . DIRECTORY_SEPARATOR . $result[$column];
+
+    // Debugging
+    error_log("DEBUG: Using filePath: " . $filePath);
     error_log("DEBUG: file_exists('$filePath'): " . (file_exists($filePath) ? 'true' : 'false'));
 
+    // Check if file exists
     if (!file_exists($filePath)) {
         http_response_code(404);
         echo "Error: Image file not found on the server at path: " . htmlspecialchars($filePath);
@@ -68,8 +69,8 @@ try {
 
 } catch (PDOException $e) {
     http_response_code(500);
-    // In a production environment, you might log this error instead of displaying it
-    echo "Database error: " . $e->getMessage();
+    error_log("Database error: " . $e->getMessage());
+    echo "Database error occurred.";
     exit;
 }
 ?>
