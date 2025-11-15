@@ -46,16 +46,16 @@ try {
 
     // Debugging: Output the constructed file path and check if it exists
     $basePath = __DIR__ . DIRECTORY_SEPARATOR . 'uploads'; // Base path to the uploads directory within Pages
-    $dbPath = $result[$column];
+    $dbFileName = $result[$column];
 
-    // Remove any leading 'uploads/' or 'public/uploads/' if present in the database path
-    if (str_starts_with($dbPath, 'public/uploads/')) {
-        $dbPath = substr($dbPath, strlen('public/uploads/'));
-    } elseif (str_starts_with($dbPath, 'uploads/')) {
-        $dbPath = substr($dbPath, strlen('uploads/'));
+    $subDirectory = '';
+    if ($imageType === 'id') {
+        $subDirectory = 'ids';
+    } elseif ($imageType === 'selfie') {
+        $subDirectory = 'selfies';
     }
 
-    $filePath = $basePath . DIRECTORY_SEPARATOR . $dbPath;
+    $filePath = $basePath . DIRECTORY_SEPARATOR . $subDirectory . DIRECTORY_SEPARATOR . $dbFileName;
     error_log("DEBUG: Constructed filePath: " . $filePath);
     error_log("DEBUG: file_exists('$filePath'): " . (file_exists($filePath) ? 'true' : 'false'));
 
