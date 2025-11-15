@@ -33,9 +33,9 @@ try {
 
         // Construct the file path relative to the current directory (php/routes/Pages/)
         if ($type === 'id') {
-            $full_path = __DIR__ . '/uploads/ids/' . $file_path;
+            $full_path = __DIR__ . 'isecured.online/php/Routes/Pages/uploads/ids/' . $file_path;
         } else {
-            $full_path = __DIR__ . '/uploads/selfies/' . $file_path;
+            $full_path = __DIR__ . 'isecured.online/php/Routes/Pages/uploads/selfies/' . $file_path;
         }
 
         // error_log("Trying to load: " . $full_path);
