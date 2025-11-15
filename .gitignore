@@ -9,7 +9,10 @@ __pycache__/
 .DS_Store
 Thumbs.db
 node_modules/
-uploads/
+# Ignore all uploads by default, but unignore specific subdirectories
+uploads/*
+!uploads/ids/
+!uploads/selfies/
 *.log
 .idea/
 .vscode/
