@@ -21,7 +21,7 @@ require 'audit_log.php';
 
   <!-- Custom CSS -->
   <link rel="stylesheet" href="admin.css" />
-  <link rel="stylesheet" href="/sidebar.css" />
+  <link rel="stylesheet" href="sidebar.css" />
 
   <!-- Date Picker -->
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css" />
