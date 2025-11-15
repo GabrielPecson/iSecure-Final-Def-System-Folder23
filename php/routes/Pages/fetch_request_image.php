@@ -40,7 +40,7 @@ try {
     if ($imageType === 'id') {
         $filePath = __DIR__ . DIRECTORY_SEPARATOR . 'uploads' . DIRECTORY_SEPARATOR . 'ids' . DIRECTORY_SEPARATOR . basename($result[$column]);
     } else {
-        $filePath = __DIR__ . DIRECTORY_SEPARATOR . 'uploads' . DIRECTORY_SEPARATOR . 'selfie' . DIRECTORY_SEPARATOR . basename($result[$column]);
+        $filePath = __DIR__ . DIRECTORY_SEPARATOR . 'uploads' . DIRECTORY_SEPARATOR . 'selfies' . DIRECTORY_SEPARATOR . basename($result[$column]);
     }
 
     if (!file_exists($filePath)) {
