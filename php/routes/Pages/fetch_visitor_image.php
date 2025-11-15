@@ -33,11 +33,20 @@ try {
         $base_upload_dir = __DIR__ . '/../uploads/'; // This resolves to php/routes/uploads/
         $full_path = '';
 
-        // Clean the file path from the database to remove any redundant 'uploads/' or 'uploads/ids/' prefixes
+        // Clean the file path from the database to remove any redundant prefixes
         $cleaned_file_path = $file_path_from_db;
+
+        // First, remove 'public/uploads/' if it exists at the beginning
+        if (strpos($cleaned_file_path, 'public/uploads/') === 0) {
+            $cleaned_file_path = substr($cleaned_file_path, strlen('public/uploads/'));
+        }
+
+        // Then, remove 'uploads/' if it exists at the beginning (for cases where public/ was not present)
         if (strpos($cleaned_file_path, 'uploads/') === 0) {
             $cleaned_file_path = substr($cleaned_file_path, strlen('uploads/'));
         }
+
+        // Finally, remove 'ids/' or 'selfies/' if they exist at the beginning
         if ($type === 'id' && strpos($cleaned_file_path, 'ids/') === 0) {
             $cleaned_file_path = substr($cleaned_file_path, strlen('ids/'));
         }

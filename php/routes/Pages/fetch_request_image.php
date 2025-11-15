@@ -50,13 +50,23 @@ try {
     $full_path = '';
     error_log("DEBUG: base_upload_dir = " . $base_upload_dir);
 
-    // Clean the file path from the database to remove any redundant 'uploads/' or 'uploads/ids/' prefixes
+    // Clean the file path from the database to remove any redundant prefixes
     $cleaned_file_path = $file_path_from_db;
     error_log("DEBUG: cleaned_file_path (before cleaning) = " . $cleaned_file_path);
+
+    // First, remove 'public/uploads/' if it exists at the beginning
+    if (strpos($cleaned_file_path, 'public/uploads/') === 0) {
+        $cleaned_file_path = substr($cleaned_file_path, strlen('public/uploads/'));
+        error_log("DEBUG: cleaned_file_path (after public/uploads/ removal) = " . $cleaned_file_path);
+    }
+
+    // Then, remove 'uploads/' if it exists at the beginning (for cases where public/ was not present)
     if (strpos($cleaned_file_path, 'uploads/') === 0) {
         $cleaned_file_path = substr($cleaned_file_path, strlen('uploads/'));
         error_log("DEBUG: cleaned_file_path (after uploads/ removal) = " . $cleaned_file_path);
     }
+
+    // Finally, remove 'ids/' or 'selfies/' if they exist at the beginning
     if ($imageType === 'id' && strpos($cleaned_file_path, 'ids/') === 0) {
         $cleaned_file_path = substr($cleaned_file_path, strlen('ids/'));
         error_log("DEBUG: cleaned_file_path (after ids/ removal) = " . $cleaned_file_path);
