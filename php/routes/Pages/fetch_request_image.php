@@ -45,23 +45,32 @@ try {
 
     // Use the path from the database directly
     $file_path_from_db = $result[$column];
+    error_log("DEBUG: file_path_from_db = " . $file_path_from_db);
     $base_upload_dir = __DIR__ . '/../uploads/'; // This resolves to php/routes/uploads/
     $full_path = '';
+    error_log("DEBUG: base_upload_dir = " . $base_upload_dir);
 
     // Clean the file path from the database to remove any redundant 'uploads/' or 'uploads/ids/' prefixes
     $cleaned_file_path = $file_path_from_db;
+    error_log("DEBUG: cleaned_file_path (before cleaning) = " . $cleaned_file_path);
     if (strpos($cleaned_file_path, 'uploads/') === 0) {
         $cleaned_file_path = substr($cleaned_file_path, strlen('uploads/'));
+        error_log("DEBUG: cleaned_file_path (after uploads/ removal) = " . $cleaned_file_path);
     }
     if ($imageType === 'id' && strpos($cleaned_file_path, 'ids/') === 0) {
         $cleaned_file_path = substr($cleaned_file_path, strlen('ids/'));
+        error_log("DEBUG: cleaned_file_path (after ids/ removal) = " . $cleaned_file_path);
     }
     if ($imageType === 'selfie' && strpos($cleaned_file_path, 'selfies/') === 0) {
         $cleaned_file_path = substr($cleaned_file_path, strlen('selfies/'));
+        error_log("DEBUG: cleaned_file_path (after selfies/ removal) = " . $cleaned_file_path);
     }
+    error_log("DEBUG: cleaned_file_path (final) = " . $cleaned_file_path);
+    error_log("DEBUG: imageType = " . $imageType);
 
     // Construct the full path
-    $full_path = $base_upload_dir . $imageType . 's/' . $cleaned_file_path; else {
+    $full_path = $base_upload_dir . $imageType . 's/' . $cleaned_file_path;
+    error_log("DEBUG: full_path = " . $full_path); else {
         http_response_code(400);
         echo "Invalid image type for path construction.";
         exit;
