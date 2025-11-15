@@ -1,67 +1,62 @@
 <?php
-require 'db_connect.php';
+require 'auth_check.php'; // Ensure user is authenticated
+require 'db_connect.php'; // Database connection
 
-if (!isset($_GET['request_id'])) {
+// Basic validation for required parameters
+if (!isset($_GET['request_id']) || !isset($_GET['type'])) {
+    http_response_code(400); // Bad Request
+    echo "Error: Missing required parameters.";
+    exit;
+}
+
+$requestId = $_GET['request_id'];
+$imageType = $_GET['type'];
+
+// Validate image type to prevent security issues
+$allowedTypes = ['id', 'selfie'];
+if (!in_array($imageType, $allowedTypes)) {
     http_response_code(400);
+    echo "Error: Invalid image type specified.";
     exit;
 }
 
-$request_id = intval($_GET['request_id']);
-$type = $_GET['type'] ?? 'id';
+// Determine which column to fetch from the database
+$column = ($imageType === 'id') ? 'valid_id_path' : 'selfie_photo_path';
 
-if ($type === 'selfie') {
-    $stmt = $pdo->prepare("SELECT selfie_photo_path FROM visitation_requests WHERE id = ?");
-} else {
-    $stmt = $pdo->prepare("SELECT valid_id_path FROM visitation_requests WHERE id = ?");
-}
-$stmt->execute([$request_id]);
-$request = $stmt->fetch();
+try {
+    // Prepare and execute the query to get the image path
+    $stmt = $pdo->prepare("SELECT {$column} FROM visitation_requests WHERE id = :id");
+    $stmt->execute([':id' => $requestId]);
+    $result = $stmt->fetch(PDO::FETCH_ASSOC);
 
-if (!$request) {
-    http_response_code(404);
-    exit;
-}
-
-$photo_path = $type === 'selfie' ? $request['selfie_photo_path'] : $request['valid_id_path'];
-$photo_path = $photo_path ?: 'sample_id.png';
-
-
-// Check if photo_path is base64 encoded image data
-if (preg_match('/^data:image\/(\w+);base64,/', $photo_path, $matches)) {
-    $data = substr($photo_path, strpos($photo_path, ',') + 1);
-    $data = base64_decode($data);
-    if ($data === false) {
-        http_response_code(500);
-        exit;
-    }
-    $mime_type = 'image/' . $matches[1];
-    header('Content-Type: ' . $mime_type);
-    echo $data;
-    exit;
-}
-
-// Construct the file path by prepending the uploads directory based on type, using basename to get the filename
-if ($type === 'selfie') {
-    $file_path = __DIR__ . '/uploads/selfies/' . basename($photo_path);
-} else {
-    $file_path = __DIR__ . '/uploads/ids/' . basename($photo_path);
-}
-
-
-// Check if the file exists
-if (!file_exists($file_path)) {
-    // If no image found, serve a placeholder
-    $placeholder_path = __DIR__ . '/sample_id.png';
-
-    if (file_exists($placeholder_path)) {
-        $file_path = $placeholder_path;
-    } else {
+    if (!$result || empty($result[$column])) {
         http_response_code(404);
+        echo "Error: Image record not found in the database.";
         exit;
     }
-}
 
-$mime_type = mime_content_type($file_path);
-header('Content-Type: ' . $mime_type);
-readfile($file_path);
+    // Construct the full, absolute path to the image file
+    // Assumes the paths stored in the DB are relative to the project's 'uploads' folder
+    $basePath = dirname(__FILE__, 4); // Go up 4 levels from /php/routes/Pages/ to the root
+    $filePath = $basePath . DIRECTORY_SEPARATOR . $result[$column];
+
+    if (!file_exists($filePath)) {
+        http_response_code(404);
+        echo "Error: Image file not found on the server at path: " . htmlspecialchars($filePath);
+        exit;
+    }
+
+    // Serve the image
+    $mimeType = mime_content_type($filePath);
+    header('Content-Type: ' . $mimeType);
+    header('Content-Length: ' . filesize($filePath));
+    readfile($filePath);
+    exit;
+
+} catch (PDOException $e) {
+    http_response_code(500);
+    // In a production environment, you might log this error instead of displaying it
+    echo "Database error: " . $e->getMessage();
+    exit;
+}
 ?>
