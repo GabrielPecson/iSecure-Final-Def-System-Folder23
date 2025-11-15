@@ -1,2 +1,5 @@
-- [x] Modify fetch_request_image.php to use the file path directly from the database instead of constructing a hardcoded path.
-- [x] Test the changes to ensure images are served correctly.
+- [x] Update visitation_submit.php: Change uploadIdFile uploadDir to __DIR__ . "/"; return $fileName instead of "uploads/ids/" . $fileName
+- [x] Update walkin_submit.php: Change uploadIdFile uploadDir to __DIR__ . "/Pages/"; (since it's in routes/)
+- [x] Update fetch_visitor_image.php: Change path construction to $full_path = __DIR__ . '/' . $file_path for both id and selfie
+- [x] Update fetch_request_image.php: Change $basePath = __DIR__ . DIRECTORY_SEPARATOR; remove subDirectory logic, set $filePath = $basePath . $dbFileName
+- [ ] Test image fetching after changes

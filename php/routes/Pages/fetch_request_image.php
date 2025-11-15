@@ -45,18 +45,11 @@ try {
     }
 
     // Debugging: Output the constructed file path and check if it exists
-    $basePath = dirname(__DIR__) . DIRECTORY_SEPARATOR . 'uploads'; // Base path to the uploads directory within routes
+    $basePath = __DIR__ . DIRECTORY_SEPARATOR; // Base path to the current directory
     $dbFullImagePath = $result[$column];
     $dbFileName = basename($dbFullImagePath);
 
-    $subDirectory = '';
-    if ($imageType === 'id') {
-        $subDirectory = 'ids';
-    } elseif ($imageType === 'selfie') {
-        $subDirectory = 'selfies';
-    }
-
-    $filePath = $basePath . DIRECTORY_SEPARATOR . $subDirectory . DIRECTORY_SEPARATOR . $dbFileName;
+    $filePath = $basePath . $dbFileName;
     error_log("DEBUG: Constructed filePath: " . $filePath);
     error_log("DEBUG: file_exists('$filePath'): " . (file_exists($filePath) ? 'true' : 'false'));
 

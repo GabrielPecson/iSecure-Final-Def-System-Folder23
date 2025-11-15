@@ -32,11 +32,7 @@ try {
         $file_path = $row[$column];
 
         // Construct the file path relative to the current directory (php/routes/Pages/)
-        if ($type === 'id') {
-            $full_path = __DIR__ . 'Pages/uploads/ids/' . $file_path;
-        } else {
-            $full_path = __DIR__ . 'Pages/uploads/selfies/' . $file_path;
-        }
+        $full_path = __DIR__ . '/' . $file_path;
 
         // error_log("Trying to load: " . $full_path);
         // error_log("File exists: " . (file_exists($full_path) ? 'yes' : 'no'));

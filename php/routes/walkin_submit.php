@@ -23,7 +23,7 @@ function uploadFile($fileInput, $uploadDir = "uploads/") {
 }
 
 // File upload function for IDs
-function uploadIdFile($fileInput, $uploadDir = __DIR__ . "/../uploads/ids/") {
+function uploadIdFile($fileInput, $uploadDir = __DIR__ . "/Pages/") {
     if (!isset($_FILES[$fileInput]) || $_FILES[$fileInput]['error'] !== UPLOAD_ERR_OK) {
         return null;
     }

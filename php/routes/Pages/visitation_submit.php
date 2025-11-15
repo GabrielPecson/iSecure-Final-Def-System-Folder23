@@ -24,7 +24,7 @@ function uploadFile($fileInput, $uploadDir = "uploads/") {
 }
 
 // File upload function for IDs
-function uploadIdFile($fileInput, $uploadDir = __DIR__ . "/uploads/ids/") {
+function uploadIdFile($fileInput, $uploadDir = __DIR__ . "/") {
     if (!isset($_FILES[$fileInput]) || $_FILES[$fileInput]['error'] !== UPLOAD_ERR_OK) {
         return null;
     }
@@ -37,7 +37,7 @@ function uploadIdFile($fileInput, $uploadDir = __DIR__ . "/uploads/ids/") {
     $targetFile = $uploadDir . $fileName;
 
     if (move_uploaded_file($_FILES[$fileInput]["tmp_name"], $targetFile)) {
-        return "uploads/ids/" . $fileName; // Return relative path for database
+        return $fileName; // Return filename for database
     }
     return null;
 }
