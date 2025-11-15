@@ -49,7 +49,11 @@ try {
     $dbPath = $result[$column];
 
     // Remove any leading 'uploads/' or 'public/uploads/' if present in the database path
-    $dbPath = preg_replace('/^(public\/)?uploads\//', '', $dbPath);
+    if (str_starts_with($dbPath, 'public/uploads/')) {
+        $dbPath = substr($dbPath, strlen('public/uploads/'));
+    } elseif (str_starts_with($dbPath, 'uploads/')) {
+        $dbPath = substr($dbPath, strlen('uploads/'));
+    }
 
     $filePath = $basePath . DIRECTORY_SEPARATOR . $dbPath;
     error_log("DEBUG: Constructed filePath: " . $filePath);
