@@ -1,6 +1,6 @@
 <?php
 session_start();
-require __DIR__ . '/db_connect.php'; // Database connection
+require __DIR__ . 'db_connect.php'; // Database connection
 
 // Basic validation for required parameters
 if ((!isset($_GET['request_id']) && !isset($_GET['visitor_id'])) || !isset($_GET['type'])) {
@@ -46,7 +46,7 @@ try {
 
     // Construct the full, absolute path to the image file
     // The base path is the project root.
-    $basePath = dirname(__FILE__, 3); // Go up 3 levels from /php/routes/ to the root
+    $basePath = dirname(__FILE__, 4); // Go up 4 levels from /php/routes/Pages/ to the root
     // Use the file path directly from the database
     $filePath = $basePath . DIRECTORY_SEPARATOR . $result[$column];
 
