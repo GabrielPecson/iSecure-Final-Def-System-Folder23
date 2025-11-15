@@ -3,23 +3,27 @@ require 'auth_check.php';
 require 'db_connect.php';
 
 // Fetch all clearance badges with visitor names
-$badges = [];
-$audit_logs = [];
+$access_logs = [];
 $error_message = '';
 
 try {
-    // Use LEFT JOIN to ensure all badges are shown, even if unassigned (visitor_id is NULL)
-    $stmt = $pdo->query("
-        SELECT cb.*, v.first_name, v.last_name 
-        FROM clearance_badges cb 
-        LEFT JOIN visitors v ON cb.visitor_id = v.id 
-        ORDER BY cb.issued_at DESC
+    // Fetch access logs and join with clearance badges and visitors to get the visitor's name
+    $stmt_logs = $pdo->query("
+        SELECT 
+            al.timestamp,
+            al.uid,
+            al.door,
+            al.status,
+            al.reason,
+            v.first_name,
+            v.last_name
+        FROM access_logs al
+        LEFT JOIN clearance_badges cb ON al.uid = cb.key_card_number
+        LEFT JOIN visitors v ON cb.visitor_id = v.id
+        ORDER BY al.timestamp DESC
+        LIMIT 500
     ");
-    $badges = $stmt->fetchAll(PDO::FETCH_ASSOC);
-
-    // Fetch audit logs
-    $stmt_logs = $pdo->query("SELECT log_id, uid, door, status, reason, timestamp FROM access_logs ORDER BY timestamp DESC LIMIT 200");
-    $audit_logs = $stmt_logs->fetchAll(PDO::FETCH_ASSOC);
+    $access_logs = $stmt_logs->fetchAll(PDO::FETCH_ASSOC);
 } catch (PDOException $e) {
     // If a query fails (e.g., table doesn't exist), show an error instead of a 500 page.
     $error_message = "Database Error: " . $e->getMessage();
@@ -70,70 +74,32 @@ try {
             <div class="alert alert-danger">
                 <h4>An Error Occurred</h4>
                 <p><?php echo htmlspecialchars($error_message); ?></p>
-                <p>Please ensure the 'clearance_badges' and 'access_logs' tables exist in your database.</p>
+                <p>Please ensure the 'access_logs', 'clearance_badges', and 'visitors' tables exist and are accessible.</p>
             </div>
         <?php else: ?>
-        <h2>All Issued Key Cards</h2>
+        <h2>Key Card Access Logs</h2>
         <div class="table-responsive">
             <table class="table table-striped table-bordered key-card-list-table">
                 <thead>
                     <tr>
-                        <th>ID</th>
-                        <th>First Name</th>
-                        <th>Last Name</th>
-                        <th>Key Card Number</th>
-                        <th>Validity Start</th>
-                        <th>Validity End</th>
-                        <th>Status</th>
-                        <th>Issued At</th>
-                        <th>Updated At</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <?php if (empty($badges)): ?>
-                        <tr>
-                            <td colspan="9" class="text-center">No key cards found.</td>
-                        </tr>
-                    <?php else: ?>
-                        <?php foreach ($badges as $badge): ?>
-                            <tr>
-                                <td><?php echo htmlspecialchars($badge['id']); ?></td>
-                                <td><?php echo htmlspecialchars($badge['first_name'] ?? 'N/A'); ?></td>
-                                <td><?php echo htmlspecialchars($badge['last_name'] ?? 'N/A'); ?></td>
-                                <td><?php echo htmlspecialchars($badge['key_card_number']); ?></td>
-                                <td><?php echo date('Y-m-d h:i:s A', strtotime($badge['validity_start'])); ?></td>
-                                <td><?php echo date('Y-m-d h:i:s A', strtotime($badge['validity_end'])); ?></td>
-                                <td><?php echo htmlspecialchars($badge['status']); ?></td>
-                                <td><?php echo date('Y-m-d h:i:s A', strtotime($badge['issued_at'])); ?></td>
-                                <td><?php echo date('Y-m-d h:i:s A', strtotime($badge['updated_at'])); ?></td>
-                            </tr>
-                        <?php endforeach; ?>
-                    <?php endif; ?>
-                </tbody>
-            </table>
-        </div>
-
-        <h2 class="mt-5">Key Card Audit Log</h2>
-        <div class="table-responsive" style="max-height: 400px; overflow-y: auto;">
-            <table class="table table-sm table-hover">
-                <thead class="table-light" style="position: sticky; top: 0;">
-                    <tr>
                         <th>Timestamp</th>
-                        <th>Card UID</th>
+                        <th>Visitor Name</th>
+                        <th>Card UID Used</th>
                         <th>Door</th>
                         <th>Status</th>
-                        <th>Details</th>
+                        <th>Details / Reason</th>
                     </tr>
                 </thead>
                 <tbody>
-                    <?php if (empty($audit_logs)): ?>
+                    <?php if (empty($access_logs)): ?>
                         <tr>
-                            <td colspan="4" class="text-center">No audit logs found.</td>
+                            <td colspan="6" class="text-center">No key card access logs found.</td>
                         </tr>
                     <?php else: ?>
-                        <?php foreach ($audit_logs as $log): ?>
+                        <?php foreach ($access_logs as $log): ?>
                             <tr>
                                 <td><?php echo htmlspecialchars(date('Y-m-d H:i:s', strtotime($log['timestamp']))); ?></td>
+                                <td><?php echo htmlspecialchars(($log['first_name'] ?? '') . ' ' . ($log['last_name'] ?? 'Unknown/Unassigned')); ?></td>
                                 <td><?php echo htmlspecialchars($log['uid']); ?></td>
                                 <td><?php echo htmlspecialchars($log['door']); ?></td>
                                 <td><span class="badge bg-<?php echo $log['status'] === 'GRANTED' ? 'success' : 'danger'; ?>"><?php echo htmlspecialchars($log['status']); ?></span></td>
