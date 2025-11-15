@@ -31,15 +31,24 @@ try {
     if ($row) {
         $file_path_from_db = $row[$column];
         $base_upload_dir = __DIR__ . '/../uploads/'; // This resolves to php/routes/uploads/
+        $full_path = '';
+
+        // Clean the file path from the database to remove any redundant 'uploads/' or 'uploads/ids/' prefixes
+        $cleaned_file_path = $file_path_from_db;
+        if (strpos($cleaned_file_path, 'uploads/') === 0) {
+            $cleaned_file_path = substr($cleaned_file_path, strlen('uploads/'));
+        }
+        if ($type === 'id' && strpos($cleaned_file_path, 'ids/') === 0) {
+            $cleaned_file_path = substr($cleaned_file_path, strlen('ids/'));
+        }
+        if ($type === 'selfie' && strpos($cleaned_file_path, 'selfies/') === 0) {
+            $cleaned_file_path = substr($cleaned_file_path, strlen('selfies/'));
+        }
 
         if ($type === 'id') {
-            // Assuming id_photo_path in DB is like 'ids/filename.png'
-            $full_path = $base_upload_dir . $file_path_from_db;
+            $full_path = $base_upload_dir . 'ids/' . $cleaned_file_path;
         } elseif ($type === 'selfie') {
-            // Assuming selfie_photo_path in DB is like 'uploads/selfies/filename.jpg'
-            // We need to remove the 'uploads/' prefix from $file_path_from_db
-            $cleaned_file_path = str_replace('uploads/', '', $file_path_from_db);
-            $full_path = $base_upload_dir . $cleaned_file_path;
+            $full_path = $base_upload_dir . 'selfies/' . $cleaned_file_path;
         } else {
             http_response_code(400);
             echo "Invalid image type for path construction.";
