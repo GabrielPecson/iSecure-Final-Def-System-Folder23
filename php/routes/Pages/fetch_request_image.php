@@ -45,22 +45,12 @@ if (preg_match('/^data:image\/(\w+);base64,/', $photo_path, $matches)) {
 // Extract filename from path if it contains directory prefixes
 $filename = basename($photo_path);
 
-// Construct the file path based on the type
-$file_path = null;
-$document_root = $_SERVER['DOCUMENT_ROOT'];
-$project_folder = 'iSecure-Final-Def-System-Folder';
-
+// Construct the file path relative to the current directory (php/routes/Pages/)
 if ($type === 'selfie') {
-    // Selfie paths are like "public/uploads/selfies/..."
-    // We need to construct the full path from the document root
-    $file_path = $document_root . '/' . $project_folder . '/php/routes/Pages/uploads/selfies/' . $photo_path;
+    $file_path = __DIR__ . '/uploads/selfies/' . $filename;
 } else {
-    // ID paths are just filenames, e.g., "1762747328_id.jpg"
-    $file_path = $document_root . '/' . $project_folder . '/php/routes/Pages/uploads/ids/' . $filename;
+    $file_path = __DIR__ . '/uploads/ids/' . $filename;
 }
-
-// Normalize the path to use correct directory separators
-$file_path = str_replace('/', DIRECTORY_SEPARATOR, $file_path);
 
 // Check if the file exists
 if (!file_exists($file_path)) {
