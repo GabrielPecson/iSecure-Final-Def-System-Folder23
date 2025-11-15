@@ -42,8 +42,8 @@ if (preg_match('/^data:image\/(\w+);base64,/', $photo_path, $matches)) {
     exit;
 }
 
-// Use the file path directly as saved in the database
-$file_path = $photo_path;
+// Construct the file path relative to the Pages directory using the path from the database
+$file_path = __DIR__ . '/' . $photo_path;
 
 // Check if the file exists
 if (!file_exists($file_path)) {
