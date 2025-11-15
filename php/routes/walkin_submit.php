@@ -23,7 +23,7 @@ function uploadFile($fileInput, $uploadDir = "uploads/") {
 }
 
 // File upload function for IDs
-function uploadIdFile($fileInput, $uploadDir = __DIR__ . "/Pages/") {
+function uploadIdFile($fileInput, $uploadDir = __DIR__ . "/uploads/ids/") {
     if (!isset($_FILES[$fileInput]) || $_FILES[$fileInput]['error'] !== UPLOAD_ERR_OK) {
         return null;
     }
@@ -37,6 +37,25 @@ function uploadIdFile($fileInput, $uploadDir = __DIR__ . "/Pages/") {
 
     if (move_uploaded_file($_FILES[$fileInput]["tmp_name"], $targetFile)) {
         return $fileName; // Return filename only for database
+    }
+    return null;
+}
+
+// File upload function for selfies
+function uploadSelfieFile($fileInput, $uploadDir = __DIR__ . "/uploads/selfies/") {
+    if (!isset($_FILES[$fileInput]) || $_FILES[$fileInput]['error'] !== UPLOAD_ERR_OK) {
+        return null;
+    }
+
+    if (!is_dir($uploadDir)) {
+        mkdir($uploadDir, 0777, true);
+    }
+
+    $fileName = time() . "_selfie." . pathinfo($_FILES[$fileInput]["name"], PATHINFO_EXTENSION);
+    $targetFile = $uploadDir . $fileName;
+
+    if (move_uploaded_file($_FILES[$fileInput]["tmp_name"], $targetFile)) {
+        return "uploads/selfies/" . $fileName; // Return relative path for database
     }
     return null;
 }
@@ -69,7 +88,7 @@ $office_to_visit_enc = $office_to_visit;
 
 // Upload files
 $valid_id_path      = uploadIdFile("valid_id");
-$facial_photos      = $_POST['facial_photos'] ?? null; // This is a hidden field with photo data
+$selfie_photo_path = uploadSelfieFile("selfie_photo");
 
 // Insert into visitation_requests
 $stmt = $pdo->prepare("
@@ -90,7 +109,7 @@ $success = $stmt->execute([
     ':contact_number'    => $contact_number_enc,
     ':email'             => $email_enc,
     ':valid_id_path'     => $valid_id_path,
-    ':facial_photos'     => $facial_photos,
+    ':selfie_photo_path' => $selfie_photo_path,
     ':vehicle_brand'     => $vehicle_brand,
     ':vehicle_color'     => $vehicle_color,
     ':plate_number'      => $license_plate,

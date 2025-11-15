@@ -24,7 +24,7 @@ function uploadFile($fileInput, $uploadDir = "uploads/") {
 }
 
 // File upload function for IDs
-function uploadIdFile($fileInput, $uploadDir = __DIR__ . "/") {
+function uploadIdFile($fileInput, $uploadDir = __DIR__ . "/../uploads/ids/") {
     if (!isset($_FILES[$fileInput]) || $_FILES[$fileInput]['error'] !== UPLOAD_ERR_OK) {
         return null;
     }
@@ -43,7 +43,7 @@ function uploadIdFile($fileInput, $uploadDir = __DIR__ . "/") {
 }
 
 // File upload function for selfies
-function uploadSelfieFile($fileInput, $uploadDir = __DIR__ . "/uploads/selfies/") {
+function uploadSelfieFile($fileInput, $uploadDir = __DIR__ . "/../../routes/uploads/selfies/") {
     if (!isset($_FILES[$fileInput]) || $_FILES[$fileInput]['error'] !== UPLOAD_ERR_OK) {
         return null;
     }
@@ -113,8 +113,9 @@ if ($has_vehicle === 'yes') {
 
 // Upload files
 $valid_id_path      = uploadIdFile("valid_id");
-$selfie_photo_path = null;
-if (isset($_SESSION['user_token'])) {
+$selfie_photo_path = $_POST['selfie_photo_path'] ?? null; // Get from POST if available
+
+if (!$selfie_photo_path && isset($_SESSION['user_token'])) { // Only check session if not in POST
     $user_token = $_SESSION['user_token'];
     $stmt_session = $pdo->prepare("SELECT selfie_photo_path FROM visitor_sessions WHERE user_token = ?");
     $stmt_session->execute([$user_token]);

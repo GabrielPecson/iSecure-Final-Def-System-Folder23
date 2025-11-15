@@ -29,10 +29,22 @@ try {
     $row = $stmt->fetch(PDO::FETCH_ASSOC);
 
     if ($row) {
-        $file_path = $row[$column];
+        $file_path_from_db = $row[$column];
+        $base_upload_dir = __DIR__ . '/../uploads/'; // This resolves to php/routes/uploads/
 
-        // Construct the file path relative to the current directory (php/routes/Pages/)
-        $full_path = __DIR__ . '/' . $file_path;
+        if ($type === 'id') {
+            // Assuming id_photo_path in DB is like 'ids/filename.png'
+            $full_path = $base_upload_dir . $file_path_from_db;
+        } elseif ($type === 'selfie') {
+            // Assuming selfie_photo_path in DB is like 'uploads/selfies/filename.jpg'
+            // We need to remove the 'uploads/' prefix from $file_path_from_db
+            $cleaned_file_path = str_replace('uploads/', '', $file_path_from_db);
+            $full_path = $base_upload_dir . $cleaned_file_path;
+        } else {
+            http_response_code(400);
+            echo "Invalid image type for path construction.";
+            exit;
+        }
 
         // error_log("Trying to load: " . $full_path);
         // error_log("File exists: " . (file_exists($full_path) ? 'yes' : 'no'));

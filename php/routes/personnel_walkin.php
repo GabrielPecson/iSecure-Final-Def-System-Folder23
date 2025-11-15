@@ -131,11 +131,12 @@ if ($role !== 'User') {
                   <input id="valid_id" name="valid_id" type="file" class="d-none" required>
                 </div>
                 <div class="col-md-6">
-                  <label class="form-label fw-semibold">Facial Scanning <span class="text-danger">*</span></label>
-                  <button type="button" class="btn btn-outline-primary w-100" data-bs-toggle="modal" data-bs-target="#facial-scan-modal">
-                    <i class="fa-solid fa-camera me-2"></i> Start Facial Scan
-                  </button>
-                  <input id="facial-photos" name="facial_photos" type="hidden">
+                  <label class="form-label fw-semibold">Selfie Photo <span class="text-danger">*</span></label>
+                  <label for="selfie-photo" class="form-control d-flex align-items-center justify-content-center border-dashed cursor-pointer">
+                    <i class="fa-solid fa-camera me-2 text-muted"></i>
+                    <span>Upload Selfie</span>
+                  </label>
+                  <input id="selfie-photo" name="selfie_photo" type="file" class="d-none" accept="image/*" required>
                 </div>
               </div>
             </section>
