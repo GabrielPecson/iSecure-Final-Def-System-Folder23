@@ -2,7 +2,7 @@
 require 'auth_check.php';
 require 'audit_log.php';
 require 'db_connect.php';
-require 'encryption_key.php';
+
 
 $fullName = 'Unknown User';
 $role = 'Unknown Role';
