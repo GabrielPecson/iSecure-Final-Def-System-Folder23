@@ -46,6 +46,17 @@ try {
     $stmt = $pdo->prepare("UPDATE clearance_badges SET status = 'terminated' WHERE visitor_id = :vid AND status = 'active'");
     $stmt->execute([':vid' => $visitorId]);
 
+    // Send exit SMS to visitor
+    $phoneStmt = $pdo->prepare("SELECT contact_number FROM visitors WHERE id = ?");
+    $phoneStmt->execute([$visitorId]);
+    $visitorPhone = $phoneStmt->fetchColumn();
+
+    if ($visitorPhone) {
+        require_once __DIR__ . 'sms_module.php';
+        $message = "Thank you for visiting Basa Air Base. You have been successfully checked out. Safe travels!";
+        send_sms($visitorPhone, $message);
+    }
+
     echo json_encode(['success' => true, 'message' => 'Visitor marked as exited']);
 } catch (Exception $e) {
     echo json_encode(['success' => false, 'message' => $e->getMessage()]);

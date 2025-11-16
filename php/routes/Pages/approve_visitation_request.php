@@ -103,6 +103,17 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                         ':message' => $notificationMessage
                     ]);
                 }
+
+                // Send SMS to visitor
+                if (!empty($contact_number)) {
+                    require_once __DIR__ . 'sms_module.php';
+                    if ($action === 'approve') {
+                        $smsMessage = "Your visitation request to Basa Air Base has been approved. Please arrive on time for your visit.";
+                    } else {
+                        $smsMessage = "Your visitation request to Basa Air Base has been rejected. Please contact the office for more details.";
+                    }
+                    send_sms($contact_number, $smsMessage);
+                }
             }
 
             echo json_encode(['success' => true, 'status' => $status]);

@@ -243,8 +243,6 @@ document.addEventListener("DOMContentLoaded", () => {
       const data = await res.json();
       if (data.success) {
         showNotification("Visitor marked as inside.", "success");
-        loadExpectedVisitors();
-        loadInsideVisitors();
         // Close the modal
         const modal = bootstrap.Modal.getInstance(document.getElementById("visitorDetailsModal"));
         if (modal) modal.hide();
