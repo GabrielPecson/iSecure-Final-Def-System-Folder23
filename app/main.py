@@ -142,9 +142,14 @@ def set_camera_source_endpoint():
         source = data.get('source')
         if not all([camera_type, source]):
             abort(400, description="`camera_type` and `source` are required.")
-        
-        set_camera_source(camera_type, source)
-        return jsonify({"message": f"{camera_type.capitalize()} camera source set to {source}"})
+
+        # The set_camera_source function should return success status
+        success, message = set_camera_source(camera_type, source)
+        if success:
+            return jsonify({"message": message})
+        else:
+            # If setting the source failed, return a 500 error with the specific message
+            abort(500, description=message)
     except Exception as e:
         abort(500, description=str(e))
 
