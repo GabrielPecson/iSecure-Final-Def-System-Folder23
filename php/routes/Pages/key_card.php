@@ -111,13 +111,14 @@ if (isset($_GET['action'])) {
         try {
             $stmt = $pdo->prepare("
                 UPDATE clearance_badges
-                SET visitor_id = ?, validity_start = ?, validity_end = ?, status = 'active'
+                SET visitor_id = ?, validity_start = ?, validity_end = ?, door = ?, status = 'active'
                 WHERE id = ?
             ");
             $stmt->execute([
                 $data['visitor_id'],
                 $data['validity_start'],
                 $data['validity_end'],
+                $data['door'],
                 $data['id']
             ]);
 
@@ -169,8 +170,10 @@ $fullName = $_SESSION['full_name'] ?? "Admin";
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+    <link rel="icon" type="image/png" href="5thFighterWing-logo.png">
     <title>Visitor Key Card Management</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet" />
+    <link rel="stylesheet" href="admin_maindashboard.css" />
     <link rel="stylesheet" href="key_cards.css" />
     <link rel="stylesheet" href="sidebar.css" />
 </head>
@@ -220,26 +223,31 @@ $fullName = $_SESSION['full_name'] ?? "Admin";
                         </div>
                     </div>
 
-                    <!-- ASSIGN CARD -->
-                    <div class="col-md-7">
-                        <div class="key-cards-form-section">
-                            <h4>Assign Key Card to Visitor</h4>
+                    <!-- ASSIGN / EDIT CARD -->
+                <div class="col-md-7">
+                    <div class="key-cards-form-section">
+                        <h4 id="formTitle">Assign Key Card to Visitor</h4>
 
-                            <form id="badgeForm">
-                                <input type="hidden" id="badgeId">
+                        <form id="badgeForm">
 
-                                <label>Select Visitor</label>
-                                <select id="visitorSelect" class="form-select">
-                                    <option value="">-- Select --</option>
-                                    <?php foreach ($visitors as $v): ?>
-                                        <option value="<?= $v['id'] ?>">
-                                            <?= $v['first_name'] . " " . $v['last_name'] ?>
-                                        </option>
-                                    <?php endforeach; ?>
-                                </select>
+                            <!-- Store badge ID when editing -->
+                            <input type="hidden" id="badgeId">
 
-                                <label>Select Card</label>
-                                <select id="keyCardId" class="form-select mt-2">
+                            <!-- Visitor Selector -->
+                            <label class="mt-2">Select Visitor</label>
+                            <select id="visitorSelect" class="form-select" required>
+                                <option value="">-- Select --</option>
+                                <?php foreach ($visitors as $v): ?>
+                                    <option value="<?= $v['id'] ?>">
+                                        <?= $v['first_name'] . " " . $v['last_name'] ?>
+                                    </option>
+                                <?php endforeach; ?>
+                            </select>
+
+                            <!-- Card Selector (Assign Mode Only) -->
+                            <div id="assignCardField">
+                                <label class="mt-2">Select Card</label>
+                                <select id="keyCardId" class="form-select">
                                     <option value="">-- Select --</option>
                                     <?php foreach ($unassigned_cards as $c): ?>
                                         <option value="<?= $c['id'] ?>">
@@ -247,17 +255,62 @@ $fullName = $_SESSION['full_name'] ?? "Admin";
                                         </option>
                                     <?php endforeach; ?>
                                 </select>
+                            </div>
 
-                                <label class="mt-2">Validity Start</label>
-                                <input type="datetime-local" id="validityStart" class="form-control">
+                            <!-- UID (READ-ONLY) – Edit mode only -->
+                            <div id="uidField" style="display:none;">
+                                <label class="mt-2">Key Card UID</label>
+                                <input type="text" id="keyCardNumber" class="form-control" readonly>
+                            </div>
 
-                                <label class="mt-2">Validity End</label>
-                                <input type="datetime-local" id="validityEnd" class="form-control">
+                            <!-- Validity -->
+                            <label class="mt-2">Validity Start</label>
+                            <input type="datetime-local" id="validityStart" class="form-control" required>
 
-                                <button class="btn btn-success mt-3">Assign Key Card</button>
-                            </form>
-                        </div>
+                            <label class="mt-2">Validity End</label>
+                            <input type="datetime-local" id="validityEnd" class="form-control" required>
+
+                            <!-- Door Access -->
+                            <label for="doorAccess" class="mt-2">Door Access</label>
+                            <select id="doorAccess" class="form-select" required>
+                                <option value="ALL">All Doors</option>
+                                <option value="DOOR1">Door 1 Only</option>
+                                <option value="DOOR2">Door 2 Only</option>
+                            </select>
+
+                            <!-- STATUS DROPDOWN (Edit Mode Only) -->
+                            <div id="statusField" class="mt-2" style="display:none;">
+                                <label>Status</label>
+                                <select id="badgeStatus" class="form-select">
+                                    <option value="active">Active</option>
+                                    <option value="inactive">Inactive</option>
+                                    <option value="terminated">Terminated</option>
+                                </select>
+                            </div>
+
+                            <!-- Buttons -->
+                            <div class="mt-3">
+
+                                <!-- Submit = Assign (default) or Update (edit mode) -->
+                                <button id="submitBtn" type="submit" class="btn btn-success">
+                                    Assign Key Card
+                                </button>
+
+                                <!-- Terminate Button -->
+                                <button id="terminateBtn" type="button" class="btn btn-danger" style="display:none;">
+                                    Terminate
+                                </button>
+
+                                <!-- Cancel Edit -->
+                                <button id="cancelEditBtn" type="button" class="btn btn-secondary" style="display:none;">
+                                    Cancel Edit
+                                </button>
+
+                            </div>
+
+                        </form>
                     </div>
+                </div>
 
                 </div>
 
@@ -269,6 +322,7 @@ $fullName = $_SESSION['full_name'] ?? "Admin";
                             <tr>
                                 <th>UID</th>
                                 <th>Holder</th>
+                                <th>Door</th>
                                 <th>Valid From</th>
                                 <th>Valid To</th>
                                 <th>Status</th>
@@ -279,6 +333,7 @@ $fullName = $_SESSION['full_name'] ?? "Admin";
                             <tr>
                                 <td><?= $card['key_card_number'] ?></td>
                                 <td><?= ($card['first_name'] ?? 'Unassigned') . " " . ($card['last_name'] ?? '') ?></td>
+                                <td><?= $card['door'] ?></td>
                                 <td><?= $card['validity_start'] ?: 'N/A' ?></td>
                                 <td><?= $card['validity_end'] ?: 'N/A' ?></td>
                                 <td><?= ucfirst($card['status']) ?></td>
