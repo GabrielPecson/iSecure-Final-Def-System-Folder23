@@ -230,9 +230,11 @@ $all_cards = $all_cards_stmt->fetchAll(PDO::FETCH_ASSOC);
                                     <option value="terminated">Terminated</option>
                                 </select>
                             </div>
-                            <button type="submit" class="btn btn-info" id="submitBtn">Assign Key Card</button>
-                            <button type="button" class="btn btn-danger" id="terminateBtn" style="display:none;">Terminate Key Card</button>
-                            <button type="button" class="btn btn-secondary" id="cancelEditBtn" style="display:none;">Cancel</button>
+                            <div class="d-flex justify-content-end mt-3">
+                                <button type="button" class="btn btn-secondary me-2" id="cancelEditBtn" style="display:none;">Cancel</button>
+                                <button type="button" class="btn btn-danger me-2" id="terminateBtn" style="display:none;">Terminate Key Card</button>
+                                <button type="submit" class="btn btn-info" id="submitBtn">Assign Key Card</button>
+                            </div>
                         </form>
                     </div>
                 </div>
