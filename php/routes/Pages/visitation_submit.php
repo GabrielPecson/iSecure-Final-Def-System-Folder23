@@ -56,7 +56,9 @@ function uploadSelfieFile($fileInput, $uploadDir = __DIR__ . "/../uploads/selfie
     $targetFile = $uploadDir . $fileName;
 
     if (move_uploaded_file($_FILES[$fileInput]["tmp_name"], $targetFile)) {
-        return $fileName; // Return filename for database
+        // Return the relative path from the project root, not just the filename.
+        // This makes it consistent with how selfie paths are stored.
+        return 'uploads/ids/' . $fileName;
     }
     return null;
 }
