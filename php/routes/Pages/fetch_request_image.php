@@ -29,9 +29,10 @@ $result = $stmt->fetch(PDO::FETCH_ASSOC);
 $image_path = $result[$column] ?? null;
 
 // --- Path Correction ---
-// __DIR__ is ".../php/routes/Pages".
-// The $image_path from the DB is now 'uploads/ids/...' or 'uploads/selfies/...'.
-$full_path = __DIR__ . DIRECTORY_SEPARATOR . $image_path;
+// The $image_path from the DB is now a full relative path from the project root,
+// e.g., 'php/routes/Pages/uploads/ids/...'
+// We need to go up three levels from this script's directory (.../Pages) to get to the project root.
+$full_path = realpath(__DIR__ . '/../../..') . DIRECTORY_SEPARATOR . $image_path;
 
 // Log the paths for debugging. You can check this in your server's error log.
 error_log("Attempting to load image. DB Path: {$image_path}, Full Constructed Path: {$full_path}");

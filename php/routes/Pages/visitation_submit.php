@@ -23,9 +23,9 @@ function uploadIdFile($fileInput) {
     $targetFile = $absoluteUploadDir . $fileName;
 
     if (move_uploaded_file($_FILES[$fileInput]["tmp_name"], $targetFile)) {
-        // Return the simple relative path from the 'Pages' directory.
-        // This will be stored in the database.
-        return $relativeUploadDir . $fileName;
+        // Return the full relative path from the project root for consistency.
+        // This matches the format used by the Python API for selfies.
+        return 'php/routes/Pages/' . $relativeUploadDir . $fileName;
     }
 
     if (!is_dir($uploadDir)) {
