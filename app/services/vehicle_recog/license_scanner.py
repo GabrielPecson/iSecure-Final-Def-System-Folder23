@@ -22,11 +22,11 @@ def detect_vehicle_plate(image_source):
 
         input_source = None
         if isinstance(image_source, str):
+            # If a file path is provided, check if it exists
             if not os.path.exists(image_source):
                 return {"error": f"Image file not found at: {image_source}"}
             input_source = PathInput(image_source)
         elif isinstance(image_source, bytes):
-            # The API client needs a filename, so we provide a dummy one
             input_source = BytesInput(image_source, "capture.jpg")
         else:
             return {"error": "Invalid image source type. Must be path or bytes."}

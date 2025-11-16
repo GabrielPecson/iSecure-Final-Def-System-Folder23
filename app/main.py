@@ -393,6 +393,11 @@ def recognize_and_compare_plate():
         image_bytes = buffer.tobytes()
         recognition_result = detect_vehicle_plate(image_bytes)
         
+        # Check if the recognition service returned an error
+        if "error" in recognition_result:
+            # Forward the specific error from the recognition service
+            return jsonify({"match": False, "message": f"Plate recognition failed: {recognition_result['error']}"}), 400
+
         recognized_plate = recognition_result.get('license_plate_number') if recognition_result else None
         vehicle_type = recognition_result.get('vehicle_type') if recognition_result else "Not found"
 
