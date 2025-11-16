@@ -188,7 +188,7 @@ def process_face_registration_in_background(session_token, absolute_file_path, r
             register_visitor(session_token, absolute_file_path)
 
             # Update the database
-            db_connection = get_db_connection()
+            db_connection = get_db_connection() # Establishes a new connection for this thread
             try:
                 with db_connection.cursor() as cursor:
                     sql = """
