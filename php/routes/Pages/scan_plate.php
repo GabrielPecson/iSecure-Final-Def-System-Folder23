@@ -16,10 +16,12 @@ if (isset($_FILES['image'])) {
         // Get absolute paths for reliability
         $imagePathForScript = escapeshellarg(realpath($uploadFile));
         $pythonScriptPath = escapeshellarg(realpath(__DIR__ . '/../../../app/services/vehicle_recog/license_scanner.py'));
+        // --- Path Correction ---
+        // Provide the absolute path to the Python executable in your virtual environment
+        $pythonExecutable = escapeshellarg(realpath(__DIR__ . '/../../../app/venv/bin/python'));
         
         // Construct the command
-        // Ensure the 'python' command is in your system's PATH
-        $command = 'python ' . $pythonScriptPath . ' ' . $imagePathForScript;
+        $command = $pythonExecutable . ' ' . $pythonScriptPath . ' ' . $imagePathForScript;
 
         // Execute the command and capture its output
         $output = shell_exec($command);
