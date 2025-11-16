@@ -101,22 +101,26 @@ if (!$token) {
 </header>
 
 <!-- New: Success Notification Area -->
+<div class="notification-container">
 <?php if (isset($_SESSION['submission_success'])): ?>
-<div id="submission-success-alert" class="fixed top-24 right-5 bg-green-500 text-white py-3 px-6 rounded-lg shadow-lg z-[100]">
-    <p><?php echo htmlspecialchars($_SESSION['submission_success']); ?></p>
+<div id="submission-success-alert" class="notification notification-success">
+    <div class="notification-content">
+        <?php echo htmlspecialchars($_SESSION['submission_success']); ?>
+    </div>
+    <button class="notification-close" onclick="this.parentElement.remove()">&times;</button>
 </div>
 <script>
-    setTimeout(() => {
+    document.addEventListener('DOMContentLoaded', function() {
         const alert = document.getElementById('submission-success-alert');
-        if (alert) {
-            alert.style.transition = 'opacity 0.5s ease';
-            alert.style.opacity = '0';
-            setTimeout(() => alert.remove(), 500);
-        }
-    }, 4000); // The alert will disappear after 4 seconds
+        // Add 'show' class to trigger the animation
+        setTimeout(() => alert.classList.add('show'), 100);
+        // Automatically remove after 5 seconds
+        setTimeout(() => alert.remove(), 5000);
+    });
 </script>
 <?php unset($_SESSION['submission_success']); // Clear the message so it doesn't show again on refresh ?>
 <?php endif; ?>
+</div>
 
 <!-- Header Carousel -->
 <section class="relative w-full h-[400px] sm:h-[575px] bg-[#E4EDF3] overflow-hidden">

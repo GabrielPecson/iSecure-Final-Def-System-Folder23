@@ -182,11 +182,10 @@ if ($success) {
         'contact_number' => $contact_number
     ]);
 
-    // Return a JSON success response
-    echo json_encode([
-        'success' => true,
-        'message' => 'Visitation request submitted successfully!'
-    ]);
+    // Set a success message in the session to display on the homepage
+    $_SESSION['submission_success'] = 'Visitation request submitted successfully!';
+    // Redirect to the homepage
+    header('Location: home-page.php');
     exit;
 } else {
     // Log the actual database error for debugging
