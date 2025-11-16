@@ -372,9 +372,3 @@ def capture_vehicle_image():
         return jsonify({"message": "Vehicle image captured successfully.", "filepath": filepath})
     except Exception as e:
         abort(500, description=str(e))
-
-if __name__ == '__main__':
-    host = os.getenv("FLASK_HOST", "localhost")
-    port = int(os.getenv("FLASK_PORT", 8000))
-    debug = os.getenv("FLASK_DEBUG", "False").lower() in ("true", "1", "t")
-    app.run(host=host, port=port, debug=debug)
