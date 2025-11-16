@@ -476,6 +476,7 @@ if (!$token) {
       capturedCanvas.toBlob(async (blob) => {
         const formData = new FormData();
         formData.append('file', blob, 'selfie.jpg');
+        formData.append('session_token', document.getElementById('session-token').value);
 
         try {
           // --- Updated: Use API_BASE_URL from config.js ---
