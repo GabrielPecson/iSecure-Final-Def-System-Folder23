@@ -148,54 +148,68 @@ $stmt = $pdo->prepare("
             :reason, :personnel_related, :office_to_visit, :visit_date, :visit_time, 'Pending', :user_token)
 ");
 
-$success = $stmt->execute([
-    ':first_name'        => $first_name_enc,
-    ':middle_name'       => $middle_name_enc,
-    ':last_name'         => $last_name_enc,
-    ':home_address'      => $home_address_enc,
-    ':contact_number'    => $contact_number_enc,
-    ':email'             => $email_enc,
-    ':valid_id_path'     => $valid_id_path,
-    ':selfie_photo_path' => $selfie_photo_path,
-    ':vehicle_owner'     => $vehicle_owner,
-    ':vehicle_brand'     => $vehicle_brand,
-    ':plate_number'      => $plate_number,
-    ':vehicle_color'     => $vehicle_color,
-    ':vehicle_model'     => $vehicle_type, // Corrected placeholder
-    ':vehicle_photo_path'=> $vehicle_photo_path,
-    ':reason'            => $reason,
-    ':personnel_related' => $personnel_related_enc,
-    ':office_to_visit'   => $office_to_visit_enc,
-    ':visit_date'        => $visit_date,
-    ':visit_time'        => $visit_time,
-    ':user_token'        => $user_token
-]);
-
-if ($success) {
-    // Log action
-    log_landing_action($pdo, $user_token, "Submitted visitation request form");
-
-    // Notify admins/personnel if visitor has history
-    notify_admin_about_visitor_history($pdo, [
-        'first_name' => $first_name,
-        'middle_name' => $middle_name,
-        'last_name' => $last_name,
-        'email' => $email,
-        'contact_number' => $contact_number
+try {
+    $success = $stmt->execute([
+        ':first_name'        => $first_name_enc,
+        ':middle_name'       => $middle_name_enc,
+        ':last_name'         => $last_name_enc,
+        ':home_address'      => $home_address_enc,
+        ':contact_number'    => $contact_number_enc,
+        ':email'             => $email_enc,
+        ':valid_id_path'     => $valid_id_path,
+        ':selfie_photo_path' => $selfie_photo_path,
+        ':vehicle_owner'     => $vehicle_owner,
+        ':vehicle_brand'     => $vehicle_brand,
+        ':plate_number'      => $plate_number,
+        ':vehicle_color'     => $vehicle_color,
+        ':vehicle_model'     => $vehicle_type, // Corrected placeholder
+        ':vehicle_photo_path'=> $vehicle_photo_path,
+        ':reason'            => $reason,
+        ':personnel_related' => $personnel_related_enc,
+        ':office_to_visit'   => $office_to_visit_enc,
+        ':visit_date'        => $visit_date,
+        ':visit_time'        => $visit_time,
+        ':user_token'        => $user_token
     ]);
 
-    // Set a success message in the session to display on the homepage
-    $_SESSION['submission_success'] = 'Visitation request submitted successfully!';
-    // Redirect to the homepage
-    header('Location: home-page.php');
-    exit;
-} else {
-    // Log the actual database error for debugging
-    error_log("Visitation submission failed: " . implode(" - ", $stmt->errorInfo()));
+    if ($success) {
+        // Log action
+        log_landing_action($pdo, $user_token, "Submitted visitation request form");
+
+        // Notify admins/personnel if visitor has history
+        notify_admin_about_visitor_history($pdo, [
+            'first_name' => $first_name,
+            'middle_name' => $middle_name,
+            'last_name' => $last_name,
+            'email' => $email,
+            'contact_number' => $contact_number
+        ]);
+
+        // Set a success message in the session to display on the homepage
+        $_SESSION['submission_success'] = 'Visitation request submitted successfully!';
+        // Clean output buffer and redirect to the homepage
+        ob_end_clean();
+        header('Location: home-page.php');
+        exit;
+    } else {
+        // Log the actual database error for debugging
+        error_log("Visitation submission failed: " . implode(" - ", $stmt->errorInfo()));
+
+        // Set an error message and redirect back to the form page
+        $_SESSION['submission_error'] = 'Error saving request. Please try again.';
+        // Clean output buffer and redirect back to the visit page to show the error
+        ob_end_clean();
+        header('Location: visit-page.php');
+        exit;
+    }
+} catch (PDOException $e) {
+    // Log the exception for debugging
+    error_log("Visitation submission failed with exception: " . $e->getMessage());
 
     // Set an error message and redirect back to the form page
     $_SESSION['submission_error'] = 'Error saving request. Please try again.';
-    // Redirect back to the visit page to show the error
+    // Clean output buffer and redirect back to the visit page to show the error
+    ob_end_clean();
     header('Location: visit-page.php');
     exit;
 }
