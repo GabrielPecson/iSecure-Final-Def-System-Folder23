@@ -139,10 +139,10 @@ $stmt = $pdo->prepare("
     INSERT INTO visitation_requests
     (first_name, middle_name, last_name, home_address, contact_number, email, valid_id_path, selfie_photo_path,
      vehicle_owner, vehicle_brand, plate_number, vehicle_color, vehicle_model, vehicle_photo_path,
-     reason, personnel_related, office_to_visit, visit_date, visit_time, status)
+     reason, personnel_related, office_to_visit, visit_date, visit_time, status, user_token)
     VALUES (:first_name, :middle_name, :last_name, :home_address, :contact_number, :email, :valid_id_path, :selfie_photo_path,
             :vehicle_owner, :vehicle_brand, :plate_number, :vehicle_color, :vehicle_type, :vehicle_photo_path,
-            :reason, :personnel_related, :office_to_visit, :visit_date, :visit_time, 'Pending')
+            :reason, :personnel_related, :office_to_visit, :visit_date, :visit_time, 'Pending', :user_token)
 ");
 
 $success = $stmt->execute([
@@ -164,7 +164,7 @@ $success = $stmt->execute([
     ':personnel_related' => $personnel_related_enc,
     ':office_to_visit'   => $office_to_visit_enc,
     ':visit_date'        => $visit_date,
-    ':visit_time'        => $visit_time
+    ':visit_time'        => $visit_time,
 ]);
 
 if ($success) {

@@ -35,7 +35,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 ':agent' => $_SERVER['HTTP_USER_AGENT'] ?? null
             ]);
 
-            echo json_encode(['success' => true, 'status' => 'Cancelled']);
+            echo json_encode(['success' => true, 'status' => 'Cancel']);
         } catch (Exception $e) {
             $pdo->rollBack();
             echo json_encode(['success' => false, 'message' => $e->getMessage()]);
