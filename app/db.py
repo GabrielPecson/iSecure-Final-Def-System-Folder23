@@ -1,22 +1,24 @@
-import os
 import pymysql
+import os
 from dotenv import load_dotenv
 
-# Load environment variables from a .env file if it exists
-# This is great for local development.
+# Load environment variables from a .env file
 load_dotenv()
 
-DB_CONFIG = {
-    "host": os.getenv("MYSQL_HOST"),
-    "user": os.getenv("MYSQL_USER"),
-    "password": os.getenv("MYSQL_PASSWORD"),
-    "database": os.getenv("MYSQL_DATABASE"),
-    "cursorclass": pymysql.cursors.DictCursor
-}
-
 def get_db_connection():
+    """
+    Creates and returns a new database connection.
+    Reads configuration from environment variables for security and flexibility.
+    """
     try:
-        return pymysql.connect(**DB_CONFIG)
+        connection = pymysql.connect(
+            host=os.environ.get('DB_HOST', 'localhost'),
+            user=os.environ.get('DB_USER', 'root'),
+            password=os.environ.get('DB_PASSWORD', ''),
+            database=os.environ.get('DB_NAME', 'isecure'),
+            cursorclass=pymysql.cursors.DictCursor
+        )
+        return connection
     except pymysql.MySQLError as e:
-        print(f"Database connection failed: {e}")
-        raise
+        print(f"Error connecting to MySQL database: {e}")
+        return None
