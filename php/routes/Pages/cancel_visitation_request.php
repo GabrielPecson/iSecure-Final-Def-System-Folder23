@@ -11,15 +11,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             // Start transaction
             $pdo->beginTransaction();
 
-            // Update visitation request status to 'Cancelled'
+            // Update visitation request status to 'Cancel'
             $stmt = $pdo->prepare("UPDATE visitation_requests SET status = 'Cancel' WHERE id = :id");
             $stmt->execute([':id' => $id]);
 
-            // Update associated visitors to 'Cancelled' status
+            // Update associated visitors to 'Cancel' status
             $stmt = $pdo->prepare("UPDATE visitors SET status = 'Cancel' WHERE visitation_id = :visitation_id");
             $stmt->execute([':visitation_id' => $id]);
 
-            // Update associated vehicles to 'Cancelled' status
+            // Update associated vehicles to 'Cancel' status
             $stmt = $pdo->prepare("UPDATE vehicles SET status = 'Cancel' WHERE visitation_id = :visitation_id");
             $stmt->execute([':visitation_id' => $id]);
 
