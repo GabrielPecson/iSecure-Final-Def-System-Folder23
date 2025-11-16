@@ -1,5 +1,5 @@
 <?php
-require '../database/db_connect.php';
+require 'db_connect.php';
 require '../../SMS module/sms_module.php';
 
 // Set the default timezone to ensure correct time comparisons

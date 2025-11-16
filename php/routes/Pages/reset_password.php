@@ -1,5 +1,5 @@
 <?php
-require '../database/db_connect.php';
+require 'db_connect.php';
 
 $token = $_GET['token'] ?? '';
 
@@ -20,7 +20,7 @@ $valid = $reset ? true : false;
   <link rel="icon" type="image/png" href="./images/logo/5thFighterWing-logo.png">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
-  <link rel="stylesheet" href="../../stylesheet/reset_password.css">
+  <link rel="stylesheet" href="reset_password.css">
 </head>
 <body>
   <div class="reset-wrapper">

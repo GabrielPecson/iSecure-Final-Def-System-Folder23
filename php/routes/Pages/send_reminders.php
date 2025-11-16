@@ -1,6 +1,6 @@
 <?php
 require 'auth_check.php';
-require '../database/db_connect.php';
+require 'db_connect.php';
 
 // Function to send reminder email
 function sendReminderEmail($contactNumber, $idPass, $validityEnd) {
