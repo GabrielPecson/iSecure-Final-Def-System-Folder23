@@ -164,10 +164,10 @@ $all_cards = $all_cards_stmt->fetchAll(PDO::FETCH_ASSOC);
                 </div>
             </div>
         <div class="container-fluid mt-4">
-            <div class="row">
+            <div class="row d-flex align-items-stretch">
                 <!-- Registration Form -->
                 <div class="col-md-5">
-                    <div class="key-cards-form-section">
+                    <div class="key-cards-form-section h-100">
                         <h4>Register New Key Card</h4>
                         <p class="text-muted small">Add a new key card UID to the system to make it available for assignment.</p>
                         <form id="registerCardForm">
@@ -186,7 +186,7 @@ $all_cards = $all_cards_stmt->fetchAll(PDO::FETCH_ASSOC);
 
                 <!-- Assignment Form -->
                 <div class="col-md-7">
-                    <div class="key-cards-form-section">
+                    <div class="key-cards-form-section h-100">
                         <h4 id="formTitle">Assign Key Card to Visitor</h4>
                         <form id="badgeForm">
                             <input type="hidden" id="badgeId" name="id" value="" />
