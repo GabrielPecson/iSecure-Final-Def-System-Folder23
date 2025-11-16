@@ -59,5 +59,6 @@ try {
 
     echo json_encode(['success' => true, 'message' => 'Visitor marked as exited']);
 } catch (Exception $e) {
+    $pdo->rollBack();
     echo json_encode(['success' => false, 'message' => $e->getMessage()]);
 }

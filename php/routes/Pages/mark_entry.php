@@ -27,6 +27,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
         echo json_encode(['success' => true, 'message' => 'Vehicle entry confirmed.']);
     } catch (Exception $e) {
+        $pdo->rollBack();
         echo json_encode(['success' => false, 'message' => 'Error: ' . $e->getMessage()]);
     }
 } else {
