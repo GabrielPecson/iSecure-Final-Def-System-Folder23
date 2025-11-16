@@ -21,7 +21,8 @@ if (isset($_FILES['image'])) {
         $pythonExecutable = escapeshellarg(realpath(__DIR__ . '/../../../app/venv/bin/python'));
         
         // Construct the command
-        $command = $pythonExecutable . ' ' . $pythonScriptPath . ' ' . $imagePathForScript;
+        // The "2>&1" at the end redirects stderr to stdout, so we can capture Python errors.
+        $command = $pythonExecutable . ' ' . $pythonScriptPath . ' ' . $imagePathForScript . ' 2>&1';
 
         // Execute the command and capture its output
         $output = shell_exec($command);
