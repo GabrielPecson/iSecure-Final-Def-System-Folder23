@@ -94,7 +94,7 @@ def set_camera_source(camera_type: str, source: str):
 
     if camera_type not in camera_sources:
         print(f"Error: Invalid camera type '{camera_type}'")
-        return
+        return False, f"Invalid camera type '{camera_type}'"
 
     # Stop the existing camera for this type
     if camera_type == "facial" and not isinstance(camera_facial, DummyCamera):
@@ -109,7 +109,7 @@ def set_camera_source(camera_type: str, source: str):
     if camera_type == "facial":
         cam_index = 0  # Facial camera uses index 0
     else:  # vehicle
-        cam_index = 0  # Vehicle camera uses index 1 to avoid conflict
+        cam_index = 1  # Vehicle camera uses index 1 to avoid conflict
 
     # Initialize the new camera
     try:
@@ -121,16 +121,19 @@ def set_camera_source(camera_type: str, source: str):
                 camera_facial = new_camera
             else: # vehicle
                 camera_vehicle = new_camera
+            return True, f"Successfully set {camera_type} camera to source '{source}'"
         else:
             # Fallback to dummy if initialization failed
-            raise ValueError("Camera failed to open.")
+            raise ValueError(f"Camera failed to open for source '{source}'. It might be in use or disconnected.")
 
     except Exception as e:
-        print(f"Error setting {camera_type} camera to source '{source}': {e}")
+        error_message = f"Error setting {camera_type} camera to source '{source}': {e}"
+        print(error_message)
         if camera_type == "facial":
             camera_facial = DummyCamera()
         else: # vehicle
             camera_vehicle = DummyCamera()
+        return False, error_message
 
 # --- New: Smart Initialization ---
 # On a server, we don't want to assume a webcam is present.
