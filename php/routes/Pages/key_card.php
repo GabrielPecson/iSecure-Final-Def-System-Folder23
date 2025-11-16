@@ -170,25 +170,29 @@ $all_cards = $all_cards_stmt->fetchAll(PDO::FETCH_ASSOC);
                     <div class="key-cards-form-section h-100">
                         <h4>Register New Key Card</h4>
                         <p class="text-muted small">Add a new key card UID to the system to make it available for assignment.</p>
-                        <form id="registerCardForm">
-                             <div class="mb-3">
-                                <label for="card_name" class="form-label">Card Name</label>
-                                <input type="text" id="card_name" class="form-control" placeholder="e.g., 'Main Gate Card 01'" required />
+                        <form id="registerCardForm" class="d-flex flex-column h-100">
+                            <div>
+                                 <div class="mb-3">
+                                    <label for="card_name" class="form-label">Card Name</label>
+                                    <input type="text" id="card_name" class="form-control" placeholder="e.g., 'Main Gate Card 01'" required />
+                                </div>
+                                <div class="mb-3">
+                                    <label for="card_uid" class="form-label">New Card UID</label>
+                                    <input type="text" id="card_uid" class="form-control" placeholder="Scan or enter new card UID" required />
+                                </div>
                             </div>
-                            <div class="mb-3">
-                                <label for="card_uid" class="form-label">New Card UID</label>
-                                <input type="text" id="card_uid" class="form-control" placeholder="Scan or enter new card UID" required />
+                            <div class="mt-auto">
+                                <button type="submit" class="btn btn-info">Register Card</button>
                             </div>
-                            <button type="submit" class="btn btn-info">Register Card</button>
                         </form>
                     </div>
                 </div>
 
                 <!-- Assignment Form -->
                 <div class="col-md-7">
-                    <div class="key-cards-form-section h-100">
+                    <div class="key-cards-form-section h-100 d-flex flex-column">
                         <h4 id="formTitle">Assign Key Card to Visitor</h4>
-                        <form id="badgeForm">
+                        <form id="badgeForm" class="d-flex flex-column flex-grow-1">
                             <input type="hidden" id="badgeId" name="id" value="" />
                             <div class="row">
                                 <div class="col-md-6 mb-3">
@@ -230,7 +234,7 @@ $all_cards = $all_cards_stmt->fetchAll(PDO::FETCH_ASSOC);
                                     <option value="terminated">Terminated</option>
                                 </select>
                             </div>
-                            <div class="d-flex justify-content-end mt-3">
+                            <div class="d-flex justify-content-end mt-auto">
                                 <button type="button" class="btn btn-secondary me-2" id="cancelEditBtn" style="display:none;">Cancel</button>
                                 <button type="button" class="btn btn-danger me-2" id="terminateBtn" style="display:none;">Terminate Key Card</button>
                                 <button type="submit" class="btn btn-info" id="submitBtn">Assign Key Card</button>
