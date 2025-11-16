@@ -115,7 +115,11 @@ try {
     $api_url = 'https://isecured.online:8000/register/face';
     $post_data = [
         'session_token' => $session_token,
-        'file' => new CURLFile(realpath($selfie_photo_path))
+        // Construct an absolute path from the document root for reliability
+        // realpath() needs an absolute or correctly relative path to work consistently
+        'file' => new CURLFile(
+            realpath($_SERVER['DOCUMENT_ROOT'] . '../php/routes/' . $selfie_photo_path)
+        )
     ];
 
     $ch = curl_init();
