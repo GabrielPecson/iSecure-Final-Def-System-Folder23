@@ -26,7 +26,7 @@ class SuppressStderr:
 # --- Constants ---
 MODEL = "Facenet512"
 DETECTOR_BACKEND = "mtcnn"
-THRESHOLD = 0.5
+THRESHOLD = 0.3
 # Get the absolute path to the project root, assuming this script is in app/services/face_recog/
 project_root = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..', '..'))
 DB_FILE = os.path.join(project_root, "app", "services", "face_recog", "visitors.json")
