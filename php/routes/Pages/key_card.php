@@ -34,6 +34,31 @@ if (isset($_GET['action'])) {
             echo json_encode(['success' => true, 'badges' => $badges]);
             break;
 
+        case 'register':
+            $data = json_decode(file_get_contents('php://input'), true);
+            if (empty($data['card_uid']) || empty($data['card_name'])) {
+                http_response_code(400);
+                echo json_encode(['success' => false, 'message' => 'Card UID and Card Name are required.']);
+                exit;
+            }
+
+            try {
+                // Insert a new card record with a status of 'unassigned' and no visitor.
+                $stmt = $pdo->prepare(
+                    "INSERT INTO clearance_badges (key_card_number, card_name, status) VALUES (?, ?, 'unassigned')"
+                );
+                $stmt->execute([$data['card_uid'], $data['card_name']]);
+
+                $details = "Registered new key card '{$data['card_name']}' (UID: {$data['card_uid']}).";
+                log_audit($pdo, $admin_user_id, $admin_username, 'CARD_REGISTER', $details);
+
+                echo json_encode(['success' => true, 'message' => 'Key card registered successfully.']);
+            } catch (PDOException $e) {
+                http_response_code(500);
+                echo json_encode(['success' => false, 'message' => 'Database error: ' . $e->getMessage()]);
+            }
+            break;
+
         case 'issue': // This is now the "assign" function
             $data = json_decode(file_get_contents('php://input'), true);
             if (empty($data['visitor_id']) || empty($data['key_card_number']) || empty($data['validity_start']) || empty($data['validity_end'])) {
@@ -83,13 +108,9 @@ if (isset($_GET['action'])) {
 $stmt = $pdo->query("SELECT id, first_name, last_name FROM visitors");
 $visitors = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-// Fetch unassigned key cards (This is a conceptual query. You'll need a table for this)
-// For now, we'll imagine a table `registered_cards` with `card_uid` and `status` columns.
-/*
-$unassigned_stmt = $pdo->query("SELECT card_uid FROM registered_cards WHERE status = 'unassigned'");
+// Fetch unassigned key cards for the assignment dropdown
+$unassigned_stmt = $pdo->query("SELECT id, card_name, key_card_number FROM clearance_badges WHERE status = 'unassigned' OR status IS NULL");
 $unassigned_cards = $unassigned_stmt->fetchAll(PDO::FETCH_ASSOC);
-*/
-// Since the table doesn't exist, we'll keep the text input for now but change the UI to reflect the new workflow.
 
 ?>
 <!DOCTYPE html>
@@ -141,8 +162,12 @@ $unassigned_cards = $unassigned_stmt->fetchAll(PDO::FETCH_ASSOC);
                         <p class="text-muted small">Add a new key card UID to the system to make it available for assignment.</p>
                         <form id="registerCardForm">
                             <div class="mb-3">
-                                <label for="newCardUid" class="form-label">New Card UID</label>
-                                <input type="text" id="newCardUid" class="form-control" placeholder="Scan or enter new card UID" required />
+                                <label for="card_uid" class="form-label">New Card UID</label>
+                                <input type="text" id="card_uid" class="form-control" placeholder="Scan or enter new card UID" required />
+                            </div>
+                             <div class="mb-3">
+                                <label for="card_name" class="form-label">Card Name</label>
+                                <input type="text" id="card_name" class="form-control" placeholder="e.g., 'Main Gate Card 01'" required />
                             </div>
                             <button type="submit" class="btn btn-info">Register Card</button>
                         </form>
@@ -166,9 +191,15 @@ $unassigned_cards = $unassigned_stmt->fetchAll(PDO::FETCH_ASSOC);
                                     </select>
                                 </div>
                                 <div class="col-md-6 mb-3">
-                                     <label for="keyCardNumber" class="form-label">Key Card Number</label>
-                                     <!-- This would be a dropdown if you had a table of unassigned cards -->
-                                    <input type="text" id="keyCardNumber" name="key_card_number" class="form-control" placeholder="Enter UID of a registered card" required />
+                                     <label for="keyCardId" class="form-label">Select Unassigned Card</label>
+                                     <select id="keyCardId" name="key_card_id" class="form-select" required>
+                                        <option value="">-- Select a card --</option>
+                                        <?php foreach ($unassigned_cards as $card): ?>
+                                            <option value="<?= htmlspecialchars($card['id']) ?>">
+                                                <?= htmlspecialchars($card['card_name']) ?> (<?= htmlspecialchars($card['key_card_number']) ?>)
+                                            </option>
+                                        <?php endforeach; ?>
+                                     </select>
                                 </div>
                             </div>
                             <div class="row">
@@ -194,6 +225,31 @@ $unassigned_cards = $unassigned_stmt->fetchAll(PDO::FETCH_ASSOC);
                             <button type="button" class="btn btn-secondary" id="cancelEditBtn" style="display:none;">Cancel</button>
                         </form>
                     </div>
+                </div>
+            </div>
+
+            <!-- Table of Unassigned Cards -->
+            <div class="key-cards-list-section mt-5">
+                <h4>Available (Unassigned) Key Cards</h4>
+                <div class="table-responsive">
+                    <table class="table table-bordered table-striped">
+                        <thead>
+                            <tr>
+                                <th>Card Name</th>
+                                <th>Card UID</th>
+                                <th>Status</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <?php foreach ($unassigned_cards as $card): ?>
+                            <tr>
+                                <td><?= htmlspecialchars($card['card_name']) ?></td>
+                                <td><?= htmlspecialchars($card['key_card_number']) ?></td>
+                                <td><span class="badge bg-warning text-dark">Unassigned</span></td>
+                            </tr>
+                            <?php endforeach; ?>
+                        </tbody>
+                    </table>
                 </div>
             </div>
 

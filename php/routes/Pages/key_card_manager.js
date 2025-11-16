@@ -52,23 +52,27 @@ document.addEventListener('DOMContentLoaded', function() {
 
     registerCardForm.addEventListener('submit', function(e) {
         e.preventDefault();
-        const newCardUid = document.getElementById('newCardUid').value;
-        if (!newCardUid) {
-            alert('Please enter a Card UID to register.');
+        const cardUid = document.getElementById('card_uid').value;
+        const cardName = document.getElementById('card_name').value;
+
+        if (!cardUid || !cardName) {
+            alert('Please provide both a Card UID and a Card Name.');
             return;
         }
-        // This part is conceptual. You need a backend endpoint for 'register'.
-        // For now, it will just show an alert.
-        // To make this work, you would create a case 'register' in key_card.php
-        // that inserts the newCardUid into a `registered_cards` table.
-        alert(`Simulating registration for Card UID: ${newCardUid}.\nTo implement this, create a 'register' action in key_card.php.`);
-        
-        // Example of what the fetch would look like:
-        /*
-        fetch('key_card.php?action=register', { ... body: { card_uid: newCardUid } ... })
-            .then(...)
-        */
-        registerCardForm.reset();
+
+        fetch('key_card.php?action=register', {
+            method: 'POST',
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify({ card_uid: cardUid, card_name: cardName })
+        })
+        .then(response => response.json())
+        .then(result => {
+            alert(result.message);
+            if (result.success) {
+                // Reload the page to show the new card in the dropdown and table
+                window.location.reload();
+            }
+        });
     });
 
 
@@ -111,13 +115,14 @@ document.addEventListener('DOMContentLoaded', function() {
             return;
         }
         const data = {
+            id: document.getElementById('keyCardId').value, // The ID of the badge record to update
             visitor_id: visitorId,
-            key_card_number: document.getElementById('keyCardNumber').value,
             validity_start: document.getElementById('validityStart').value.replace('T', ' ') + ':00',
             validity_end: document.getElementById('validityEnd').value.replace('T', ' ') + ':00'
         };
-        const action = badgeId ? 'update' : 'issue';
-        if (badgeId) {
+        // The action is now always 'update' for assignment, as we are updating an existing unassigned record.
+        const action = 'update';
+        if (badgeId) { // This block is for editing an already assigned card
             data.id = badgeId;
             data.status = document.getElementById('badgeStatus').value;
         }
