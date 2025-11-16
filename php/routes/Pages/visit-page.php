@@ -153,7 +153,7 @@ if (!$token) {
   <!-- Facial Scanning -->
   <div class="w-full">
     <label class="block text-sm font-semibold mb-1">
-      Facial Scanning <span class="text-red-500">*</span>
+      Facial Capture <span class="text-red-500">*</span>
     </label>
     <button
       type="button"
@@ -161,7 +161,7 @@ if (!$token) {
       class="flex items-center justify-center w-full border border-gray-300 rounded-md py-3 cursor-pointer hover:border-[#003673] transition text-gray-700 font-medium bg-white"
     >
       <i class="fa-solid fa-camera mr-2 text-gray-600"></i>
-      <span>Start Facial Scan</span>
+      <span>Start Facial Capture</span>
     </button>
     <input id="selfie-photo-path" name="selfie_photo_path" type="hidden" required />
   </div>
@@ -348,7 +348,7 @@ if (!$token) {
           Cancel
         </button>
         <button id="complete-facial-scan" class="px-4 py-2 bg-[#003673] text-white rounded-md hover:bg-[#002a59] transition">
-          Complete Scan
+          Complete Facial Capture
         </button>
       </div>
     </div>
