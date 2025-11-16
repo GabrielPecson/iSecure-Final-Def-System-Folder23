@@ -2,6 +2,7 @@
 session_start();
 require 'db_connect.php';
 require 'encryption_key.php';
+require 'notify.php';
 require 'audit_log.php';
 
 // File upload function
@@ -174,7 +175,6 @@ if ($success) {
     log_landing_action($pdo, $user_token, "Submitted visitation request form");
 
     // Notify admins/personnel if visitor has history
-    require 'notify.php';
     notify_admin_about_visitor_history($pdo, [
         'first_name' => $first_name,
         'middle_name' => $middle_name,
