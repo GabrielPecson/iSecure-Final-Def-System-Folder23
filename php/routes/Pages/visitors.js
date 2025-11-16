@@ -245,6 +245,11 @@ document.addEventListener("DOMContentLoaded", () => {
         showNotification("Visitor marked as inside.", "success");
         loadExpectedVisitors();
         loadInsideVisitors();
+        // Close the modal
+        const modal = bootstrap.Modal.getInstance(document.getElementById("visitorDetailsModal"));
+        if (modal) modal.hide();
+        // Refresh the page
+        location.reload();
       } else showNotification(data.message || "Failed to mark entry.", "error");
     } catch (err) {
       console.error(err);
