@@ -167,9 +167,31 @@ def authenticate_face_endpoint():
         if success:
             # The message is "Authenticated as {session_token}"
             session_token = message.split(" ")[2]
+            
+            # --- Look up the visitor's name from the database ---
+            visitor_name = "Unknown Visitor"
+            visitor_id = None
+            db_connection = get_db_connection()
+            try:
+                with db_connection.cursor() as cursor:
+                    # Find the visitor's name by joining through the tables.
+                    # The matched ID could be a name or a session token.
+                    sql = """
+                        SELECT vr.first_name, vr.last_name, v.id
+                        FROM visitation_requests vr
+                        LEFT JOIN visitors v ON vr.id = v.visitation_id
+                        WHERE CONCAT(vr.first_name, ' ', vr.last_name) = %s OR vr.id IN (SELECT visitation_id FROM visitors WHERE id = %s)
+                    """
+                    cursor.execute(sql, (session_token, session_token))
+                    result = cursor.fetchone()
+                    if result:
+                        visitor_name = f"{result['first_name']} {result['last_name']}"
+                        visitor_id = result['id']
+            finally:
+                if db_connection:
+                    db_connection.close()
 
-            # --- New: Look up the visitor's name using the session token ---
-            return jsonify({"success": True, "message": f"Authenticated as {session_token}", "visitor_id": None})
+            return jsonify({"success": True, "message": f"Authenticated as {visitor_name}", "visitor_id": visitor_id})
         else:
             return jsonify({"success": False, "message": message})
     except Exception as e:
@@ -260,10 +282,11 @@ def register_face_endpoint():
 def register_from_selfie_endpoint():
     try:
         data = request.get_json()
+        visitor_id = data.get('visitor_id') # Keep visitor_id for potential future use
         visitor_name = data.get('visitor_name')
         selfie_path = data.get('selfie_path')
 
-        if not all([visitor_name, selfie_path]):
+        if not all([visitor_id, visitor_name, selfie_path]):
             abort(400, description="Visitor ID and selfie_path are required.")
 
         # Construct the absolute path from the project root
@@ -274,7 +297,7 @@ def register_from_selfie_endpoint():
             return jsonify({"message": f"Selfie file not found at: {absolute_selfie_path}"}), 404
 
         from app.services.face_recog.face_authenticator import register_visitor
-        success, message = register_visitor(visitor_name, absolute_selfie_path)
+        success, message = register_visitor(visitor_name, absolute_selfie_path) # Use visitor_name for registration
 
         if success:
             return jsonify({"success": True, "message": message})

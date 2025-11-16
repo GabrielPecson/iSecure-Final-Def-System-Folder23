@@ -107,11 +107,11 @@ def authenticate_visitor(frame_path):
         if min_dist < THRESHOLD:
             return True, f"Authenticated as {best_id}"
         else:
-            return False, f"Rejected (Closest match: {best_id}, Distance: {min_dist:.3f})"
+            return False, "Rejected: Face does not match."
             
     except Exception as e:
         if "Face could not be detected" in str(e):
-            return False, "Authentication failed: No face could be detected."
+            return False, "No face could be detected."
         return False, f"Authentication error: {str(e)}"
 
 # --- Command-Line Execution ---

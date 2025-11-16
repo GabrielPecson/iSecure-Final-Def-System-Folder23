@@ -39,7 +39,7 @@ try {
 
     // Call the Python API to register this selfie
     $api_url = 'https://isecured.online:8000/register/from_selfie';
-    $post_data = json_encode(['visitor_name' => $visitor_name, 'selfie_path' => $selfie_path]);
+    $post_data = json_encode(['visitor_id' => $visitor_id, 'visitor_name' => $visitor_name, 'selfie_path' => $selfie_path]);
 
     $ch = curl_init($api_url);
     curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
