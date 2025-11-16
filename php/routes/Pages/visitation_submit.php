@@ -1,6 +1,5 @@
 <?php
 session_start();
-header('Content-Type: application/json'); // Set header to return JSON
 require 'db_connect.php';
 require 'encryption_key.php';
 require 'audit_log.php';
@@ -182,21 +181,18 @@ if ($success) {
         'contact_number' => $contact_number
     ]);
 
-    // Return a JSON success response
-    echo json_encode([
-        'success' => true,
-        'message' => 'Visitation request submitted successfully!',
-        'redirectUrl' => 'home-page.php' // Provide the URL to redirect to
-    ]);
+    // Set a success message in the session to display on the homepage
+    $_SESSION['submission_success'] = 'Visitation request submitted successfully!';
+    // Redirect to the homepage
+    header('Location: home-page.php');
     exit;
 } else {
     // Log the actual database error for debugging
     error_log("Visitation submission failed: " . implode(" - ", $stmt->errorInfo()));
 
-    // Return a JSON error response
-    echo json_encode([
-        'success' => false,
-        'message' => 'Error saving request. Please try again.'
-    ]);
+    // Set an error message and redirect back to the form page
+    $_SESSION['submission_error'] = 'Error saving request. Please try again.';
+    // Redirect back to the visit page to show the error
+    header('Location: visit-page.php');
     exit;
 }

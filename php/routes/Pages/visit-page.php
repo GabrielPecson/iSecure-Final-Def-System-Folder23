@@ -105,8 +105,27 @@ if (!$token) {
     Schedule A Visit with Us
   </h1>
 
+  <!-- Notification Area for Errors -->
+  <div id="notification-container" class="fixed top-20 right-5 z-[100]">
+    <?php if (isset($_SESSION['submission_error'])): ?>
+    <div class="notification notification-error show">
+        <div class="notification-content">
+            <?php echo htmlspecialchars($_SESSION['submission_error']); ?>
+        </div>
+        <button class="notification-close" onclick="this.parentElement.remove()">&times;</button>
+    </div>
+    <script>
+        // Automatically remove after 5 seconds
+        setTimeout(() => {
+            document.querySelector('.notification-error')?.remove();
+        }, 5000);
+    </script>
+    <?php unset($_SESSION['submission_error']); ?>
+    <?php endif; ?>
+  </div>
+
   <div class="bg-white w-full max-w-5xl p-8 rounded-xl shadow-[0_4px_25px_rgba(0,0,0,0.1)] border border-gray-200">
-    <form class="space-y-8" id="visitation-form" action="visitation_submit.php" method="POST" enctype="multipart/form-data">
+    <form class="space-y-8" id="visitationForm" action="visitation_submit.php" method="POST" enctype="multipart/form-data">
       <input type="hidden" id="session-token" value="<?php echo htmlspecialchars($token); ?>">
 
       <!-- Header -->
@@ -359,6 +378,7 @@ if (!$token) {
 <!-- <script src="https://cdn.tailwindcss.com"></script> -->
 <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
 <script src="landingpage.js"></script>
+<script src="notification.js"></script>
 <script>
   document.addEventListener('DOMContentLoaded', function() {
     const facialScanBtn = document.getElementById('facial-scan-btn');
@@ -372,12 +392,6 @@ if (!$token) {
     const selfiePhotoPathInput = document.getElementById('selfie-photo-path');
     const scanInstructions = document.getElementById('scan-instructions');
     const submitRequestBtn = document.getElementById('submit-request-btn');
-
-    // --- New: Disable submit button initially ---
-    submitRequestBtn.disabled = true;
-    submitRequestBtn.classList.add('bg-gray-400', 'cursor-not-allowed');
-    submitRequestBtn.classList.remove('bg-[#003673]', 'hover:bg-[#002a59]');
-
 
     let stream; // To store the webcam stream
 
@@ -482,11 +496,6 @@ if (!$token) {
             facialScanBtn.classList.remove('hover:border-[#003673]', 'bg-white');
             facialScanBtn.classList.add('bg-green-500', 'text-white', 'border-green-500');
             
-            // --- New: Enable submit button ---
-            submitRequestBtn.disabled = false;
-            submitRequestBtn.classList.remove('bg-gray-400', 'cursor-not-allowed');
-            submitRequestBtn.classList.add('bg-[#003673]', 'hover:bg-[#002a59]');
-
             facialScanModal.classList.add('hidden');
           } else {
             showNotification('Error: ' + (result.detail || 'Unknown error occurred.'), true);
@@ -503,4 +512,5 @@ if (!$token) {
     });
   });
 </script>
+<!-- The visit-form-handler.js is no longer needed for this submission method -->
 </html>
