@@ -20,6 +20,7 @@ import numpy as np
 import time
 import tempfile
 import json
+import threading
 
 app = Flask(__name__)
 
@@ -174,6 +175,38 @@ def authenticate_face_endpoint():
             os.unlink(temp_frame_path)
         abort(500, description=str(e))
 
+def process_face_registration_in_background(session_token, absolute_file_path, relative_file_path):
+    """
+    This function runs in a separate thread to avoid blocking the main server.
+    It handles the time-consuming face registration and database update.
+    """
+    with app.app_context():
+        try:
+            print(f"Background registration started for token: {session_token}")
+            # Register face embedding with the face recognition system
+            from app.services.face_recog.face_authenticator import register_visitor
+            register_visitor(session_token, absolute_file_path)
+
+            # Update the database
+            db_connection = get_db_connection()
+            try:
+                with db_connection.cursor() as cursor:
+                    sql = """
+                        INSERT INTO visitor_sessions (user_token, selfie_photo_path, expires_at)
+                        VALUES (%s, %s, NOW() + INTERVAL 1 HOUR)
+                        ON DUPLICATE KEY UPDATE selfie_photo_path = VALUES(selfie_photo_path)
+                    """
+                    cursor.execute(sql, (session_token, relative_file_path))
+                db_connection.commit()
+                print(f"Background registration completed for token: {session_token}")
+            finally:
+                if db_connection:
+                    db_connection.close()
+
+        except Exception as e:
+            # Log any errors that occur in the background thread
+            print(f"Error in background face registration for token {session_token}: {str(e)}")
+
 @app.route("/register/face", methods=["POST"])
 def register_face_endpoint():
     session_token = request.form.get('session_token')
@@ -207,25 +240,15 @@ def register_face_endpoint():
             content = file.read()
             buffer.write(content)
 
-        # Register face embedding with the face recognition system
-        from app.services.face_recog.face_authenticator import register_visitor
-        register_visitor(session_token, absolute_file_path)
-
-        db_connection = get_db_connection()
-        try:
-            with db_connection.cursor() as cursor:
-                # Use INSERT ... ON DUPLICATE KEY UPDATE to handle both new and existing sessions
-                sql = """
-                    INSERT INTO visitor_sessions (user_token, selfie_photo_path, expires_at)
-                    VALUES (%s, %s, NOW() + INTERVAL 1 HOUR)
-                    ON DUPLICATE KEY UPDATE selfie_photo_path = VALUES(selfie_photo_path)
-                """
-                cursor.execute(sql, (session_token, relative_file_path))
-            db_connection.commit()
-        finally:
-            db_connection.close()
-
-        return jsonify({"message": "Face registered successfully", "file_path": relative_file_path})
+        # --- Start the heavy processing in a background thread ---
+        thread = threading.Thread(
+            target=process_face_registration_in_background,
+            args=(session_token, absolute_file_path, relative_file_path)
+        )
+        thread.start()
+        
+        # --- Return an immediate response to the user ---
+        return jsonify({"message": "Face registration is processing in the background.", "file_path": relative_file_path})
     except Exception as e:
         abort(500, description=f"Failed to register face: {str(e)}")
 
