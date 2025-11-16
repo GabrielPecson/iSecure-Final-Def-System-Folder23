@@ -3,19 +3,57 @@ import cv2
 
 class Camera:
     def __init__(self, source=0):
-        # Try DirectShow backend first, as MSMF can cause issues on some Windows systems
-        self.cap = cv2.VideoCapture(source, cv2.CAP_DSHOW)
-        if not self.cap.isOpened():
-            # Fallback to MSMF if DSHOW fails
-            self.cap = cv2.VideoCapture(source, cv2.CAP_MSMF)
-            if not self.cap.isOpened():
-                # Don't raise an error, just mark as not running
-                self.running = False
-                print(f"Warning: Could not open video source: {source}")
+        self.running = False
+        self.cap = None
+
+        # Try different sources/backends in order of preference
+        sources_to_try = []
+
+        # If source is a string, treat it as webcam index or URL
+        if isinstance(source, str):
+            if source == 'webcam':
+                # Try multiple webcam indices
+                sources_to_try = [
+                    (0, cv2.CAP_DSHOW),
+                    (0, cv2.CAP_MSMF),
+                    (1, cv2.CAP_DSHOW),
+                    (1, cv2.CAP_MSMF),
+                    (2, cv2.CAP_DSHOW),
+                    (2, cv2.CAP_MSMF),
+                ]
             else:
-                self.running = True
+                # Treat as URL
+                sources_to_try = [(source, cv2.CAP_FFMPEG)]
         else:
-            self.running = True
+            # Numeric source (webcam index)
+            sources_to_try = [
+                (source, cv2.CAP_DSHOW),
+                (source, cv2.CAP_MSMF),
+            ]
+
+        for src, backend in sources_to_try:
+            try:
+                self.cap = cv2.VideoCapture(src, backend)
+                if self.cap.isOpened():
+                    # Test reading a frame to ensure it's working
+                    ret, test_frame = self.cap.read()
+                    if ret and test_frame is not None:
+                        self.running = True
+                        print(f"Successfully opened camera with source: {src}, backend: {backend}")
+                        break
+                    else:
+                        self.cap.release()
+                        self.cap = None
+                else:
+                    self.cap = None
+            except Exception as e:
+                print(f"Failed to open camera with source {src}, backend {backend}: {e}")
+                if self.cap:
+                    self.cap.release()
+                    self.cap = None
+
+        if not self.running:
+            print(f"Warning: Could not open any video source for camera initialization")
 
     def read_frame(self):
         if not self.running or not self.cap.isOpened():

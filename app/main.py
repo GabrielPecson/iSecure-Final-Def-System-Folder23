@@ -374,4 +374,21 @@ def capture_vehicle_image():
         abort(500, description=str(e))
 
 if __name__ == '__main__':
-    app.run(host='0.0.0.0', port=8000, debug=True)
+    import ssl
+
+    # Create SSL context
+    context = ssl.SSLContext(ssl.PROTOCOL_TLS)
+
+    # Load your Let’s Encrypt certificate + private key
+    context.load_cert_chain(
+        '/etc/letsencrypt/live/isecured.online/fullchain.pem',
+        '/etc/letsencrypt/live/isecured.online/privkey.pem'
+    )
+
+    # Run Flask with HTTPS manually
+    app.run(
+        host='0.0.0.0',
+        port=8000,
+        debug=True,
+        ssl_context=context
+    )
