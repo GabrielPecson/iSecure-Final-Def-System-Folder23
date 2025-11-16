@@ -22,7 +22,7 @@ if (!$visitor_id) {
 try {
     // Fetch the selfie path from the visitation_requests table using the visitor's ID
     $stmt = $pdo->prepare("
-        SELECT vr.selfie_photo_path 
+        SELECT vr.selfie_photo_path, vr.first_name, vr.last_name 
         FROM visitors v
         JOIN visitation_requests vr ON v.visitation_id = vr.id
         WHERE v.id = ?
@@ -35,10 +35,11 @@ try {
     }
 
     $selfie_path = $result['selfie_photo_path'];
+    $visitor_name = trim($result['first_name'] . ' ' . $result['last_name']);
 
     // Call the Python API to register this selfie
     $api_url = 'https://isecured.online:8000/register/from_selfie';
-    $post_data = json_encode(['visitor_id' => $visitor_id, 'selfie_path' => $selfie_path]);
+    $post_data = json_encode(['visitor_name' => $visitor_name, 'selfie_path' => $selfie_path]);
 
     $ch = curl_init($api_url);
     curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
