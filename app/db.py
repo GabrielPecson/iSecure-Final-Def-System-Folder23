@@ -15,10 +15,12 @@ def get_db_connection():
             host=os.environ.get('DB_HOST', 'localhost'),
             user=os.environ.get('DB_USER', 'root'),
             password=os.environ.get('DB_PASSWORD', ''),
-            database=os.environ.get('DB_NAME', 'isecure'),
+            db=os.environ.get('DB_NAME', 'isecure'), # Use 'db' instead of 'database' for pymysql
             cursorclass=pymysql.cursors.DictCursor
         )
         return connection
     except pymysql.MySQLError as e:
         print(f"Error connecting to MySQL database: {e}")
-        return None
+        # In a background thread, it's better to raise the exception
+        # so it can be caught and logged.
+        raise e

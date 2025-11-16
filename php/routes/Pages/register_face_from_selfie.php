@@ -1,136 +1,63 @@
 <?php
-header('Content-Type: application/json');
+require 'auth_check.php';
 require 'db_connect.php';
 
-// --- Helper function to find Python executable ---
-function find_python_executable() {
-    $possible_paths = [
-        realpath(__DIR__ . '/../../.venv/Scripts/python.exe'), // Virtual environment
-        '/usr/bin/python3', // Linux
-        '/usr/local/bin/python3', // macOS
-        'C:\Python39\python.exe', // Windows example
-        'C:\Python38\python.exe', // Windows example
-        'C:\Python37\python.exe', // Windows example
-        trim(shell_exec('where python')), // Windows command
-        trim(shell_exec('which python3')), // Linux/macOS command
-        trim(shell_exec('which python')), // Linux/macOS command
-    ];
+header('Content-Type: application/json');
 
-    foreach ($possible_paths as $path) {
-        if ($path && file_exists($path) && is_executable($path)) {
-            return $path;
-        }
-    }
-    return null; // Python executable not found
-}
-
-// --- Configuration ---
-$python_executable = find_python_executable();
-$python_script = realpath(__DIR__ . '/../../app/services/face_recog/face_authenticator.py');
-
-$response = ['success' => false, 'message' => 'An unknown error occurred.'];
-
-// --- Input Validation ---
-$input = json_decode(file_get_contents('php://input'), true);
-$visitor_id = $input['visitor_id'] ?? null;
-
-if (!$visitor_id) {
-    $response['message'] = 'Missing visitor_id.';
-    http_response_code(400);
-    echo json_encode($response);
+if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+    http_response_code(405);
+    echo json_encode(['success' => false, 'message' => 'Invalid request method.']);
     exit;
 }
 
-// --- Database Query ---
+$data = json_decode(file_get_contents('php://input'), true);
+$visitor_id = $data['visitor_id'] ?? null;
+
+if (!$visitor_id) {
+    http_response_code(400);
+    echo json_encode(['success' => false, 'message' => 'Visitor ID is required.']);
+    exit;
+}
+
 try {
+    // Fetch the selfie path from the visitation_requests table using the visitor's ID
     $stmt = $pdo->prepare("
-        SELECT 
-            v.selfie_photo_path, 
-            vr.first_name, 
-            vr.middle_name, 
-            vr.last_name 
+        SELECT vr.selfie_photo_path 
         FROM visitors v
-        LEFT JOIN visitation_requests vr ON v.first_name = vr.first_name AND v.middle_name = vr.middle_name AND v.last_name = vr.last_name
+        JOIN visitation_requests vr ON v.visitation_id = vr.id
         WHERE v.id = ?
     ");
     $stmt->execute([$visitor_id]);
-    $row = $stmt->fetch(PDO::FETCH_ASSOC);
-    if ($row) {
-        $relative_selfie_path = $row['selfie_photo_path'];
-        $project_root = realpath(__DIR__ . '/../../');
-        $absolute_selfie_path = $project_root . DIRECTORY_SEPARATOR . str_replace('/', DIRECTORY_SEPARATOR, $relative_selfie_path);
+    $result = $stmt->fetch(PDO::FETCH_ASSOC);
 
-        if (!file_exists($absolute_selfie_path)) {
-            throw new Exception("Selfie file not found at path: " . $absolute_selfie_path);
-        }
-
-        // --- Python Script Execution ---
-        if (!$python_executable) {
-            throw new Exception("Python executable not found. Please ensure Python is installed and accessible.");
-        }
-
-        $full_name = trim($row['first_name'] . ' ' . ($row['middle_name'] ? $row['middle_name'] . ' ' : '') . $row['last_name']);
-        $command_parts = [
-            escapeshellarg($python_executable),
-            escapeshellarg($python_script),
-            'register',
-            escapeshellarg($full_name),
-            escapeshellarg($absolute_selfie_path)
-        ];
-        $command = implode(' ', $command_parts);
-
-        $descriptorspec = [
-            0 => ["pipe", "r"],  // stdin
-            1 => ["pipe", "w"],  // stdout
-            2 => ["pipe", "w"]   // stderr
-        ];
-
-        $process = proc_open($command, $descriptorspec, $pipes);
-
-        if (is_resource($process)) {
-            // Close stdin, we are not sending any input
-            fclose($pipes[0]);
-
-            $stdout = stream_get_contents($pipes[1]);
-            fclose($pipes[1]);
-
-            $stderr = stream_get_contents($pipes[2]);
-            fclose($pipes[2]);
-
-            $exitCode = proc_close($process);
-
-            if ($exitCode !== 0) {
-                $error_message = "Python script exited with error code {$exitCode}.";
-                if (!empty($stderr)) {
-                    $error_message .= " Stderr: " . $stderr;
-                }
-                throw new Exception($error_message);
-            }
-
-            $python_response = json_decode($stdout, true);
-
-            if (json_last_error() === JSON_ERROR_NONE && isset($python_response['success'])) {
-                $response = $python_response;
-                if (!$response['success']) http_response_code(400);
-            } else {
-                $error_message = "Failed to parse JSON from Python script output.";
-                if (!empty($stdout)) {
-                    $error_message .= " Stdout: " . $stdout;
-                }
-                if (!empty($stderr)) {
-                    $error_message .= " Stderr: " . $stderr;
-                }
-                throw new Exception($error_message);
-            }
-        } else {
-            throw new Exception("Failed to open process for Python script.");
-        }
-    } else {
-        throw new Exception("Visitor not found.");
+    if (!$result || empty($result['selfie_photo_path'])) {
+        throw new Exception("Selfie photo path not found for visitor ID: {$visitor_id}");
     }
-} catch (Exception $e) {
-    $response['message'] = $e->getMessage();
-    http_response_code(500);
-}
 
-echo json_encode($response);
+    $selfie_path = $result['selfie_photo_path'];
+
+    // Call the Python API to register this selfie
+    $api_url = 'https://isecured.online:8000/register/from_selfie';
+    $post_data = json_encode(['visitor_id' => $visitor_id, 'selfie_path' => $selfie_path]);
+
+    $ch = curl_init($api_url);
+    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+    curl_setopt($ch, CURLOPT_POST, true);
+    curl_setopt($ch, CURLOPT_POSTFIELDS, $post_data);
+    curl_setopt($ch, CURLOPT_HTTPHEADER, ['Content-Type: application/json']);
+    
+    $api_response = curl_exec($ch);
+    $http_code = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+    curl_close($ch);
+
+    if ($http_code !== 200) {
+        throw new Exception("API Error (HTTP {$http_code}): " . ($api_response ?: 'No response from server.'));
+    }
+
+    echo $api_response;
+
+} catch (Exception $e) {
+    http_response_code(500);
+    echo json_encode(['success' => false, 'message' => $e->getMessage()]);
+}
+?>
