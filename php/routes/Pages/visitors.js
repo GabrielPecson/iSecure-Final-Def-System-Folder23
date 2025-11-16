@@ -543,7 +543,7 @@ document.addEventListener("DOMContentLoaded", () => {
         method: "POST",
         body: formData,
       });
-      if (!ocrResponse.ok) throw new Error(`Server error: ${ocrResponse.statusText}`);
+      if (!ocrResponse.ok) throw new Error(`Server error: ${ocrResponse.status} ${ocrResponse.statusText}`);
       const result = await ocrResponse.json();
       if (result.success) {
         const { data: extracted, id_type } = result;

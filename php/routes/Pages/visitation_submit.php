@@ -5,32 +5,66 @@ require 'encryption_key.php';
 require 'audit_log.php';
 
 // File upload function
+function uploadFile($fileInput, $uploadDir = "uploads/") {
+    if (!isset($_FILES[$fileInput]) || $_FILES[$fileInput]['error'] !== UPLOAD_ERR_OK) {
+        return null;
+    }
+
+    if (!is_dir($uploadDir)) {
+        mkdir($uploadDir, 0777, true);
+    }
+
+    $fileName = time() . "_" . basename($_FILES[$fileInput]["name"]);
+    $targetFile = $uploadDir . $fileName;
+
+    if (move_uploaded_file($_FILES[$fileInput]["tmp_name"], $targetFile)) {
+        return $targetFile;
+    }
+    return null;
+}
+
+// File upload function for IDs
 function uploadIdFile($fileInput) {
     if (!isset($_FILES[$fileInput]) || $_FILES[$fileInput]['error'] !== UPLOAD_ERR_OK) {
         return null;
     }
 
-    // 1. Define the path relative to the current script's directory ('Pages').
-    $uploadSubDir = 'uploads/ids/';
-    $absoluteUploadDir = __DIR__ . DIRECTORY_SEPARATOR . $uploadSubDir;
+    // Define the relative path for both saving and database storage.
+    // This will create 'uploads/ids/' inside the current 'Pages' directory.
+    $relativeUploadDir = 'uploads/ids/';
+    $uploadDir = __DIR__ . DIRECTORY_SEPARATOR . $relativeUploadDir;
 
-    // 2. Create the directory if it doesn't exist.
-    if (!is_dir($absoluteUploadDir)) {
-        mkdir($absoluteUploadDir, 0777, true);
+    if (!is_dir($uploadDir)) {
+        mkdir($uploadDir, 0777, true);
     }
 
-    // 3. Generate a unique filename.
     $fileName = time() . "_id." . pathinfo($_FILES[$fileInput]["name"], PATHINFO_EXTENSION);
-    $targetFile = $absoluteUploadDir . $fileName;
-
+    $targetFile = $uploadDir . $fileName;
     if (move_uploaded_file($_FILES[$fileInput]["tmp_name"], $targetFile)) {
-        // 4. Return the full relative path from the project root.
-        // This ensures consistency with the selfie path format.
-        return 'php/routes/Pages/' . $uploadSubDir . $fileName;
+        // Return the full relative path from the project root for consistency.
+        // This matches the format used by the Python API for selfies.
+        return 'php/routes/Pages/' . $relativeUploadDir . $fileName;
+    }
+    return null;
+}
+
+// File upload function for selfies
+function uploadSelfieFile($fileInput, $uploadDir = __DIR__ . "/../uploads/selfies/") {
+    if (!isset($_FILES[$fileInput]) || $_FILES[$fileInput]['error'] !== UPLOAD_ERR_OK) {
+        return null;
     }
 
     if (!is_dir($uploadDir)) {
         mkdir($uploadDir, 0777, true);
+    }
+
+    $fileName = time() . "_selfie." . pathinfo($_FILES[$fileInput]["name"], PATHINFO_EXTENSION);
+    $targetFile = $uploadDir . $fileName;
+
+    if (move_uploaded_file($_FILES[$fileInput]["tmp_name"], $targetFile)) {
+        // Return the relative path from the project root, not just the filename.
+        // This makes it consistent with how selfie paths are stored.
+        return 'uploads/ids/' . $fileName;
     }
     return null;
 }

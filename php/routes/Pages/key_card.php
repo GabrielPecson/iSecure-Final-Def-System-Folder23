@@ -7,7 +7,7 @@ require 'db_connect.php';
  */
 function log_audit($pdo, $user_id, $username, $action, $details) {
     try {
-        // The admin_audit_logs table has user_id, action, details. Username is not needed here.
+        // The admin_audit_logs table has user_id, action, details. The username is not needed here.
         $stmt = $pdo->prepare("INSERT INTO admin_audit_logs (user_id, action, details) VALUES (?, ?, ?)");
         $stmt->execute([$user_id, $action, $details]);
     } catch (PDOException $e) {
