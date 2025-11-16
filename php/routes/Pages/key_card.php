@@ -173,6 +173,8 @@ $fullName = $_SESSION['full_name'] ?? "Admin";
     <link rel="icon" type="image/png" href="5thFighterWing-logo.png">
     <title>Visitor Key Card Management</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=League+Spartan:wght@100..900&display=swap" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet" />
     <link rel="stylesheet" href="admin_maindashboard.css" />
     <link rel="stylesheet" href="key_cards.css" />
     <link rel="stylesheet" href="sidebar.css" />
