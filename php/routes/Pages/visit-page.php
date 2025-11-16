@@ -105,7 +105,7 @@ if (!$token) {
     Schedule A Visit with Us
   </h1>
 
-e  <!-- Notification Area for Errors -->
+  <!-- Notification Area for Errors -->
   <div id="notification-container" class="fixed top-20 right-5 z-[100]">
     <?php if (isset($_SESSION['submission_error'])): ?>
     <div class="notification notification-error show">
@@ -241,6 +241,7 @@ e  <!-- Notification Area for Errors -->
 
           <div class="mt-4">
             <label class="block text-sm font-semibold mb-1">License Plate Number</label>
+            <input type="text" name="license_plate" class="w-full border border-gray-300 rounded-md px-3 py-2 focus:ring-2 focus:ring-[#003673] focus:outline-none">
           </div>
         </div>
       </section>
@@ -475,8 +476,6 @@ e  <!-- Notification Area for Errors -->
       capturedCanvas.toBlob(async (blob) => {
         const formData = new FormData();
         formData.append('file', blob, 'selfie.jpg');
-        const sessionToken = document.getElementById('session-token').value;
-        formData.append('session_token', sessionToken);
 
         try {
           // --- Updated: Use API_BASE_URL from config.js ---
