@@ -54,8 +54,14 @@ def recognize_vehicle():
         
         # Read the file content directly
         contents = file.read()
-        plate = detect_vehicle_plate(contents)
-        return jsonify({"plate_number": plate})
+        recognition_result = detect_vehicle_plate(contents)
+
+        # Check if the recognition was successful and extract the plate number
+        if "error" in recognition_result:
+            # Forward the error from the recognition service
+            return jsonify(recognition_result), 400
+
+        return jsonify(recognition_result)
     except Exception as e:
         abort(500, description=str(e))
 
