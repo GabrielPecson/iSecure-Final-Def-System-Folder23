@@ -105,14 +105,14 @@ $visitor_name = trim(implode(' ', array_filter([$first_name, $middle_name, $last
 if ($has_vehicle === 'yes') {
     $vehicle_owner      = $visitor_name; // Plain text vehicle_owner
     $vehicle_brand      = $_POST['vehicle_brand'] ?? null;
-    $plate_number       = $_POST['plate_number'] ?? null;
+    $license_plate      = $_POST['license_plate'] ?? null;
     $vehicle_color      = $_POST['vehicle_color'] ?? null;
     $vehicle_type       = $_POST['vehicle_type'] ?? null;
     $vehicle_photo_path = null; // No vehicle photo in form
 } else {
     $vehicle_owner      = null;
     $vehicle_brand      = null;
-    $plate_number       = null;
+    $license_plate      = null;
     $vehicle_color      = null;
     $vehicle_type       = null;
     $vehicle_photo_path = null;
@@ -153,7 +153,7 @@ try {
         ':selfie_photo_path' => $selfie_photo_path,
         ':vehicle_owner'     => $vehicle_owner,
         ':vehicle_brand'     => $vehicle_brand,
-        ':plate_number'      => $plate_number,
+        ':plate_number'      => $license_plate,
         ':vehicle_color'     => $vehicle_color,
         ':vehicle_model'     => $vehicle_type, // Corrected placeholder
         ':vehicle_photo_path'=> $vehicle_photo_path,
