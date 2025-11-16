@@ -170,18 +170,16 @@ $all_cards = $all_cards_stmt->fetchAll(PDO::FETCH_ASSOC);
                     <div class="key-cards-form-section h-100">
                         <h4>Register New Key Card</h4>
                         <p class="text-muted small">Add a new key card UID to the system to make it available for assignment.</p>
-                        <form id="registerCardForm" class="d-flex flex-column h-100">
-                            <div>
-                                 <div class="mb-3">
-                                    <label for="card_name" class="form-label">Card Name</label>
-                                    <input type="text" id="card_name" class="form-control" placeholder="e.g., 'Main Gate Card 01'" required />
-                                </div>
-                                <div class="mb-3">
-                                    <label for="card_uid" class="form-label">New Card UID</label>
-                                    <input type="text" id="card_uid" class="form-control" placeholder="Scan or enter new card UID" required />
-                                </div>
+                        <form id="registerCardForm">
+                             <div class="mb-3">
+                                <label for="card_name" class="form-label">Card Name</label>
+                                <input type="text" id="card_name" class="form-control" placeholder="e.g., 'Main Gate Card 01'" required />
                             </div>
-                            <div class="mt-auto">
+                            <div class="mb-3">
+                                <label for="card_uid" class="form-label">New Card UID</label>
+                                <input type="text" id="card_uid" class="form-control" placeholder="Scan or enter new card UID" required />
+                            </div>
+                            <div class="text-end">
                                 <button type="submit" class="btn btn-info">Register Card</button>
                             </div>
                         </form>
