@@ -1,8 +1,6 @@
 <?php
 session_start();
 require 'db_connect.php';
-require 'encryption_key.php';
-require 'notify.php';
 require 'audit_log.php';
 
 // File upload function
@@ -174,15 +172,6 @@ try {
     if ($success) {
         // Log action
         log_landing_action($pdo, $user_token, "Submitted visitation request form");
-
-        // Notify admins/personnel if visitor has history
-        notify_admin_about_visitor_history($pdo, [
-            'first_name' => $first_name,
-            'middle_name' => $middle_name,
-            'last_name' => $last_name,
-            'email' => $email,
-            'contact_number' => $contact_number
-        ]);
 
         // Set a success message in the session to display on the homepage
         $_SESSION['submission_success'] = 'Visitation request submitted successfully!';

@@ -4,7 +4,4 @@
 // For development, generate a strong random key and keep it secret
 define('ENCRYPTION_KEY', 'MPLC7l9UHbSCjgWOg19TtBj4VPz2leQb'); // 32-character key for development
 
-// Initialize encryption with the key
-require_once __DIR__ . 'encryption.php';
-Encryption::setKey(ENCRYPTION_KEY);
 ?>

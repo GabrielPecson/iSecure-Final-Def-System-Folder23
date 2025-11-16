@@ -1,6 +1,5 @@
 <?php
 require 'auth_check.php';
-require 'encryption_key.php';
 
 // Default fallbacks
 $fullName = 'Unknown User';
