@@ -95,7 +95,7 @@ def get_single_facial_frame():
         ret, buffer = cv2.imencode('.jpg', frame)
         if ret:
             return Response(buffer.tobytes(), mimetype='image/jpeg')
-    blank = cv2.zeros((480, 640, 3), dtype=np.uint8)
+    blank = np.zeros((480, 640, 3), dtype=np.uint8)
     ret, buffer = cv2.imencode('.jpg', blank)
     return Response(buffer.tobytes(), mimetype='image/jpeg')
 
@@ -173,7 +173,7 @@ def register_face_endpoint():
         abort(400, description="No selected file")
 
     # Get the project root to build a reliable path
-    project_root = sys.path[0]
+    project_root = os.path.abspath(os.path.join(os.path.dirname(__file__), '..'))
     # Define the relative path for DB and URL, ensuring forward slashes for web compatibility
     relative_upload_dir = "../php/routes/Pages/uploads/selfies"
     # Define the absolute path for saving the file on the server
@@ -226,7 +226,7 @@ def register_from_selfie_endpoint():
             abort(400, description="Visitor ID and selfie_path are required.")
 
         # Construct the absolute path from the project root
-        project_root = sys.path[0]
+        project_root = os.path.abspath(os.path.join(os.path.dirname(__file__), '..'))
         absolute_selfie_path = os.path.join(project_root, selfie_path)
 
         if not os.path.exists(absolute_selfie_path):
@@ -258,7 +258,7 @@ def register_visitor_endpoint():
         abort(400, description="No selected file")
 
     # Get the project root to build a reliable path
-    project_root = sys.path[0]
+    project_root = os.path.abspath(os.path.join(os.path.dirname(__file__), '..'))
     relative_upload_dir = "php/routes/Pages/uploads/selfies"
     # Define the absolute path for saving the file on the server
     absolute_upload_dir = os.path.join(project_root, relative_upload_dir)
@@ -372,3 +372,6 @@ def capture_vehicle_image():
         return jsonify({"message": "Vehicle image captured successfully.", "filepath": filepath})
     except Exception as e:
         abort(500, description=str(e))
+
+if __name__ == '__main__':
+    app.run(host='0.0.0.0', port=8000, debug=True)
