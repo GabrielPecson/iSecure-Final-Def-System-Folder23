@@ -171,13 +171,13 @@ $all_cards = $all_cards_stmt->fetchAll(PDO::FETCH_ASSOC);
                         <h4>Register New Key Card</h4>
                         <p class="text-muted small">Add a new key card UID to the system to make it available for assignment.</p>
                         <form id="registerCardForm">
-                            <div class="mb-3">
-                                <label for="card_uid" class="form-label">New Card UID</label>
-                                <input type="text" id="card_uid" class="form-control" placeholder="Scan or enter new card UID" required />
-                            </div>
                              <div class="mb-3">
                                 <label for="card_name" class="form-label">Card Name</label>
                                 <input type="text" id="card_name" class="form-control" placeholder="e.g., 'Main Gate Card 01'" required />
+                            </div>
+                            <div class="mb-3">
+                                <label for="card_uid" class="form-label">New Card UID</label>
+                                <input type="text" id="card_uid" class="form-control" placeholder="Scan or enter new card UID" required />
                             </div>
                             <button type="submit" class="btn btn-info">Register Card</button>
                         </form>
@@ -242,7 +242,7 @@ $all_cards = $all_cards_stmt->fetchAll(PDO::FETCH_ASSOC);
             <div class="key-cards-list-section mt-5" id="all-cards-table">
                 <h4>All Registered Cards</h4>
                 <div class="table-responsive">
-                    <table class="table table-bordered table-striped">
+                    <table class="table table-bordered table-striped key-card-list-table">
                         <thead>
                             <tr>
                                 <th>UID</th>
