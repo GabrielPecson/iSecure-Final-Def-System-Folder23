@@ -24,10 +24,15 @@ function uploadFile($fileInput, $uploadDir = "uploads/") {
 }
 
 // File upload function for IDs
-function uploadIdFile($fileInput, $uploadDir = __DIR__ . "/../uploads/ids/") {
+function uploadIdFile($fileInput) {
     if (!isset($_FILES[$fileInput]) || $_FILES[$fileInput]['error'] !== UPLOAD_ERR_OK) {
         return null;
     }
+
+    // Define the relative path for both saving and database storage.
+    // This will create 'uploads/ids/' inside the current 'Pages' directory.
+    $relativeUploadDir = 'uploads/ids/';
+    $uploadDir = __DIR__ . DIRECTORY_SEPARATOR . $relativeUploadDir;
 
     if (!is_dir($uploadDir)) {
         mkdir($uploadDir, 0777, true);
@@ -35,10 +40,9 @@ function uploadIdFile($fileInput, $uploadDir = __DIR__ . "/../uploads/ids/") {
 
     $fileName = time() . "_id." . pathinfo($_FILES[$fileInput]["name"], PATHINFO_EXTENSION);
     $targetFile = $uploadDir . $fileName;
-
     if (move_uploaded_file($_FILES[$fileInput]["tmp_name"], $targetFile)) {
-        // Return the relative path from the project root, not just the filename.
-        return 'uploads/ids/' . $fileName;
+        // Return the full relative path, which now correctly includes 'Pages'
+        return $relativeUploadDir . $fileName;
     }
     return null;
 }
