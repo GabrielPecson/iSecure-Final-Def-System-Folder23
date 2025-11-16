@@ -26,6 +26,20 @@ app = Flask(__name__)
 # Allow PHP frontend (Apache) to access this API
 CORS(app, resources={r"/*": {"origins": "*"}})
 
+def preload_models():
+    """
+    Pre-loads the deepface models into memory when the server starts.
+    This prevents long delays and timeouts on the first API call.
+    """
+    try:
+        print("Pre-loading face recognition models...")
+        from deepface import DeepFace
+        # This call will download and cache the model if it's not already present
+        DeepFace.build_model("Facenet512")
+        print("Face recognition models loaded successfully.")
+    except Exception as e:
+        print(f"Warning: Could not pre-load models. First request may be slow. Error: {e}")
+
 
 
 @app.route("/recognize/vehicle", methods=["POST"])
@@ -374,6 +388,9 @@ def capture_vehicle_image():
         abort(500, description=str(e))
 
 if __name__ == '__main__':
+    # Pre-load models before starting the server
+    preload_models()
+
     import ssl
 
     # Create SSL context

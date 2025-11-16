@@ -1,6 +1,5 @@
 import cv2
 import numpy as np
-from deepface import DeepFace
 import json
 import os
 import sys
@@ -8,6 +7,9 @@ import argparse
 import warnings
 
 warnings.filterwarnings('ignore')
+# Import DeepFace at the top level to keep the model in memory after pre-loading
+from deepface import DeepFace
+
 os.environ['TF_CPP_MIN_LOG_LEVEL'] = '3' # Suppress TensorFlow logging
 os.environ['TF_ENABLE_ONEDNN_OPTS'] = '0' # Disable oneDNN custom operations
 
@@ -145,4 +147,3 @@ if __name__ == "__main__":
             response['visitor_name'] = message.split(" ")[2]
 
     print(json.dumps(response))
-
