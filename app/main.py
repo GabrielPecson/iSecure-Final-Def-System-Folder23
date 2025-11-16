@@ -165,8 +165,33 @@ def authenticate_face_endpoint():
 
         # Parse the result
         if success:
-            visitor_id = message.split(" ")[2]
-            return jsonify({"success": True, "message": message, "visitor_id": visitor_id})
+            # The message is "Authenticated as {session_token}"
+            session_token = message.split(" ")[2]
+
+            # --- New: Look up the visitor's name using the session token ---
+            visitor_name = "Unknown Visitor"
+            visitor_id = None
+            db_connection = get_db_connection()
+            try:
+                with db_connection.cursor() as cursor:
+                    # Find the selfie path from the session, then find the name from the request
+                    sql = """
+                        SELECT vr.first_name, vr.last_name, v.id
+                        FROM visitor_sessions vs
+                        JOIN visitation_requests vr ON vs.selfie_photo_path = vr.selfie_photo_path
+                        LEFT JOIN visitors v ON vr.id = v.visitation_id
+                        WHERE vs.user_token = %s
+                    """
+                    cursor.execute(sql, (session_token,))
+                    result = cursor.fetchone()
+                    if result:
+                        visitor_name = f"{result['first_name']} {result['last_name']}"
+                        visitor_id = result['id']
+            finally:
+                if db_connection:
+                    db_connection.close()
+            
+            return jsonify({"success": True, "message": f"Authenticated as {visitor_name}", "visitor_id": visitor_id})
         else:
             return jsonify({"success": False, "message": message})
     except Exception as e:
