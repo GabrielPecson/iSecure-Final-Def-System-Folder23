@@ -54,15 +54,15 @@ def recognize_vehicle():
         
         # Read the file content directly
         contents = file.read()
-        result = detect_vehicle_plate(contents)
+        recognition_result = detect_vehicle_plate(contents)
 
         # Check if the recognition service returned an error
-        if "error" in result:
+        if "error" in recognition_result:
             # Forward the error from the recognition service
-            return jsonify(result), 400
+            return jsonify(recognition_result), 400
 
         # If successful, return the entire result dictionary
-        return jsonify(result)
+        return jsonify(recognition_result)
     except Exception as e:
         abort(500, description=str(e))
 
