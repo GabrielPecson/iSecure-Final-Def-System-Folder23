@@ -188,9 +188,10 @@ $all_cards = $all_cards_stmt->fetchAll(PDO::FETCH_ASSOC);
 
                 <!-- Assignment Form -->
                 <div class="col-md-7">
-                    <div class="key-cards-form-section h-100 d-flex flex-column">
+                    <div class="key-cards-form-section h-100">
                         <h4 id="formTitle">Assign Key Card to Visitor</h4>
-                        <form id="badgeForm" class="d-flex flex-column flex-grow-1">
+                        <p class="text-muted small">Select a visitor and an unassigned card to grant access for a specific time.</p>
+                        <form id="badgeForm">
                             <input type="hidden" id="badgeId" name="id" value="" />
                             <div class="row">
                                 <div class="col-md-6 mb-3">
@@ -232,7 +233,7 @@ $all_cards = $all_cards_stmt->fetchAll(PDO::FETCH_ASSOC);
                                     <option value="terminated">Terminated</option>
                                 </select>
                             </div>
-                            <div class="d-flex justify-content-end mt-auto">
+                            <div class="d-flex justify-content-end mt-3">
                                 <button type="button" class="btn btn-secondary me-2" id="cancelEditBtn" style="display:none;">Cancel</button>
                                 <button type="button" class="btn btn-danger me-2" id="terminateBtn" style="display:none;">Terminate Key Card</button>
                                 <button type="submit" class="btn btn-info" id="submitBtn">Assign Key Card</button>
