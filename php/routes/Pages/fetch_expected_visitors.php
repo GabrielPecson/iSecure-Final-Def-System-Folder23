@@ -16,7 +16,7 @@ try {
             date,
             status
         FROM visitors
-        WHERE (status = 'Expected' OR status IS NULL OR status = '') AND time_in IS NULL
+        WHERE (status = 'Expected' OR status IS NULL OR status = '') AND time_in IS NULL AND status != 'Cancelled'
         ORDER BY date DESC
     ");
     $stmt->execute();
