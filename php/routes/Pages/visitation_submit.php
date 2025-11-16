@@ -11,23 +11,21 @@ function uploadIdFile($fileInput) {
     }
 
     // 1. Define the path relative to the current script's directory ('Pages').
-    $uploadSubDir = 'uploads/ids/';
-    $absoluteUploadDir = __DIR__ . DIRECTORY_SEPARATOR . $uploadSubDir;
+    $relativeUploadDir = 'uploads/ids/';
+    $absoluteUploadDir = __DIR__ . DIRECTORY_SEPARATOR . $relativeUploadDir;
 
     // 2. Create the directory if it doesn't exist.
     if (!is_dir($absoluteUploadDir)) {
         mkdir($absoluteUploadDir, 0777, true);
     }
 
-    // 3. Generate a unique and safe filename.
     $fileName = time() . "_id." . pathinfo($_FILES[$fileInput]["name"], PATHINFO_EXTENSION);
     $targetFile = $absoluteUploadDir . $fileName;
 
-    // 4. Move the uploaded file to the final destination.
     if (move_uploaded_file($_FILES[$fileInput]["tmp_name"], $targetFile)) {
-        // 5. Return the full relative path from the project root for consistency.
-        // This is the path that fetch_request_image.php will use.
-        return 'php/routes/Pages/' . $uploadSubDir . $fileName;
+        // Return the simple relative path from the 'Pages' directory.
+        // This will be stored in the database.
+        return $relativeUploadDir . $fileName;
     }
 
     if (!is_dir($uploadDir)) {
