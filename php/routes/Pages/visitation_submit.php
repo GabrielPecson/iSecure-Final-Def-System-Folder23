@@ -84,6 +84,9 @@ $office_to_visit    = $_POST['office_to_visit'] ?? null;
 $visit_date         = $_POST['visit_date'] ?? null;
 $visit_time         = $_POST['visit_time'] ?? null;
 
+// --- FIX: Define the user_token from the session ---
+$user_token = $_SESSION['user_token'] ?? null;
+
 // Ensure office_to_visit has a value if not selected
 if (empty($office_to_visit)) {
     $office_to_visit = 'Not specified';
@@ -124,7 +127,6 @@ $valid_id_path      = uploadIdFile("valid_id");
 $selfie_photo_path = $_POST['selfie_photo_path'] ?? null; // Get from POST if available
 
 if (!$selfie_photo_path && isset($_SESSION['user_token'])) { // Only check session if not in POST
-    $user_token = $_SESSION['user_token'];
     $stmt_session = $pdo->prepare("SELECT selfie_photo_path FROM visitor_sessions WHERE user_token = ?");
     $stmt_session->execute([$user_token]);
     $session_data = $stmt_session->fetch(PDO::FETCH_ASSOC);
@@ -164,12 +166,12 @@ $success = $stmt->execute([
     ':office_to_visit'   => $office_to_visit_enc,
     ':visit_date'        => $visit_date,
     ':visit_time'        => $visit_time,
+    ':user_token'        => $user_token
 ]);
 
 if ($success) {
     // Log action
-    $token = $_SESSION['user_token'] ?? null;
-    log_landing_action($pdo, $token, "Submitted visitation request form");
+    log_landing_action($pdo, $user_token, "Submitted visitation request form");
 
     // Notify admins/personnel if visitor has history
     require 'notify.php';
