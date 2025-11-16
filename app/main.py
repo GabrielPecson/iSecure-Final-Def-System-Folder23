@@ -166,9 +166,9 @@ def authenticate_face_endpoint():
         # Parse the result
         if success:
             visitor_id = message.split(" ")[2]
-            return jsonify({"authenticated": True, "visitor_id": visitor_id})
+            return jsonify({"success": True, "message": message, "visitor_id": visitor_id})
         else:
-            return jsonify({"authenticated": False, "message": message})
+            return jsonify({"success": False, "message": message})
     except Exception as e:
         # Clean up in case of an error
         if 'temp_frame_path' in locals() and os.path.exists(temp_frame_path):
