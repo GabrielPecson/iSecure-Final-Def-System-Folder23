@@ -1,6 +1,6 @@
 <?php
 session_start();
-require_once __DIR__ . '../../../Pages/db_connect.php';
+require_once __DIR__ . '/../../Pages/db_connect.php';
 ;
 
 function generateRandomToken($length = 64) {
