@@ -28,21 +28,26 @@ $result = $stmt->fetch(PDO::FETCH_ASSOC);
 
 $image_path = $result[$column] ?? null;
 
-// Construct the full, absolute path to the image file
-// The image_path from the DB is something like 'up10ads/se1fies/...'
-// and this script is in '.../Pages/'. We need to go up to the project root
-// then into the correct directory.
-// Assuming the project root is two levels up from 'Pages'
-$full_path = realpath(__DIR__ . '/../../' . $image_path);
+// --- Debugging and Path Correction ---
+// __DIR__ is ".../php/routes/Pages". We need to go up two levels to get to ".../php/".
+// The $image_path from the DB is something like 'uploads/ids/...' or 'uploads/selfies/...'.
+// So the correct path is relative to the 'php' directory.
+$base_path = realpath(__DIR__ . '/../..'); // This resolves to the '.../php' directory.
+$full_path = $base_path . DIRECTORY_SEPARATOR . $image_path;
+
+// Log the paths for debugging. You can check this in your server's error log.
+error_log("Attempting to load image. DB Path: {$image_path}, Full Constructed Path: {$full_path}");
 
 if ($image_path && file_exists($full_path)) {
     $finfo = new finfo(FILEINFO_MIME_TYPE);
     $mime_type = $finfo->file($full_path);
     header('Content-Type: ' . $mime_type);
     readfile($full_path);
+    exit;
 } else {
     http_response_code(404);
     // You can optionally return a placeholder image here
     echo "Image not found.";
+    error_log("Image not found at path: {$full_path}"); // Log the failure
 }
 ?>
