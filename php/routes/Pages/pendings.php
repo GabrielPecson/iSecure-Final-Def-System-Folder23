@@ -431,8 +431,8 @@ const requestModal = new bootstrap.Modal(document.getElementById("requestModal")
             document.getElementById("modalVehicleModelCell").textContent = btn.dataset.vehiclemodel;
             document.getElementById("modalVehicleColorCell").textContent = btn.dataset.vehiclecolor;
             document.getElementById("modalPlateNumberCell").textContent = btn.dataset.platenumber;
-            document.getElementById("modalValidId").src = "fetch_request_image.php?request_id=" + btn.dataset.id + "&type=id";
-            document.getElementById("modalSelfie").src = "fetch_request_image.php?request_id=" + btn.dataset.id + "&type=selfie";
+            document.getElementById("modalValidId").src = btn.dataset.validid ? `../${btn.dataset.validid}` : '';
+            document.getElementById("modalSelfie").src = btn.dataset.selfie ? `../${btn.dataset.selfie}` : '';
             document.getElementById("modalRequestId").value = btn.dataset.id;
 
     // Hide approve/reject buttons if not pending
