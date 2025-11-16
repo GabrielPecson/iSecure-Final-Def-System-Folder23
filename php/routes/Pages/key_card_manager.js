@@ -108,25 +108,28 @@ document.addEventListener('DOMContentLoaded', function() {
 
     badgeForm.addEventListener('submit', function(e) {
         e.preventDefault();
-        const badgeId = document.getElementById('badgeId').value;
+        const editingBadgeId = document.getElementById('badgeId').value; // This is for editing, not assigning
         const visitorId = visitorSelect.value;
+
         if (!visitorId) {
             alert('Please select a visitor.');
             return;
         }
+
         const data = {
-            id: document.getElementById('keyCardId').value, // The ID of the badge record to update
             visitor_id: visitorId,
             validity_start: document.getElementById('validityStart').value.replace('T', ' ') + ':00',
             validity_end: document.getElementById('validityEnd').value.replace('T', ' ') + ':00'
         };
-        // The action is now always 'update' for assignment, as we are updating an existing unassigned record.
-        const action = 'update';
-        if (badgeId) { // This block is for editing an already assigned card
-            data.id = badgeId;
+
+        if (editingBadgeId) { // This block is for editing an already assigned card
+            data.id = editingBadgeId;
             data.status = document.getElementById('badgeStatus').value;
+        } else { // This block is for assigning a new card
+            data.id = document.getElementById('keyCardId').value; // The ID of the badge record to update
         }
-        fetch(`key_card.php?action=${action}`, {
+
+        fetch(`key_card.php?action=update`, {
             method: 'POST',
             headers: {'Content-Type': 'application/json'},
             body: JSON.stringify(data)
@@ -136,7 +139,7 @@ document.addEventListener('DOMContentLoaded', function() {
             alert(result.message);
             if (result.success) {
                 resetForm();
-                visitorSelect.dispatchEvent(new Event('change'));
+                window.location.reload(); // Reload to see the updated table and dropdown
             }
         });
     });

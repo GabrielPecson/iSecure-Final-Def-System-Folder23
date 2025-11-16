@@ -38,7 +38,7 @@ try {
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet" />
     <link href="https://fonts.googleapis.com/css2?family=League+Spartan:wght@100..900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
-    <link rel="icon" type="image/png" href="../../images/logo/5thFighterWing-logo.png">
+    <link rel="icon" type="image/png" href="5thFighterWing-logo.png">
     <link rel="stylesheet" href="admin_maindashboard.css" />
     <link rel="stylesheet" href="sidebar.css" />
 </head>

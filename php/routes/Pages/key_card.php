@@ -59,40 +59,40 @@ if (isset($_GET['action'])) {
             }
             break;
 
-        case 'issue': // This is now the "assign" function
+        case 'update':
             $data = json_decode(file_get_contents('php://input'), true);
-            if (empty($data['visitor_id']) || empty($data['key_card_number']) || empty($data['validity_start']) || empty($data['validity_end'])) {
+            if (empty($data['id']) || empty($data['visitor_id']) || empty($data['validity_start']) || empty($data['validity_end'])) {
                 http_response_code(400);
-                echo json_encode(['success' => false, 'message' => 'Missing required fields for assignment.']);
+                echo json_encode(['success' => false, 'message' => 'Card ID, Visitor ID, and validity dates are required.']);
                 exit;
             }
 
             try {
-                // This logic assumes you are adding a new record for assignment.
-                // A more robust system might update an existing "unassigned" card record.
+                // Update the existing card record to assign it to a visitor and set it as 'active'.
                 $stmt = $pdo->prepare(
-                    "INSERT INTO clearance_badges (visitor_id, key_card_number, validity_start, validity_end, status) VALUES (?, ?, ?, ?, 'active')"
+                    "UPDATE clearance_badges SET visitor_id = ?, validity_start = ?, validity_end = ?, status = 'active' WHERE id = ?"
                 );
-                $stmt->execute([$data['visitor_id'], $data['key_card_number'], $data['validity_start'], $data['validity_end']]);
+                $stmt->execute([
+                    $data['visitor_id'],
+                    $data['validity_start'],
+                    $data['validity_end'],
+                    $data['id']
+                ]);
 
-                $details = "Assigned key card #{$data['key_card_number']} to visitor ID {$data['visitor_id']}.";
-                log_audit($pdo, $admin_user_id, $admin_username, 'CARD_ASSIGN', $details);
+                if ($stmt->rowCount() > 0) {
+                    $details = "Assigned card ID {$data['id']} to visitor ID {$data['visitor_id']}.";
+                    log_audit($pdo, $admin_user_id, $admin_username, 'CARD_ASSIGN', $details);
+                    echo json_encode(['success' => true, 'message' => 'Key card assigned successfully.']);
+                } else {
+                    // This can happen if the card ID is invalid or already assigned.
+                    echo json_encode(['success' => false, 'message' => 'Failed to assign key card. It may not exist or is not unassigned.']);
+                }
 
-                echo json_encode(['success' => true, 'message' => 'Key card assigned successfully.']);
             } catch (PDOException $e) {
                 http_response_code(500);
                 echo json_encode(['success' => false, 'message' => 'Database error: ' . $e->getMessage()]);
             }
             break;
-
-        case 'update':
-            // This logic remains for editing an already-assigned card
-            $data = json_decode(file_get_contents('php://input'), true);
-            // ... (update logic as before) ...
-            break;
-
-        // You would add a 'register' case here if you create a separate table for unassigned cards.
-        // For now, we will handle it via the "Assign" form.
 
         default:
             http_response_code(400);
@@ -112,6 +112,16 @@ $visitors = $stmt->fetchAll(PDO::FETCH_ASSOC);
 $unassigned_stmt = $pdo->query("SELECT id, card_name, key_card_number FROM clearance_badges WHERE status = 'unassigned' OR status IS NULL");
 $unassigned_cards = $unassigned_stmt->fetchAll(PDO::FETCH_ASSOC);
 
+// Fetch ALL key cards for the main list view, joining with visitors to get holder name
+$all_cards_stmt = $pdo->query("
+    SELECT 
+        cb.id, cb.key_card_number, cb.card_name, cb.status, cb.validity_start, cb.validity_end,
+        v.first_name, v.last_name
+    FROM clearance_badges cb
+    LEFT JOIN visitors v ON cb.visitor_id = v.id
+    ORDER BY cb.issued_at DESC
+");
+$all_cards = $all_cards_stmt->fetchAll(PDO::FETCH_ASSOC);
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -228,24 +238,32 @@ $unassigned_cards = $unassigned_stmt->fetchAll(PDO::FETCH_ASSOC);
                 </div>
             </div>
 
-            <!-- Table of Unassigned Cards -->
-            <div class="key-cards-list-section mt-5">
-                <h4>Available (Unassigned) Key Cards</h4>
+            <!-- Table of All Registered Cards -->
+            <div class="key-cards-list-section mt-5" id="all-cards-table">
+                <h4>All Registered Cards</h4>
                 <div class="table-responsive">
                     <table class="table table-bordered table-striped">
                         <thead>
                             <tr>
-                                <th>Card Name</th>
-                                <th>Card UID</th>
+                                <th>UID</th>
+                                <th>Holder</th>
+                                <th>Valid From</th>
+                                <th>Valid To</th>
                                 <th>Status</th>
                             </tr>
                         </thead>
                         <tbody>
-                            <?php foreach ($unassigned_cards as $card): ?>
+                            <?php foreach ($all_cards as $card): ?>
                             <tr>
-                                <td><?= htmlspecialchars($card['card_name']) ?></td>
                                 <td><?= htmlspecialchars($card['key_card_number']) ?></td>
-                                <td><span class="badge bg-warning text-dark">Unassigned</span></td>
+                                <td><?= htmlspecialchars(($card['first_name'] ?? '') . ' ' . ($card['last_name'] ?? '')) ?: 'Unassigned' ?></td>
+                                <td><?= $card['validity_start'] ? htmlspecialchars(date('Y-m-d H:i', strtotime($card['validity_start']))) : 'N/A' ?></td>
+                                <td><?= $card['validity_end'] ? htmlspecialchars(date('Y-m-d H:i', strtotime($card['validity_end']))) : 'N/A' ?></td>
+                                <td>
+                                    <span class="badge bg-<?= $card['status'] === 'active' ? 'success' : ($card['status'] === 'unassigned' ? 'warning text-dark' : 'secondary') ?>">
+                                        <?= htmlspecialchars(ucfirst($card['status'] ?? '')) ?>
+                                    </span>
+                                </td>
                             </tr>
                             <?php endforeach; ?>
                         </tbody>
