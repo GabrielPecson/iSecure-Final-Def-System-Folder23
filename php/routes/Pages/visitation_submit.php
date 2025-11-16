@@ -142,7 +142,7 @@ $stmt = $pdo->prepare("
      vehicle_owner, vehicle_brand, plate_number, vehicle_color, vehicle_model, vehicle_photo_path,
      reason, personnel_related, office_to_visit, visit_date, visit_time, status, user_token)
     VALUES (:first_name, :middle_name, :last_name, :home_address, :contact_number, :email, :valid_id_path, :selfie_photo_path,
-            :vehicle_owner, :vehicle_brand, :plate_number, :vehicle_color, :vehicle_type, :vehicle_photo_path,
+            :vehicle_owner, :vehicle_brand, :plate_number, :vehicle_color, :vehicle_model, :vehicle_photo_path,
             :reason, :personnel_related, :office_to_visit, :visit_date, :visit_time, 'Pending', :user_token)
 ");
 
@@ -159,7 +159,7 @@ $success = $stmt->execute([
     ':vehicle_brand'     => $vehicle_brand,
     ':plate_number'      => $plate_number,
     ':vehicle_color'     => $vehicle_color,
-    ':vehicle_type'      => $vehicle_type,
+    ':vehicle_model'     => $vehicle_type, // Corrected placeholder
     ':vehicle_photo_path'=> $vehicle_photo_path,
     ':reason'            => $reason,
     ':personnel_related' => $personnel_related_enc,
