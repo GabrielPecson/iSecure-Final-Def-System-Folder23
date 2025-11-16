@@ -1,6 +1,6 @@
 <?php
 require 'db_connect.php';
-require '../../SMS module/sms_module.php';
+require 'sms_module.php';
 
 // Set the default timezone to ensure correct time comparisons
 date_default_timezone_set('Asia/Manila'); // Adjust to your local timezone

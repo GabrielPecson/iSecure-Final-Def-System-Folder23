@@ -1,5 +1,8 @@
 <?php
 
+// Use an absolute path to require the database configuration. This makes the include reliable.
+require_once __DIR__ . '/../../config/db_config.php';
+
 function send_sms($number, $message, $sendername = 'SEMAPHORE') {
     $ch = curl_init();
     $parameters = array(

@@ -1,5 +1,6 @@
 <?php
 session_start();
+header('Content-Type: application/json'); // Set header to return JSON
 require 'db_connect.php';
 require 'encryption_key.php';
 require 'audit_log.php';
@@ -181,14 +182,20 @@ if ($success) {
         'contact_number' => $contact_number
     ]);
 
-    // Set a session variable to show a success message on the next page.
-    $_SESSION['submission_success'] = "Visitation request submitted successfully!";
-    
-    // Use a standard server-side redirect. This is more reliable.
-    header("Location: home-page.php");
-    exit; // Always call exit() after a header redirect.
+    // Return a JSON success response
+    echo json_encode([
+        'success' => true,
+        'message' => 'Visitation request submitted successfully!'
+    ]);
+    exit;
 } else {
-    $_SESSION['submission_error'] = "Error saving request. Please try again.";
-    header("Location: visit-page.php");
+    // Log the actual database error for debugging
+    error_log("Visitation submission failed: " . implode(" - ", $stmt->errorInfo()));
+
+    // Return a JSON error response
+    echo json_encode([
+        'success' => false,
+        'message' => 'Error saving request. Please try again.'
+    ]);
     exit;
 }

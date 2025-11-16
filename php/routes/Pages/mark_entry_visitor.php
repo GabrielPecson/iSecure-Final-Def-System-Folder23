@@ -56,7 +56,9 @@ try {
 
     if ($visitorPhone) {
         // Send SMS
-        require_once '../../SMS module/sms_module.php';
+        // Corrected the path to sms_module.php. Since it's in the same directory,
+        // a direct include is sufficient. Using __DIR__ makes it more robust.
+        require_once __DIR__ . 'sms_module.php';
         $message = "Welcome to Basa Air Base. Please be advised that you need to leave the premises before 7:00 PM.";
         send_sms($visitorPhone, $message);
     }

@@ -134,7 +134,7 @@ if (!$token) {
           </div>
         </div>
 
-        <div class="grid grid-cols-2 gap-4 mt-4">
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-4">
   <!-- Valid ID Upload -->
   <div class="w-full">
     <label class="block text-sm font-semibold mb-1">
@@ -153,7 +153,7 @@ if (!$token) {
   <!-- Facial Scanning -->
   <div class="w-full">
     <label class="block text-sm font-semibold mb-1">
-      Facial Scanning (Optional)
+      Facial Scanning <span class="text-red-500">*</span>
     </label>
     <button
       type="button"
@@ -163,7 +163,7 @@ if (!$token) {
       <i class="fa-solid fa-camera mr-2 text-gray-600"></i>
       <span>Start Facial Scan</span>
     </button>
-    <input id="selfie-photo-path" name="selfie_photo_path" type="hidden" />
+    <input id="selfie-photo-path" name="selfie_photo_path" type="hidden" required />
   </div>
 </div>
       </section>
