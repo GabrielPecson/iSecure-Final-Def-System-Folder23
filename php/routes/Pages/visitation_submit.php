@@ -1,7 +1,7 @@
 <?php
-ob_start();
 session_start();
 require 'db_connect.php';
+require 'encryption_key.php';
 require 'notify.php';
 require 'audit_log.php';
 
@@ -186,8 +186,7 @@ try {
 
         // Set a success message in the session to display on the homepage
         $_SESSION['submission_success'] = 'Visitation request submitted successfully!';
-        // Clean output buffer and redirect to the homepage
-        ob_end_clean();
+        // Redirect to the homepage
         header('Location: home-page.php');
         exit;
     } else {
@@ -196,8 +195,7 @@ try {
 
         // Set an error message and redirect back to the form page
         $_SESSION['submission_error'] = 'Error saving request. Please try again.';
-        // Clean output buffer and redirect back to the visit page to show the error
-        ob_end_clean();
+        // Redirect back to the visit page to show the error
         header('Location: visit-page.php');
         exit;
     }
@@ -207,8 +205,7 @@ try {
 
     // Set an error message and redirect back to the form page
     $_SESSION['submission_error'] = 'Error saving request. Please try again.';
-    // Clean output buffer and redirect back to the visit page to show the error
-    ob_end_clean();
+    // Redirect back to the visit page to show the error
     header('Location: visit-page.php');
     exit;
 }
