@@ -132,6 +132,13 @@ def set_camera_source(camera_type: str, source: str):
         else: # vehicle
             camera_vehicle = DummyCamera()
 
-# Initialize default cameras on startup
-set_camera_source("facial", "webcam")
-set_camera_source("vehicle", "webcam")
+# --- New: Smart Initialization ---
+# On a server, we don't want to assume a webcam is present.
+# We will let the cameras start as DummyCamera.
+# They can be configured later via the /camera/source API endpoint
+# with a real IP camera URL.
+# If you are developing locally and want webcams on by default,
+# you can uncomment the two lines below.
+
+# set_camera_source("facial", "webcam")
+# set_camera_source("vehicle", "webcam")
