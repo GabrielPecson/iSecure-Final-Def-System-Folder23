@@ -1,5 +1,6 @@
 import argparse
 import os
+import tempfile
 import json
 from mindee import ClientV2, InferenceParameters, PathInput
 from dateutil import parser as date_parser
@@ -26,6 +27,37 @@ def call_mindee_api(image_path, api_key, model_id):
     response = mindee_client.enqueue_and_get_inference(input_source, params)
 
     return response
+
+def extract_id_info(image_bytes):
+    """
+    Main function to be called by the API.
+    Takes image bytes, saves to a temporary file, and processes with Mindee.
+    """
+    # Hardcoded credentials for Mindee
+    api_key = "md_wSasrvkkiuFg06GG7bY1X8TI0PxHAEZD"
+    model_id = "8beb1990-b527-4e62-bbab-73bc0d4fae3c"
+
+    temp_file_path = None
+    try:
+        # Create a temporary file to store the image bytes
+        with tempfile.NamedTemporaryFile(delete=False, suffix=".jpg") as temp_file:
+            temp_file.write(image_bytes)
+            temp_file_path = temp_file.name
+
+        # Call Mindee API with the path to the temporary file
+        response = call_mindee_api(temp_file_path, api_key, model_id)
+
+        # Extract fields from the response
+        extracted, detected_type = extract_fields(response)
+
+        return {"success": True, "id_type": detected_type, "data": extracted}
+
+    except Exception as e:
+        return {"success": False, "message": str(e)}
+    finally:
+        # Clean up the temporary file
+        if temp_file_path and os.path.exists(temp_file_path):
+            os.unlink(temp_file_path)
 
 def extract_phil_id_fields(raw_text):
     """Extract fields specific to Philippine National ID (PhilSys)."""

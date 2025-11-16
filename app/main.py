@@ -12,7 +12,7 @@ from app.db import get_db_connection
 from app.config import set_camera_source, camera_facial, camera_vehicle
 from app.services.face_recog.authentication_service import authenticate_face
 from app.services.vehicle_recog.license_scanner import detect_vehicle_plate
-# from app.services.ocr.ocr_service import extract_id_info
+from app.services.ocr.id_scanner import extract_id_info
 from flask_cors import CORS
 import asyncio
 import cv2
@@ -59,20 +59,20 @@ def recognize_vehicle():
     except Exception as e:
         abort(500, description=str(e))
 
-# @app.route("/ocr/id", methods=["POST"])
-# def ocr_id():
-#     try:
-#         if 'file' not in request.files:
-#             abort(400, description="No file part")
-#         file = request.files['file']
-#         if file.filename == '':
-#             abort(400, description="No selected file")
+@app.route("/ocr/id", methods=["POST"])
+def ocr_id():
+    try:
+        if 'file' not in request.files:
+            abort(400, description="No file part")
+        file = request.files['file']
+        if file.filename == '':
+            abort(400, description="No selected file")
         
-#         contents = file.read()
-#         result = extract_id_info(contents)
-#         return jsonify(result)
-#     except Exception as e:
-#         abort(500, description=str(e))
+        contents = file.read()
+        result = extract_id_info(contents)
+        return jsonify(result)
+    except Exception as e:
+        abort(500, description=str(e))
 
 @app.route("/", methods=["GET"])
 def health_check():
@@ -368,12 +368,15 @@ def recognize_and_compare_plate():
         if frame is None:
             abort(500, description="Could not capture frame from vehicle camera.")
 
-        # Save the captured frame for auditing
-        output_dir = "ID' Data for ocr/"
-        os.makedirs(output_dir, exist_ok=True)
+        # --- Corrected Pathing ---
+        # Save to a consistent, web-accessible uploads directory
+        project_root = os.path.abspath(os.path.join(os.path.dirname(__file__), '..'))
+        relative_output_dir = "php/routes/Pages/uploads/vehicle_captures"
+        absolute_output_dir = os.path.join(project_root, relative_output_dir)
+        os.makedirs(absolute_output_dir, exist_ok=True)
         timestamp = time.strftime("%Y%m%d-%H%M%S")
         filename = f"{timestamp}_capture.jpg"
-        filepath = os.path.join(output_dir, filename)
+        filepath = os.path.join(absolute_output_dir, filename)
         cv2.imwrite(filepath, frame)
 
         ret, buffer = cv2.imencode('.jpg', frame)
@@ -386,23 +389,8 @@ def recognize_and_compare_plate():
         recognized_plate = recognition_result.get('license_plate_number') if recognition_result else None
         vehicle_type = recognition_result.get('vehicle_type') if recognition_result else "Not found"
 
-        # --- New: Save the recognized data to a JSON file ---
-        json_output_folder = "License Plate Data/"
-        os.makedirs(json_output_folder, exist_ok=True)
-
-        plate_data = {
-            "id_type": "philippine_license_plate",
-            "license_plate_number": recognized_plate if recognized_plate else "Not found",
-            "vehicle_type": vehicle_type
-        }
-
-        base_name = os.path.splitext(filename)[0]
-        json_filename = f"{base_name}.json"
-        json_path = os.path.join(json_output_folder, json_filename)
-
-        with open(json_path, 'w') as f:
-            json.dump(plate_data, f, indent=4)
-        # --- End new logic ---
+        # --- Removed the logic that saves to a separate JSON file ---
+        # The result is returned directly in the API response, which is more efficient.
 
         if recognized_plate is None:
             return jsonify({
@@ -428,14 +416,17 @@ def capture_vehicle_image():
         if frame is None:
             abort(500, description="Could not capture frame from vehicle camera.")
 
-        output_dir = "ID' Data for ocr/"
-        os.makedirs(output_dir, exist_ok=True)
+        # --- Corrected Pathing ---
+        project_root = os.path.abspath(os.path.join(os.path.dirname(__file__), '..'))
+        relative_output_dir = "php/routes/Pages/uploads/vehicle_captures"
+        absolute_output_dir = os.path.join(project_root, relative_output_dir)
+        os.makedirs(absolute_output_dir, exist_ok=True)
         timestamp = time.strftime("%Y%m%d-%H%M%S")
         filename = f"{timestamp}_vehicle_capture.jpg"
-        filepath = os.path.join(output_dir, filename)
+        filepath = os.path.join(absolute_output_dir, filename)
         cv2.imwrite(filepath, frame)
 
-        return jsonify({"message": "Vehicle image captured successfully.", "filepath": filepath})
+        return jsonify({"message": "Vehicle image captured successfully.", "filepath": os.path.join(relative_output_dir, filename)})
     except Exception as e:
         abort(500, description=str(e))
 
