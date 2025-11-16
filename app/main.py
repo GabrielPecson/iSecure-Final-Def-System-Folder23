@@ -175,12 +175,14 @@ def authenticate_face_endpoint():
             try:
                 with db_connection.cursor() as cursor:
                     # Find the visitor's name by joining through the tables.
-                    # The matched ID could be a name or a session token.
+                    # This query handles matching by full name (with or without middle name)
+                    # OR by the session token stored during initial registration.
                     sql = """
                         SELECT vr.first_name, vr.last_name, v.id
                         FROM visitation_requests vr
                         LEFT JOIN visitors v ON vr.id = v.visitation_id
-                        WHERE CONCAT(vr.first_name, ' ', vr.last_name) = %s OR vr.id IN (SELECT visitation_id FROM visitors WHERE id = %s)
+                        LEFT JOIN visitor_sessions vs ON vr.selfie_photo_path = vs.selfie_photo_path
+                        WHERE CONCAT_WS(' ', vr.first_name, vr.middle_name, vr.last_name) = %s OR vs.user_token = %s
                     """
                     cursor.execute(sql, (session_token, session_token))
                     result = cursor.fetchone()
