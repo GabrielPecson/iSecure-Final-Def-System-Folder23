@@ -30,7 +30,7 @@ try {
             v.personnel_related,
             v.office_to_visit
         FROM visitors v
-        LEFT JOIN visitation_requests vr ON v.visitation_request_id = vr.id
+        LEFT JOIN visitation_requests vr ON v.visitation_id = vr.id
         WHERE v.id = :id
     ");
 
