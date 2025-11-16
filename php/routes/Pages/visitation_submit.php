@@ -1,11 +1,7 @@
 <?php
-ini_set('display_errors', 1);
-ini_set('display_startup_errors', 1);
-error_reporting(E_ALL);
 ob_start();
 session_start();
 require 'db_connect.php';
-require 'encryption_key.php';
 require 'notify.php';
 require 'audit_log.php';
 
