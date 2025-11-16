@@ -173,7 +173,14 @@ if ($success) {
         'contact_number' => $contact_number
     ]);
 
-    echo "<script>alert('Visitation request submitted successfully!'); window.location.href='../routes/Pages/home-page.php';</script>";
+    // Set a session variable to show a success message on the next page.
+    $_SESSION['submission_success'] = "Visitation request submitted successfully!";
+    
+    // Use a standard server-side redirect. This is more reliable.
+    header("Location: home-page.php");
+    exit; // Always call exit() after a header redirect.
 } else {
-    echo "<script>alert('Error saving request. Please try again.'); window.history.back();</script>";
+    $_SESSION['submission_error'] = "Error saving request. Please try again.";
+    header("Location: visit-page.php");
+    exit;
 }
