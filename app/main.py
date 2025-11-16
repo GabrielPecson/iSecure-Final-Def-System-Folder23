@@ -416,7 +416,10 @@ def recognize_and_compare_plate():
                 "message": "Could not detect a license plate."
             })
 
-        match = (recognized_plate.strip().upper() == expected_plate.strip().upper())
+        # Normalize both strings by removing all spaces and converting to uppercase for a robust comparison
+        normalized_recognized = recognized_plate.replace(" ", "").strip().upper()
+        normalized_expected = expected_plate.replace(" ", "").strip().upper()
+        match = (normalized_recognized == normalized_expected)
         
         return jsonify({
             "match": match,
