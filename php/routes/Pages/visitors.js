@@ -75,6 +75,11 @@ document.addEventListener("DOMContentLoaded", () => {
         authVideoFeed.srcObject = currentStream;
         authVideoFeed.style.display = 'block';
       }
+      await fetch(`${API_BASE_URL}/camera/source`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ camera_type: 'facial', source: 'webcam' })
+      });
     } catch (err) {
       console.error("Error accessing webcam for facial recognition: ", err);
       if (authResultDiv) authResultDiv.innerHTML = `<div class="alert alert-danger">Error: Could not access webcam.</div>`;
@@ -86,6 +91,11 @@ document.addEventListener("DOMContentLoaded", () => {
     if (cctvFeed) {
       cctvFeed.src = `${API_BASE_URL}/camera/facial/frame`;
       cctvFeed.style.display = 'block';
+      await fetch(`${API_BASE_URL}/camera/source`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ camera_type: 'facial', source: 'cctv' })
+      });
     }
   }
 
@@ -98,6 +108,11 @@ document.addEventListener("DOMContentLoaded", () => {
         vehicleVideoFeed.srcObject = currentStream;
         vehicleVideoFeed.style.display = 'block';
       }
+      await fetch(`${API_BASE_URL}/camera/source`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ camera_type: 'vehicle', source: 'webcam' })
+      });
     } catch (err) {
       console.error("Error accessing webcam for vehicle recognition: ", err);
       if (vehicleAuthResultDiv) vehicleAuthResultDiv.innerHTML = `<div class="alert alert-danger">Error: Could not access webcam.</div>`;
@@ -109,6 +124,11 @@ document.addEventListener("DOMContentLoaded", () => {
     if (vehicleCctvFeed) {
       vehicleCctvFeed.src = `${API_BASE_URL}/camera/vehicle/frame`;
       vehicleCctvFeed.style.display = 'block';
+      await fetch(`${API_BASE_URL}/camera/source`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ camera_type: 'vehicle', source: 'cctv' })
+      });
     }
   }
 
