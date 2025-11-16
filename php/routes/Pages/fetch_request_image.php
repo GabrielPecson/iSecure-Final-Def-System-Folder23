@@ -29,7 +29,7 @@ $result = $stmt->fetch(PDO::FETCH_ASSOC);
 $image_path = $result[$column] ?? null;
 
 // Construct the full, absolute path to the image file
-$full_path = realpath(__DIR__ . '/../' . $image_path);
+$full_path = realpath(__DIR__ . '/../../' . $image_path);
 
 if ($image_path && file_exists($full_path)) {
     $finfo = new finfo(FILEINFO_MIME_TYPE);
