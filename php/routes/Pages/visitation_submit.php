@@ -1,7 +1,7 @@
 <?php
 session_start();
-require 'db_connect.php';
-require 'audit_log.php';
+require_once 'db_connect.php';
+require_once 'audit_log.php';
 
 // File upload function
 function uploadFile($fileInput, $uploadDir = "uploads/") {

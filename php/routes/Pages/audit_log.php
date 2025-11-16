@@ -1,5 +1,5 @@
 <?php
-require 'db_connect.php';
+require_once 'db_connect.php';
 
 function get_client_ip() {
     if (!empty($_SERVER['HTTP_CLIENT_IP'])) {
@@ -53,5 +53,3 @@ function log_landing_action($pdo, $user_id, $action) {
 }
 
 ?>
-
-
