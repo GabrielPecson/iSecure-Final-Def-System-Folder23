@@ -274,9 +274,9 @@ def register_from_selfie_endpoint():
         success, message = register_visitor(visitor_id, absolute_selfie_path)
 
         if success:
-            return jsonify({"message": message})
+            return jsonify({"success": True, "message": message})
         else:
-            return jsonify({"message": message}), 400
+            return jsonify({"success": False, "message": message}), 400
 
     except Exception as e:
         return jsonify({"message": f"An unexpected error occurred: {str(e)}"}), 500
