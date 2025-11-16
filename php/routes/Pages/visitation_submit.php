@@ -83,9 +83,6 @@ $office_to_visit    = $_POST['office_to_visit'] ?? null;
 $visit_date         = $_POST['visit_date'] ?? null;
 $visit_time         = $_POST['visit_time'] ?? null;
 
-// --- FIX: Define the user_token from the session ---
-$user_token = $_SESSION['user_token'] ?? null;
-
 // Ensure office_to_visit has a value if not selected
 if (empty($office_to_visit)) {
     $office_to_visit = 'Not specified';
@@ -133,24 +130,15 @@ if (!$valid_id_path) {
 }
 
 
-if (!$selfie_photo_path && isset($_SESSION['user_token'])) { // Only check session if not in POST
-    $stmt_session = $pdo->prepare("SELECT selfie_photo_path FROM visitor_sessions WHERE user_token = ?");
-    $stmt_session->execute([$user_token]);
-    $session_data = $stmt_session->fetch(PDO::FETCH_ASSOC);
-    if ($session_data && $session_data['selfie_photo_path']) {
-        $selfie_photo_path = $session_data['selfie_photo_path'];
-    }
-}
-
 // Insert into visitation_requests
 $stmt = $pdo->prepare("
     INSERT INTO visitation_requests
     (first_name, middle_name, last_name, home_address, contact_number, email, valid_id_path, selfie_photo_path,
      vehicle_owner, vehicle_brand, plate_number, vehicle_color, vehicle_model, vehicle_photo_path,
-     reason, personnel_related, office_to_visit, visit_date, visit_time, status, user_token)
+     reason, personnel_related, office_to_visit, visit_date, visit_time, status)
     VALUES (:first_name, :middle_name, :last_name, :home_address, :contact_number, :email, :valid_id_path, :selfie_photo_path,
             :vehicle_owner, :vehicle_brand, :plate_number, :vehicle_color, :vehicle_model, :vehicle_photo_path,
-            :reason, :personnel_related, :office_to_visit, :visit_date, :visit_time, 'Pending', :user_token)
+            :reason, :personnel_related, :office_to_visit, :visit_date, :visit_time, 'Pending')
 ");
 
 try {
@@ -173,14 +161,10 @@ try {
         ':personnel_related' => $personnel_related_enc,
         ':office_to_visit'   => $office_to_visit_enc,
         ':visit_date'        => $visit_date,
-        ':visit_time'        => $visit_time,
-        ':user_token'        => $user_token
+        ':visit_time'        => $visit_time
     ]);
 
     if ($success) {
-        // Log action
-        log_landing_action($pdo, $user_token, "Submitted visitation request form");
-
         // Set a success message in the session to display on the homepage
         $_SESSION['submission_success'] = 'Visitation request submitted successfully!';
         // Redirect to the homepage
