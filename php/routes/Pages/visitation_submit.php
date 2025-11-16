@@ -11,21 +11,22 @@ function uploadIdFile($fileInput) {
     }
 
     // 1. Define the path relative to the current script's directory ('Pages').
-    $relativeUploadDir = 'uploads/ids/';
-    $absoluteUploadDir = __DIR__ . DIRECTORY_SEPARATOR . $relativeUploadDir;
+    $uploadSubDir = 'uploads/ids/';
+    $absoluteUploadDir = __DIR__ . DIRECTORY_SEPARATOR . $uploadSubDir;
 
     // 2. Create the directory if it doesn't exist.
     if (!is_dir($absoluteUploadDir)) {
         mkdir($absoluteUploadDir, 0777, true);
     }
 
+    // 3. Generate a unique filename.
     $fileName = time() . "_id." . pathinfo($_FILES[$fileInput]["name"], PATHINFO_EXTENSION);
     $targetFile = $absoluteUploadDir . $fileName;
 
     if (move_uploaded_file($_FILES[$fileInput]["tmp_name"], $targetFile)) {
-        // Return the full relative path from the project root for consistency.
-        // This matches the format used by the Python API for selfies.
-        return 'php/routes/Pages/' . $relativeUploadDir . $fileName;
+        // 4. Return the full relative path from the project root.
+        // This ensures consistency with the selfie path format.
+        return 'php/routes/Pages/' . $uploadSubDir . $fileName;
     }
 
     if (!is_dir($uploadDir)) {
