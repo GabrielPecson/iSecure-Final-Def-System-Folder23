@@ -16,7 +16,7 @@ try {
             time_out,
             status
         FROM visitors
-        WHERE time_in IS NOT NULL AND time_out IS NULL AND (status != 'Cancelled' OR status IS NULL OR status = '')
+        WHERE time_in IS NOT NULL AND time_out IS NULL AND (status != 'Rejected' OR status IS NULL OR status = '')
     ");
     $stmt->execute();
     $visitors = $stmt->fetchAll(PDO::FETCH_ASSOC);
