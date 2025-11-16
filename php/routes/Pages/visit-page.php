@@ -105,7 +105,7 @@ if (!$token) {
     Schedule A Visit with Us
   </h1>
 
-  <!-- Notification Area for Errors -->
+e  <!-- Notification Area for Errors -->
   <div id="notification-container" class="fixed top-20 right-5 z-[100]">
     <?php if (isset($_SESSION['submission_error'])): ?>
     <div class="notification notification-error show">
@@ -241,7 +241,6 @@ if (!$token) {
 
           <div class="mt-4">
             <label class="block text-sm font-semibold mb-1">License Plate Number</label>
-            <input type="text" name="license_plate" class="w-full border border-gray-300 rounded-md px-3 py-2 focus:ring-2 focus:ring-[#003673] focus:outline-none">
           </div>
         </div>
       </section>
