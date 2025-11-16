@@ -184,10 +184,10 @@ document.addEventListener("DOMContentLoaded", () => {
     document.getElementById("vehicleModelCell").textContent = escapeHtml(visitor.vehicle_model || 'N/A');
     document.getElementById("vehicleColorCell").textContent = escapeHtml(visitor.vehicle_color || 'N/A');
     document.getElementById("plateNumberCell").textContent = escapeHtml(visitor.plate_number || '');
-    document.getElementById("visitorIDPhoto").src = `fetch_request_image.php?request_id=${visitor.request_id}&type=id`;
-    document.getElementById("visitorSelfie").src = `fetch_request_image.php?request_id=${visitor.request_id}&type=selfie`;
+    document.getElementById("visitorIDPhoto").src = visitor.valid_id_path ? `../${visitor.valid_id_path}` : '';
+    document.getElementById("visitorSelfie").src = visitor.selfie_photo_path ? `../${visitor.selfie_photo_path}` : '';
     document.getElementById("expectedPlateNumberDisplay").textContent = visitor.plate_number || '';
-    idTabImage.src = `fetch_request_image.php?request_id=${visitor.request_id}&type=id`;
+    idTabImage.src = visitor.valid_id_path ? `../${visitor.valid_id_path}` : '';
     currentVisitorId = visitor.id;
 
     const hasVehicle = visitor.plate_number && visitor.plate_number.trim() !== "";
