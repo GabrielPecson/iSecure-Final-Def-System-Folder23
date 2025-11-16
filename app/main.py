@@ -158,17 +158,17 @@ def authenticate_face_endpoint():
 
         # Run authentication using face_authenticator
         from app.services.face_recog.face_authenticator import authenticate_visitor
-        auth_result = authenticate_visitor(temp_frame_path)
+        success, message = authenticate_visitor(temp_frame_path)
 
         # Clean up the temporary file
         os.unlink(temp_frame_path)
 
         # Parse the result
-        if auth_result.startswith("Authenticated as"):
-            visitor_id = auth_result.split(" ")[2]
+        if success:
+            visitor_id = message.split(" ")[2]
             return jsonify({"authenticated": True, "visitor_id": visitor_id})
         else:
-            return jsonify({"authenticated": False, "message": auth_result})
+            return jsonify({"authenticated": False, "message": message})
     except Exception as e:
         # Clean up in case of an error
         if 'temp_frame_path' in locals() and os.path.exists(temp_frame_path):
