@@ -181,7 +181,7 @@ def authenticate_face_endpoint():
             session_token = message.split(" ")[2]
             
             # --- Look up the visitor's name from the database ---
-            visitor_name = "Unknown Visitor"
+            visitor_name = "Registered Visitor"
             visitor_id = None
             db_connection = get_db_connection()
             try:
