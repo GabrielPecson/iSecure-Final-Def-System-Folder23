@@ -16,12 +16,9 @@ if (!$visitorId) {
 }
 
 try {
-    // Assign key card
-    $keyCardNumber = 'KC-' . strtoupper(substr(md5(uniqid()), 0, 8));
-
-    // Update visitor with key card and status
-    $updateStmt = $pdo->prepare("UPDATE visitors SET time_in = NOW(), status = 'Inside', key_card_number = ? WHERE id = ?");
-    $updateStmt->execute([$keyCardNumber, $visitorId]);
+    // Update visitor status
+    $updateStmt = $pdo->prepare("UPDATE visitors SET time_in = NOW(), status = 'Inside' WHERE id = ?");
+    $updateStmt->execute([$visitorId]);
 
     // Get visitor name from visitor_id
     $visitorStmt = $pdo->prepare("SELECT first_name, middle_name, last_name FROM visitors WHERE id = :vid");
@@ -36,9 +33,7 @@ try {
         $stmt->execute([':visitor_name' => $visitorName]);
     }
 
-    // Insert into clearance_badges
-    $badgeStmt = $pdo->prepare("INSERT INTO clearance_badges (visitor_id, clearance_level, key_card_number, validity_start, validity_end, status) VALUES (?, 'Visitor', ?, NOW(), DATE_ADD(NOW(), INTERVAL 1 DAY), 'Active')");
-    $badgeStmt->execute([$visitorId, $keyCardNumber]);
+
 
     // Removed transfer to inside_vehicles table as per user feedback
     // $transferStmt = $pdo->prepare("
