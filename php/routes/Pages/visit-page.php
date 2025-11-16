@@ -106,7 +106,7 @@ if (!$token) {
   </h1>
 
   <div class="bg-white w-full max-w-5xl p-8 rounded-xl shadow-[0_4px_25px_rgba(0,0,0,0.1)] border border-gray-200">
-    <form class="space-y-8" id="visitation-form" action="../visitation_submit.php" method="POST" enctype="multipart/form-data">
+    <form class="space-y-8" id="visitation-form" action="visitation_submit.php" method="POST" enctype="multipart/form-data">
       <input type="hidden" id="session-token" value="<?php echo htmlspecialchars($token); ?>">
 
       <!-- Header -->
