@@ -27,8 +27,16 @@ if (isset($_FILES['image'])) {
         // Execute the command and capture its output
         $output = shell_exec($command);
 
-        // The Python script prints JSON, so we can directly echo it
-        echo $output;
+        // --- New: Validate the output ---
+        // Check if the output is valid JSON. If not, it's probably a Python error.
+        json_decode($output);
+        if (json_last_error() === JSON_ERROR_NONE) {
+            // The output is valid JSON, so echo it directly.
+            echo $output;
+        } else {
+            // The output is not JSON, so wrap the error in a valid JSON structure.
+            echo json_encode(['error' => 'The recognition script failed.', 'details' => $output]);
+        }
 
         // Clean up the uploaded file
         unlink($uploadFile);
