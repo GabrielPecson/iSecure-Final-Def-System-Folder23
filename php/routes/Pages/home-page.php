@@ -28,11 +28,13 @@ if (!$token) {
     <link rel="icon" type="image/png" href="5thFighterWing-logo.png">
     <title>5th Fighter Wing</title>
     <link href="output.css" rel="stylesheet" >
+    <link href="notification.css" rel="stylesheet" >
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@200..700&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.1/css/all.min.css">
+    
 
 </head>
 
@@ -385,4 +387,5 @@ if (!$token) {
 </body>
 <!-- <script src="https://cdn.tailwindcss.com"></script> -->
 <script src="landingpage.js"></script>
+<script src="notification.js"></script>
 </html>
