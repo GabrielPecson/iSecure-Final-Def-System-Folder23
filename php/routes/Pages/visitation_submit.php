@@ -108,7 +108,7 @@ $visitor_name = trim(implode(' ', array_filter([$first_name, $middle_name, $last
 if ($has_vehicle === 'yes') {
     $vehicle_owner      = $visitor_name; // Plain text vehicle_owner
     $vehicle_brand      = $_POST['vehicle_brand'] ?? null;
-    $plate_number       = $_POST['license_plate'] ?? null;
+    $plate_number       = $_POST['plate_number'] ?? null;
     $vehicle_color      = $_POST['vehicle_color'] ?? null;
     $vehicle_type       = $_POST['vehicle_type'] ?? null;
     $vehicle_photo_path = null; // No vehicle photo in form
