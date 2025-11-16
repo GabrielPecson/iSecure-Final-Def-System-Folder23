@@ -4,4 +4,4 @@
 // By defining the base URL here, we can easily switch between development
 // and production environments without changing the hardcoded URLs in multiple files.
 
-const API_BASE_URL = 'http://localhost:8000';
+const API_BASE_URL = 'http://72.61.149.199:8000';
