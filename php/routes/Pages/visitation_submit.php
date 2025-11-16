@@ -125,6 +125,14 @@ if ($has_vehicle === 'yes') {
 $valid_id_path      = uploadIdFile("valid_id");
 $selfie_photo_path = $_POST['selfie_photo_path'] ?? null; // Get from POST if available
 
+// --- FIX: Add server-side validation for required file uploads ---
+if (!$valid_id_path) {
+    $_SESSION['submission_error'] = 'Please upload a valid ID.';
+    header('Location: visit-page.php');
+    exit;
+}
+
+
 if (!$selfie_photo_path && isset($_SESSION['user_token'])) { // Only check session if not in POST
     $stmt_session = $pdo->prepare("SELECT selfie_photo_path FROM visitor_sessions WHERE user_token = ?");
     $stmt_session->execute([$user_token]);
