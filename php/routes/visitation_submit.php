@@ -1,161 +1,179 @@
 <?php
 session_start();
-require 'db_connect.php'; // Assuming this file provides a $pdo object
+require 'db_connect.php';
+require 'encryption_key.php';
+require 'audit_log.php';
 
-header('Content-Type: application/json');
+// File upload function
+function uploadFile($fileInput, $uploadDir = "uploads/") {
+    if (!isset($_FILES[$fileInput]) || $_FILES[$fileInput]['error'] !== UPLOAD_ERR_OK) {
+        return null;
+    }
 
-if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
-    http_response_code(405); // Method Not Allowed
-    echo json_encode(['success' => false, 'message' => 'Invalid request method.']);
-    exit;
+    if (!is_dir($uploadDir)) {
+        mkdir($uploadDir, 0777, true);
+    }
+
+    $fileName = time() . "_" . basename($_FILES[$fileInput]["name"]);
+    $targetFile = $uploadDir . $fileName;
+
+    if (move_uploaded_file($_FILES[$fileInput]["tmp_name"], $targetFile)) {
+        return $targetFile;
+    }
+    return null;
 }
 
-// --- 1. Data Validation ---
-$required_fields = ['first_name', 'last_name', 'contact_number', 'email', 'address', 'personnel_to_visit', 'office_to_visit', 'date', 'time_in'];
-foreach ($required_fields as $field) {
-    if (empty($_POST[$field])) {
-        http_response_code(400);
-        echo json_encode(['success' => false, 'message' => "Field '{$field}' is required."]);
-        exit;
+// File upload function for IDs
+function uploadIdFile($fileInput, $uploadDir = __DIR__ . "/../uploads/ids/") {
+    if (!isset($_FILES[$fileInput]) || $_FILES[$fileInput]['error'] !== UPLOAD_ERR_OK) {
+        return null;
+    }
+
+    if (!is_dir($uploadDir)) {
+        mkdir($uploadDir, 0777, true);
+    }
+
+    $fileName = time() . "_id." . pathinfo($_FILES[$fileInput]["name"], PATHINFO_EXTENSION);
+    $targetFile = $uploadDir . $fileName;
+
+    if (move_uploaded_file($_FILES[$fileInput]["tmp_name"], $targetFile)) {
+        return $fileName; // Return filename for database
+    }
+    return null;
+}
+
+// File upload function for selfies
+function uploadSelfieFile($fileInput, $uploadDir = __DIR__ . "/../uploads/selfies/") {
+    if (!isset($_FILES[$fileInput]) || $_FILES[$fileInput]['error'] !== UPLOAD_ERR_OK) {
+        return null;
+    }
+
+    if (!is_dir($uploadDir)) {
+        mkdir($uploadDir, 0777, true);
+    }
+
+    $fileName = time() . "_selfie." . pathinfo($_FILES[$fileInput]["name"], PATHINFO_EXTENSION);
+    $targetFile = $uploadDir . $fileName;
+
+    if (move_uploaded_file($_FILES[$fileInput]["tmp_name"], $targetFile)) {
+        return $fileName; // Return filename for database
+    }
+    return null;
+}
+
+// Collect form inputs
+$first_name         = $_POST['first_name'] ?? null;
+$middle_name        = $_POST['middle_name'] ?? null;
+$last_name          = $_POST['last_name'] ?? null;
+
+$home_address       = $_POST['home_address'] ?? null;
+$contact_number     = $_POST['contact_number'] ?? null;
+$email              = $_POST['email'] ?? null;
+$has_vehicle        = $_POST['has_vehicle'] ?? 'no';
+$reason             = $_POST['reason'] ?? 'Visitation';
+$personnel_related  = $_POST['contact_personnel'] ?? null;
+$office_to_visit    = $_POST['office_to_visit'] ?? null;
+$visit_date         = $_POST['visit_date'] ?? null;
+$visit_time         = $_POST['visit_time'] ?? null;
+
+// Ensure office_to_visit has a value if not selected
+if (empty($office_to_visit)) {
+    $office_to_visit = 'Not specified';
+}
+
+// Store data in plain text
+$first_name_enc     = $first_name;
+$middle_name_enc    = $middle_name;
+$last_name_enc      = $last_name;
+$home_address_enc   = $home_address;
+$contact_number_enc = $contact_number;
+$email_enc          = $email;
+$personnel_related_enc = $personnel_related;
+$office_to_visit_enc = $office_to_visit; // Plain text
+
+// Build visitor name for vehicle owner if needed (encrypt later)
+$visitor_name = trim(implode(' ', array_filter([$first_name, $middle_name, $last_name])));
+
+// Handle vehicle fields based on has_vehicle
+if ($has_vehicle === 'yes') {
+    $vehicle_owner      = $visitor_name; // Plain text vehicle_owner
+    $vehicle_brand      = $_POST['vehicle_brand'] ?? null;
+    $plate_number       = $_POST['license_plate'] ?? null;
+    $vehicle_color      = $_POST['vehicle_color'] ?? null;
+    $vehicle_type       = $_POST['vehicle_type'] ?? null;
+    $vehicle_photo_path = null; // No vehicle photo in form
+} else {
+    $vehicle_owner      = null;
+    $vehicle_brand      = null;
+    $plate_number       = null;
+    $vehicle_color      = null;
+    $vehicle_type       = null;
+    $vehicle_photo_path = null;
+}
+
+// Upload files
+$valid_id_path      = uploadIdFile("valid_id");
+$selfie_photo_path = $_POST['selfie_photo_path'] ?? null; // Get from POST if available
+
+if (!$selfie_photo_path && isset($_SESSION['user_token'])) { // Only check session if not in POST
+    $user_token = $_SESSION['user_token'];
+    $stmt_session = $pdo->prepare("SELECT selfie_photo_path FROM visitor_sessions WHERE user_token = ?");
+    $stmt_session->execute([$user_token]);
+    $session_data = $stmt_session->fetch(PDO::FETCH_ASSOC);
+    if ($session_data && $session_data['selfie_photo_path']) {
+        $selfie_photo_path = $session_data['selfie_photo_path'];
     }
 }
 
-if (!filter_var($_POST['email'], FILTER_VALIDATE_EMAIL)) {
-    http_response_code(400);
-    echo json_encode(['success' => false, 'message' => 'Invalid email format.']);
-    exit;
-}
+// Insert into visitation_requests
+$stmt = $pdo->prepare("
+    INSERT INTO visitation_requests
+    (first_name, middle_name, last_name, home_address, contact_number, email, valid_id_path, selfie_photo_path,
+     vehicle_owner, vehicle_brand, plate_number, vehicle_color, vehicle_model, vehicle_photo_path,
+     reason, personnel_related, office_to_visit, visit_date, visit_time, status)
+    VALUES (:first_name, :middle_name, :last_name, :home_address, :contact_number, :email, :valid_id_path, :selfie_photo_path,
+            :vehicle_owner, :vehicle_brand, :plate_number, :vehicle_color, :vehicle_type, :vehicle_photo_path,
+            :reason, :personnel_related, :office_to_visit, :visit_date, :visit_time, 'Pending')
+");
 
-// --- 2. File Upload Handling ---
-function handle_upload($file_key, $upload_dir) {
-    if (!isset($_FILES[$file_key]) || $_FILES[$file_key]['error'] !== UPLOAD_ERR_OK) {
-        throw new RuntimeException("Failed to upload file for '{$file_key}'. Please try again.");
-    }
+$success = $stmt->execute([
+    ':first_name'        => $first_name_enc,
+    ':middle_name'       => $middle_name_enc,
+    ':last_name'         => $last_name_enc,
+    ':home_address'      => $home_address_enc,
+    ':contact_number'    => $contact_number_enc,
+    ':email'             => $email_enc,
+    ':valid_id_path'     => $valid_id_path,
+    ':selfie_photo_path' => $selfie_photo_path,
+    ':vehicle_owner'     => $vehicle_owner,
+    ':vehicle_brand'     => $vehicle_brand,
+    ':plate_number'      => $plate_number,
+    ':vehicle_color'     => $vehicle_color,
+    ':vehicle_type'      => $vehicle_type,
+    ':vehicle_photo_path'=> $vehicle_photo_path,
+    ':reason'            => $reason,
+    ':personnel_related' => $personnel_related_enc,
+    ':office_to_visit'   => $office_to_visit_enc,
+    ':visit_date'        => $visit_date,
+    ':visit_time'        => $visit_time
+]);
 
-    $file = $_FILES[$file_key];
-    $max_size = 5 * 1024 * 1024; // 5 MB
-    if ($file['size'] > $max_size) {
-        throw new RuntimeException("File '{$file_key}' is too large. Maximum size is 5MB.");
-    }
+if ($success) {
+    // Log action
+    $token = $_SESSION['user_token'] ?? null;
+    log_landing_action($pdo, $token, "Submitted visitation request form");
 
-    $allowed_types = ['image/jpeg', 'image/png', 'image/gif'];
-    $finfo = new finfo(FILEINFO_MIME_TYPE);
-    $mime_type = $finfo->file($file['tmp_name']);
-    if (!in_array($mime_type, $allowed_types)) {
-        throw new RuntimeException("Invalid file type for '{$file_key}'. Only JPG, PNG, and GIF are allowed.");
-    }
-
-    if (!is_dir($upload_dir)) {
-        mkdir($upload_dir, 0777, true);
-    }
-
-    $extension = pathinfo($file['name'], PATHINFO_EXTENSION);
-    $safe_filename = uniqid(preg_replace('/[^a-zA-Z0-9]/', '_', strtolower($_POST['first_name'] . '_' . $_POST['last_name'])) . '_', true) . '.' . $extension;
-    $destination = $upload_dir . $safe_filename;
-
-    if (!move_uploaded_file($file['tmp_name'], $destination)) {
-        throw new RuntimeException("Failed to move uploaded file '{$file_key}'.");
-    }
-
-    return $destination;
-}
-
-try {
-    $id_photo_path = handle_upload('id_photo', 'Pages/uploads/ids/');
-    $selfie_photo_path = handle_upload('selfie_photo', 'Pages/uploads/selfies/');
-} catch (RuntimeException $e) {
-    http_response_code(400);
-    echo json_encode(['success' => false, 'message' => $e->getMessage()]);
-    exit;
-}
-
-// --- 3. Database Insertion ---
-try {
-    $pdo->beginTransaction();
-
-    $sql = "INSERT INTO visitors (
-                first_name, middle_name, last_name, contact_number, email, address, 
-                personnel_to_visit, office_to_visit, date, time_in, 
-                vehicle_owner, vehicle_brand, vehicle_model, vehicle_color, plate_number, 
-                id_photo_path, selfie_photo_path, status
-            ) VALUES (
-                :first_name, :middle_name, :last_name, :contact_number, :email, :address, 
-                :personnel_to_visit, :office_to_visit, :date, :time_in, 
-                :vehicle_owner, :vehicle_brand, :vehicle_model, :vehicle_color, :plate_number, 
-                :id_photo_path, :selfie_photo_path, 'Pending'
-            )";
-
-    $stmt = $pdo->prepare($sql);
-    $stmt->execute([
-        ':first_name' => $_POST['first_name'],
-        ':middle_name' => $_POST['middle_name'] ?? null,
-        ':last_name' => $_POST['last_name'],
-        ':contact_number' => $_POST['contact_number'],
-        ':email' => $_POST['email'],
-        ':address' => $_POST['address'],
-        ':personnel_to_visit' => $_POST['personnel_to_visit'],
-        ':office_to_visit' => $_POST['office_to_visit'],
-        ':date' => $_POST['date'],
-        ':time_in' => $_POST['time_in'],
-        ':vehicle_owner' => $_POST['vehicle_owner'] ?? null,
-        ':vehicle_brand' => $_POST['vehicle_brand'] ?? null,
-        ':vehicle_model' => $_POST['vehicle_model'] ?? null,
-        ':vehicle_color' => $_POST['vehicle_color'] ?? null,
-        ':plate_number' => $_POST['plate_number'] ?? null,
-        ':id_photo_path' => $id_photo_path,
-        ':selfie_photo_path' => $selfie_photo_path
+    // Notify admins/personnel if visitor has history
+    require 'notify.php';
+    notify_admin_about_visitor_history($pdo, [
+        'first_name' => $first_name,
+        'middle_name' => $middle_name,
+        'last_name' => $last_name,
+        'email' => $email,
+        'contact_number' => $contact_number
     ]);
 
-    $visitor_id = $pdo->lastInsertId();
-
-    // --- 4. API Call to Register Face ---
-    // Generate a unique token for this visit session
-    $session_token = bin2hex(random_bytes(32));
-
-    $api_url = 'https://isecured.online:8000/register/face';
-    $post_data = [
-        'session_token' => $session_token,
-        // Construct an absolute path from the document root for reliability
-        // realpath() needs an absolute or correctly relative path to work consistently
-        'file' => new CURLFile(
-            realpath($_SERVER['DOCUMENT_ROOT'] . '../php/routes/' . $selfie_photo_path)
-        )
-    ];
-
-    $ch = curl_init();
-    curl_setopt($ch, CURLOPT_URL, $api_url);
-    curl_setopt($ch, CURLOPT_POST, 1);
-    curl_setopt($ch, CURLOPT_POSTFIELDS, $post_data);
-    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-    // On a live server with valid SSL, you should not disable verification.
-    // If you have issues, ensure your server's CA bundle is up to date.
-    // curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false); 
-    // curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, false);
-
-    $api_response = curl_exec($ch);
-    $http_code = curl_getinfo($ch, CURLINFO_HTTP_CODE);
-    $curl_error = curl_error($ch);
-    curl_close($ch);
-
-    if ($http_code !== 200) {
-        throw new Exception("API Error: Failed to register face. Server responded with code {$http_code}. Details: {$api_response} Curl Error: {$curl_error}");
-    }
-
-    // If everything is successful, commit the transaction
-    $pdo->commit();
-
-    // Set a session variable for the success page
-    $_SESSION['registration_success'] = true;
-    $_SESSION['visitor_name'] = htmlspecialchars($_POST['first_name'] . ' ' . $_POST['last_name']);
-
-    echo json_encode(['success' => true, 'message' => 'Visitation request submitted successfully. Please wait for approval.']);
-
-} catch (Exception $e) {
-    // If anything fails, roll back the database transaction
-    if ($pdo->inTransaction()) {
-        $pdo->rollBack();
-    }
-    http_response_code(500);
-    echo json_encode(['success' => false, 'message' => 'An error occurred: ' . $e->getMessage()]);
+    echo "<script>alert('Visitation request submitted successfully!'); window.location.href='../routes/Pages/home-page.php';</script>";
+} else {
+    echo "<script>alert('Error saving request. Please try again.'); window.history.back();</script>";
 }
-?>

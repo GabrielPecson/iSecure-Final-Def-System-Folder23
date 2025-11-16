@@ -106,7 +106,7 @@ if (!$token) {
   </h1>
 
   <div class="bg-white w-full max-w-5xl p-8 rounded-xl shadow-[0_4px_25px_rgba(0,0,0,0.1)] border border-gray-200">
-    <form class="space-y-8" action="../visitation_submit.php" method="POST" enctype="multipart/form-data">
+    <form class="space-y-8" id="visitation-form" action="../visitation_submit.php" method="POST" enctype="multipart/form-data">
       <input type="hidden" id="session-token" value="<?php echo htmlspecialchars($token); ?>">
 
       <!-- Header -->
@@ -372,6 +372,12 @@ if (!$token) {
     const selfiePhotoPathInput = document.getElementById('selfie-photo-path');
     const scanInstructions = document.getElementById('scan-instructions');
     const submitRequestBtn = document.getElementById('submit-request-btn');
+
+    // --- New: Disable submit button initially ---
+    submitRequestBtn.disabled = true;
+    submitRequestBtn.classList.add('bg-gray-400', 'cursor-not-allowed');
+    submitRequestBtn.classList.remove('bg-[#003673]', 'hover:bg-[#002a59]');
+
 
     let stream; // To store the webcam stream
 
