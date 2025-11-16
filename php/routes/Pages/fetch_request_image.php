@@ -29,6 +29,10 @@ $result = $stmt->fetch(PDO::FETCH_ASSOC);
 $image_path = $result[$column] ?? null;
 
 // Construct the full, absolute path to the image file
+// The image_path from the DB is something like 'up10ads/se1fies/...'
+// and this script is in '.../Pages/'. We need to go up to the project root
+// then into the correct directory.
+// Assuming the project root is two levels up from 'Pages'
 $full_path = realpath(__DIR__ . '/../../' . $image_path);
 
 if ($image_path && file_exists($full_path)) {
