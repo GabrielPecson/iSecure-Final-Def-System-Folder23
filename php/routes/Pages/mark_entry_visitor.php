@@ -37,7 +37,7 @@ try {
     }
 
     // Insert into clearance_badges
-    $badgeStmt = $pdo->prepare("INSERT INTO clearance_badges (visitor_id, clearance_level, key_card_number, validity_start, validity_end, status) VALUES (?, 'Visitor', ?, NOW(), DATE_ADD(NOW(), INTERVAL 1 DAY), 'active')");
+    $badgeStmt = $pdo->prepare("INSERT INTO clearance_badges (visitor_id, clearance_level, key_card_number, validity_start, validity_end, status) VALUES (?, 'Visitor', ?, NOW(), DATE_ADD(NOW(), INTERVAL 1 DAY), 'Active')");
     $badgeStmt->execute([$visitorId, $keyCardNumber]);
 
     // Removed transfer to inside_vehicles table as per user feedback

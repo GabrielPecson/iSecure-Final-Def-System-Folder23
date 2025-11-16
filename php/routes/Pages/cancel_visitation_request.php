@@ -11,16 +11,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             // Start transaction
             $pdo->beginTransaction();
 
-            // Update visitation request status to 'Cancel'
-            $stmt = $pdo->prepare("UPDATE visitation_requests SET status = 'Cancel' WHERE id = :id");
+            // Update visitation request status to 'Cancelled'
+            $stmt = $pdo->prepare("UPDATE visitation_requests SET status = 'Cancelled' WHERE id = :id");
             $stmt->execute([':id' => $id]);
 
-            // Update associated visitors to 'Cancel' status
-            $stmt = $pdo->prepare("UPDATE visitors SET status = 'Cancel' WHERE visitation_id = :visitation_id");
+            // Update associated visitors to 'Cancelled' status
+            $stmt = $pdo->prepare("UPDATE visitors SET status = 'Cancelled' WHERE visitation_id = :visitation_id");
             $stmt->execute([':visitation_id' => $id]);
 
-            // Update associated vehicles to 'Cancel' status
-            $stmt = $pdo->prepare("UPDATE vehicles SET status = 'Cancel' WHERE visitation_id = :visitation_id");
+            // Update associated vehicles to 'Cancelled' status
+            $stmt = $pdo->prepare("UPDATE vehicles SET status = 'Cancelled' WHERE visitation_id = :visitation_id");
             $stmt->execute([':visitation_id' => $id]);
 
             // Commit transaction
@@ -35,7 +35,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 ':agent' => $_SERVER['HTTP_USER_AGENT'] ?? null
             ]);
 
-            echo json_encode(['success' => true, 'status' => 'Cancel']);
+            echo json_encode(['success' => true, 'status' => 'Cancelled']);
         } catch (Exception $e) {
             $pdo->rollBack();
             echo json_encode(['success' => false, 'message' => $e->getMessage()]);
