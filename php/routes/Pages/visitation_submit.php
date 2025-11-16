@@ -37,7 +37,8 @@ function uploadIdFile($fileInput, $uploadDir = __DIR__ . "/../uploads/ids/") {
     $targetFile = $uploadDir . $fileName;
 
     if (move_uploaded_file($_FILES[$fileInput]["tmp_name"], $targetFile)) {
-        return $fileName; // Return filename for database
+        // Return the relative path from the project root, not just the filename.
+        return 'uploads/ids/' . $fileName;
     }
     return null;
 }
