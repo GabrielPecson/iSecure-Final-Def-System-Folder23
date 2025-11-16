@@ -15,7 +15,7 @@ if (isset($_FILES['image'])) {
     if (move_uploaded_file($_FILES['image']['tmp_name'], $uploadFile)) {
         // Get absolute paths for reliability
         $imagePathForScript = escapeshellarg(realpath($uploadFile));
-        $pythonScriptPath = escapeshellarg(realpath(__DIR__ . '/../../app/services/vehicle_recog/license_scanner.py'));
+        $pythonScriptPath = escapeshellarg(realpath(__DIR__ . '/../../../app/services/vehicle_recog/license_scanner.py'));
         
         // Construct the command
         // Ensure the 'python' command is in your system's PATH
