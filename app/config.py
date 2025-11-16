@@ -124,7 +124,12 @@ def set_camera_source(camera_type: str, source: str):
             return True, f"Successfully set {camera_type} camera to source '{source}'"
         else:
             # Fallback to dummy if initialization failed
-            raise ValueError(f"Camera failed to open for source '{source}'. It might be in use or disconnected.")
+            print(f"Camera failed to open for source '{source}'. Setting to dummy camera.")
+            if camera_type == "facial":
+                camera_facial = DummyCamera()
+            else: # vehicle
+                camera_vehicle = DummyCamera()
+            return True, f"Set {camera_type} camera to dummy as source '{source}' is not available"
 
     except Exception as e:
         error_message = f"Error setting {camera_type} camera to source '{source}': {e}"
@@ -133,7 +138,7 @@ def set_camera_source(camera_type: str, source: str):
             camera_facial = DummyCamera()
         else: # vehicle
             camera_vehicle = DummyCamera()
-        return False, error_message
+        return True, f"Set {camera_type} camera to dummy due to error: {e}"
 
 # --- New: Smart Initialization ---
 # On a server, we don't want to assume a webcam is present.
