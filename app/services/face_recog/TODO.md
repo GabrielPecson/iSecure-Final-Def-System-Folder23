@@ -1,0 +1,6 @@
+- [x] Create face_authenticator.py with imports, constants, and install comments
+- [x] Implement load_database and save_database functions
+- [x] Implement register_visitor function
+- [x] Implement authenticate_visitor function
+- [x] Implement main logic with register and authenticate modes
+- [x] Add detailed comments explaining each step

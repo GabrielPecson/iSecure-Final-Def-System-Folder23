@@ -1,0 +1,28 @@
+The `face_recog` service works by using a Python script named `face_authenticator.py`. Here's a breakdown of its functionality:
+
+**Core Technology:**
+
+*   **`deepface` library:** This is the primary library for all face-related operations.
+*   **`opencv-python`:** This library is used to capture video from your webcam.
+*   **`Facenet512` Model:** This is a deep learning model that generates a unique 512-point "signature" (called an embedding) for each face it sees.
+
+**How it Functions:**
+
+1.  **Database:** A simple JSON file, `visitors.json`, is used to store the face embeddings of registered individuals. Each person has an entry with their `visitor_id` and their corresponding face embedding.
+
+2.  **Registration:**
+    *   To register a new person, the script captures an image from the webcam.
+    *   It then uses the `Facenet512` model to create a facial embedding from that image.
+    *   This embedding is saved in the `visitors.json` file, linked to a `visitor_id`.
+
+3.  **Authentication:**
+    *   To authenticate a person, the script captures a new image from the webcam and generates a new embedding.
+    *   It then compares this new embedding to all the embeddings stored in the `visitors.json` file.
+    *   The comparison is done using **cosine distance**, which measures the similarity between two embeddings. A lower distance signifies a better match.
+    *   If the distance is below a set threshold (0.4 in the script), the person is authenticated. Otherwise, access is rejected.
+
+4.  **Execution:**
+    *   The script is run from the command line and provides three modes: `register`, `authenticate`, and `delete`.
+    *   It uses your webcam to capture the necessary images for these operations.
+
+In short, the system enrolls users by creating and storing a unique digital signature of their face. It then authenticates them by comparing their live facial signature to the stored ones. The `TODO.md` file indicates that the core features of this script are complete.

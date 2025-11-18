@@ -1,0 +1,25 @@
+# iSecure Git Ignore
+.venv/
+venv/
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.env
+.DS_Store
+Thumbs.db
+node_modules/
+# Ignore all uploads by default, but unignore specific subdirectories
+uploads/*
+!uploads/ids/
+!uploads/selfies/
+*.log
+.idea/
+.vscode/
+
+.venv/
+.venv/
+.venv/
+__pycache__/
+*.pyc
+node_modules/

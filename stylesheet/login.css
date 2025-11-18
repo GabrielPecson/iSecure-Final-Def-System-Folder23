@@ -1,0 +1,152 @@
+body {
+  font-family: 'League Spartan', sans-serif;
+  background-color: #f3f3f3;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  margin: 0;
+}
+
+.login-wrapper {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+}
+
+.login-card {
+  display: flex;
+  width: 1000px;
+  height: 590px;
+  background: #fff;
+  border-radius: 12px;
+  box-shadow: 0px 4px 20px rgba(0,0,0,0.1);
+  overflow: hidden;
+}
+
+/* Left Panel */
+.left-panel {
+  background-color: #046c79;
+  color: #fff;
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.left-panel h1 {
+  font-size: 3.5rem;
+  font-weight: 700;
+}
+
+/* Right Panel */
+.right-panel {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 30px;
+}
+
+.login-form {
+  width: 100%;
+  max-width: 400px;
+  display: flex;
+  flex-direction: column;
+}
+
+.login-form h2 {
+  font-size: 2.8rem;
+  font-weight: 700;
+  margin-bottom: 20px;
+  color: #046c79;
+}
+
+.login-form label {
+  font-weight: 600;
+  color: #006682;
+  margin: 10px 0 5px;
+}
+
+.login-form input {
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  font-size: 1rem;
+}
+
+.password-wrapper {
+  position: relative;
+  margin-bottom: 10px;
+}
+
+.password-wrapper input {
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.password-wrapper i {
+  position: absolute;
+  right: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+  cursor: pointer;
+  color: #666;
+}
+
+.password-wrapper i:hover {
+  color: #333;
+}
+
+.forgot {
+  font-size: 0.9rem;
+  color: #046c79;
+  text-decoration: none;
+  margin-bottom: 20px;
+  align-self: flex-end;
+}
+
+.login-btn {
+  background-color: #046c79;
+  color: white;
+  padding: 12px;
+  font-size: 1rem;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: 600;
+}
+
+.login-btn:hover {
+  background-color: #035963;
+}
+
+.modal-content {
+  height: 20rem;
+}
+
+.custom-modal-header {
+  background-color: #046c79;
+}
+
+.modal-title {
+  font-size: 30px;
+}
+
+.modal-body {
+  font-size: 25px;
+  text-align: center;
+  padding-top: 70px;
+}
+
+.btn-secondary {
+  background-color: #ff1100;
+}
+
+.right-panel a {
+  color: #006682;
+  text-align: end;
+  margin-top: 10px;
+  margin-bottom: 10px;
+}

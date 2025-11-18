@@ -1,0 +1,14 @@
+{
+    "license_plate_number": {
+        "value": "YEC 652",
+        "confidence": null,
+        "polygon": null,
+        "raw_text": null
+    },
+    "vehicle_type": {
+        "value": "car",
+        "confidence": null,
+        "polygon": null,
+        "raw_text": null
+    }
+}

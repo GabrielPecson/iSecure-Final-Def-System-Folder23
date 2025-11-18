@@ -1,0 +1,150 @@
+/* Personnel Walkin Stylesheet */
+
+/* Walk-in Form Section */
+.walkin-form-section {
+    margin-top: 20px;
+    margin-bottom: 40px;
+}
+
+.walkin-form-section h4 {
+    color: #003673;
+    font-weight: bold;
+    margin-bottom: 20px;
+    font-size: 24px;
+}
+
+/* Form Scroll Container */
+.form-scroll-container {
+    max-height: calc(100vh - 200px);
+    overflow-y: auto;
+    overflow-x: hidden;
+    padding: 0;
+    margin: 0;
+}
+
+/* Form Container */
+.walkin-form-section .bg-white {
+    background-color: #ffffff !important;
+    padding: 2rem !important;
+    border-radius: 0.5rem !important;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1) !important;
+    border: 1px solid #dee2e6 !important;
+    max-width: 100%;
+    overflow-x: hidden;
+}
+
+/* Section Headers */
+.visitation-request-section h3 {
+    color: #003673;
+    font-weight: bold;
+    margin-bottom: 20px;
+    border-bottom: 2px solid #003673;
+    padding-bottom: 10px;
+}
+
+/* Form Labels */
+.form-label {
+    font-weight: 600 !important;
+    color: #333 !important;
+}
+
+/* Form Controls */
+.form-control {
+    border: 1px solid #ddd !important;
+    border-radius: 5px !important;
+    padding: 10px !important;
+    font-size: 14px !important;
+    transition: border-color 0.3s ease !important;
+}
+
+.form-control:focus {
+    outline: none !important;
+    border-color: #003673 !important;
+    box-shadow: 0 0 5px rgba(0, 55, 115, 0.3) !important;
+}
+
+/* File Input Styling */
+.border-dashed {
+    border: 2px dashed #ddd !important;
+    background-color: #f8f9fa !important;
+    cursor: pointer !important;
+    transition: all 0.3s ease !important;
+}
+
+.border-dashed:hover {
+    background-color: #e9ecef !important;
+    border-color: #003673 !important;
+    color: #003673 !important;
+}
+
+/* Radio Buttons */
+.form-check-input:checked {
+    background-color: #003673 !important;
+    border-color: #003673 !important;
+}
+
+/* Hidden Vehicle Fields */
+#vehicle-fields {
+    display: none;
+}
+
+/* Submit Button */
+.btn-primary {
+    background-color: #003673 !important;
+    border-color: #003673 !important;
+    padding: 12px 30px !important;
+    font-size: 16px !important;
+    font-weight: bold !important;
+    transition: background-color 0.3s ease !important;
+}
+
+.btn-primary:hover {
+    background-color: #002a59 !important;
+    border-color: #002a59 !important;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .walkin-form-section .bg-white {
+        padding: 1rem !important;
+    }
+
+    .row.g-3 {
+        --bs-gutter-x: 1rem;
+        --bs-gutter-y: 1rem;
+    }
+}
+
+/* Facial Scanning Modal Custom Styles */
+.modal-fullscreen .modal-content {
+    height: 100vh;
+    border: none;
+    border-radius: 0;
+}
+
+.modal-fullscreen .modal-header {
+    background-color: #003673 !important;
+    color: white !important;
+    border-bottom: none;
+}
+
+.modal-fullscreen .modal-header .btn-close {
+    filter: invert(1);
+}
+
+.modal-fullscreen .modal-body {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 2rem;
+}
+
+.modal-fullscreen .modal-footer {
+    border-top: none;
+    justify-content: center;
+}
+
+.modal-fullscreen .modal-footer .btn {
+    min-width: 120px;
+}
