@@ -123,6 +123,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     } else {
         echo json_encode(['success' => false, 'message' => 'Missing request ID']);
     }
+<<<<<<< HEAD
 } else {
     echo json_encode(['success' => false, 'message' => 'Invalid request method']);
 }
+=======
+}
+>>>>>>> 9278b8c0711da9717ed2ccd6e225ebe8332f0214

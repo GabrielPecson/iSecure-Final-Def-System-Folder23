@@ -23,11 +23,18 @@ function hexToLE($hex){
 function log_audit($pdo, $user_id, $username, $action, $details) {
     try {
         $stmt = $pdo->prepare("
+<<<<<<< HEAD
             INSERT INTO access_log (uid, door, status, reason, timestamp)
             VALUES (?, 'ADMIN', 'SUCCESS', ?, NOW())
         ");
         $reason = $action . ': ' . $details;
         $stmt->execute([$user_id, $reason]);
+=======
+            INSERT INTO audit_log (user_id, username, action, details)
+            VALUES (?, ?, ?, ?)
+        ");
+        $stmt->execute([$user_id, $username, $action, $details]);
+>>>>>>> 9278b8c0711da9717ed2ccd6e225ebe8332f0214
     } catch (PDOException $e) {
         error_log("Audit log failed: " . $e->getMessage());
     }
@@ -61,6 +68,7 @@ if (isset($_GET['action'])) {
     // ---------------------------------------------------------------
     // Register a NEW Key Card (Merged with admin_register logic)
     // ---------------------------------------------------------------
+<<<<<<< HEAD
 // ---------------------------------------------------------------
 // Register a NEW Key Card (Fixed: saves UID as LITTLE-ENDIAN HEX)
 // ---------------------------------------------------------------
@@ -131,6 +139,42 @@ if ($action === 'register') {
 }
 
 
+=======
+    if ($action === 'register') {
+        $data = json_decode(file_get_contents('php://input'), true);
+
+        if (empty($data['card_uid']) || empty($data['card_name'])) {
+            http_response_code(400);
+            echo json_encode(['success' => false, 'message' => 'Card UID and Card Name are required.']);
+            exit;
+        }
+
+        // Convert input (supports raw decimal or hex)
+        $raw = trim($data['card_uid']);
+        if (ctype_digit($raw)) {
+            $key_card_uid = decToLEHex($raw);
+        } else {
+            $key_card_uid = hexToLE($raw);
+        }
+
+        try {
+            $stmt = $pdo->prepare("
+                INSERT INTO clearance_badges (key_card_number, card_name, status)
+                VALUES (?, ?, 'unassigned')
+            ");
+            $stmt->execute([$key_card_uid, $data['card_name']]);
+
+            log_audit($pdo, $admin_user_id, $admin_username, "CARD_REGISTER",
+                "Registered card '{$data['card_name']}' UID: $key_card_uid");
+
+            echo json_encode(['success' => true, 'message' => 'Key card registered successfully.']);
+        } catch (PDOException $e) {
+            echo json_encode(['success' => false, 'message' => 'Database error: ' . $e->getMessage()]);
+        }
+        exit;
+    }
+
+>>>>>>> 9278b8c0711da9717ed2ccd6e225ebe8332f0214
     // ---------------------------------------------------------------
     // Assign Key Card to Visitor (Merged admin_assign logic)
     // ---------------------------------------------------------------
@@ -145,6 +189,7 @@ if ($action === 'register') {
             exit;
         }
 
+<<<<<<< HEAD
         // Check if visitor exists
         $visitor_id = (int)$data['visitor_id'];
         if ($visitor_id <= 0) {
@@ -162,6 +207,12 @@ if ($action === 'register') {
             $stmt = $pdo->prepare("
                 UPDATE clearance_badges
                 SET visitor_id = ?, validity_start = ?, validity_end = ?, door = ?, status = 'active', clearance_level = 'visitor'
+=======
+        try {
+            $stmt = $pdo->prepare("
+                UPDATE clearance_badges
+                SET visitor_id = ?, validity_start = ?, validity_end = ?, door = ?, status = 'active'
+>>>>>>> 9278b8c0711da9717ed2ccd6e225ebe8332f0214
                 WHERE id = ?
             ");
             $stmt->execute([
@@ -173,6 +224,7 @@ if ($action === 'register') {
             ]);
 
             if ($stmt->rowCount() > 0) {
+<<<<<<< HEAD
                 // Get visitor details for card_holder table
                 $visitor_stmt = $pdo->prepare("SELECT first_name, last_name FROM visitors WHERE id = ?");
                 $visitor_stmt->execute([$data['visitor_id']]);
@@ -187,6 +239,8 @@ if ($action === 'register') {
                     $holder_stmt->execute([$data['visitor_id'], $visitor['first_name'], $visitor['last_name']]);
                 }
 
+=======
+>>>>>>> 9278b8c0711da9717ed2ccd6e225ebe8332f0214
                 log_audit($pdo, $admin_user_id, $admin_username, "CARD_ASSIGN",
                     "Assigned card ID {$data['id']} to visitor {$data['visitor_id']}");
 
@@ -211,6 +265,7 @@ if ($action === 'register') {
 // ---------------------------------------------------------------------
 $visitors = $pdo->query("SELECT id, first_name, last_name FROM visitors")->fetchAll(PDO::FETCH_ASSOC);
 
+<<<<<<< HEAD
 $all_cards_for_assign = $pdo->query("
     SELECT cb.id, cb.card_name, cb.key_card_number, cb.status,
            CONCAT(v.first_name, ' ', v.last_name) as holder_name
@@ -223,6 +278,18 @@ $all_cards = $pdo->query("
     SELECT
         cb.id, cb.key_card_number, cb.card_name, cb.status,
         cb.validity_start, cb.validity_end, cb.door,
+=======
+$unassigned_cards = $pdo->query("
+    SELECT id, card_name, key_card_number 
+    FROM clearance_badges
+    WHERE status='unassigned' OR status IS NULL
+")->fetchAll(PDO::FETCH_ASSOC);
+
+$all_cards = $pdo->query("
+    SELECT 
+        cb.id, cb.key_card_number, cb.card_name, cb.status,
+        cb.validity_start, cb.validity_end,
+>>>>>>> 9278b8c0711da9717ed2ccd6e225ebe8332f0214
         v.first_name, v.last_name
     FROM clearance_badges cb
     LEFT JOIN visitors v ON cb.visitor_id = v.id
@@ -312,17 +379,26 @@ $fullName = $_SESSION['full_name'] ?? "Admin";
                                 <?php endforeach; ?>
                             </select>
 
+<<<<<<< HEAD
                             <!-- Badge List for Selected Visitor -->
                             <div id="badgeList" class="mb-4"></div>
 
+=======
+>>>>>>> 9278b8c0711da9717ed2ccd6e225ebe8332f0214
                             <!-- Card Selector (Assign Mode Only) -->
                             <div id="assignCardField">
                                 <label class="mt-2">Select Card</label>
                                 <select id="keyCardId" class="form-select">
                                     <option value="">-- Select --</option>
+<<<<<<< HEAD
                                     <?php foreach ($all_cards_for_assign as $c): ?>
                                         <option value="<?= $c['id'] ?>" <?= $c['status'] === 'active' ? 'disabled' : '' ?>>
                                             <?= htmlspecialchars($c['card_name']) ?> (<?= $c['key_card_number'] ?>) - <?= $c['status'] === 'active' ? 'Assigned to: ' . htmlspecialchars($c['holder_name'] ?? 'Unknown') : 'Available' ?>
+=======
+                                    <?php foreach ($unassigned_cards as $c): ?>
+                                        <option value="<?= $c['id'] ?>">
+                                            <?= $c['card_name'] ?> (<?= $c['key_card_number'] ?>)
+>>>>>>> 9278b8c0711da9717ed2ccd6e225ebe8332f0214
                                         </option>
                                     <?php endforeach; ?>
                                 </select>
@@ -391,7 +467,10 @@ $fullName = $_SESSION['full_name'] ?? "Admin";
                     <table class="table table-bordered">
                         <thead>
                             <tr>
+<<<<<<< HEAD
                                 <th>Card Name</th>
+=======
+>>>>>>> 9278b8c0711da9717ed2ccd6e225ebe8332f0214
                                 <th>UID</th>
                                 <th>Holder</th>
                                 <th>Door</th>
@@ -403,10 +482,16 @@ $fullName = $_SESSION['full_name'] ?? "Admin";
                         <tbody>
                         <?php foreach ($all_cards as $card): ?>
                             <tr>
+<<<<<<< HEAD
                                 <td><?= htmlspecialchars($card['card_name']) ?></td>
                                 <td><?= $card['key_card_number'] ?></td>
                                 <td><?= ($card['first_name'] ?? 'Unassigned') . " " . ($card['last_name'] ?? '') ?></td>
                                 <td><?= $card['door'] ?? 'N/A' ?></td>
+=======
+                                <td><?= $card['key_card_number'] ?></td>
+                                <td><?= ($card['first_name'] ?? 'Unassigned') . " " . ($card['last_name'] ?? '') ?></td>
+                                <td><?= $card['door'] ?></td>
+>>>>>>> 9278b8c0711da9717ed2ccd6e225ebe8332f0214
                                 <td><?= $card['validity_start'] ?: 'N/A' ?></td>
                                 <td><?= $card['validity_end'] ?: 'N/A' ?></td>
                                 <td><?= ucfirst($card['status']) ?></td>

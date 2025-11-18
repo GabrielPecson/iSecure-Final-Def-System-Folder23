@@ -266,12 +266,15 @@ document.addEventListener('DOMContentLoaded', function() {
                 alert('Please select a card to assign.');
                 return;
             }
+<<<<<<< HEAD
             // Check if selected option is disabled (already assigned)
             const selectedOption = keyCardIdSelect.options[keyCardIdSelect.selectedIndex];
             if (selectedOption.disabled) {
                 alert('This card is already assigned to a visitor. Please select an available card.');
                 return;
             }
+=======
+>>>>>>> 9278b8c0711da9717ed2ccd6e225ebe8332f0214
         }
 
         fetch(`key_card.php?action=update`, {

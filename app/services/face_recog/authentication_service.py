@@ -86,4 +86,8 @@ def authenticate_face(frame):
             continue
 
     _log("Authentication failed: Unknown visitor")
+<<<<<<< HEAD
     return {"authenticated": False, "message": "Unknown visitor."}
+=======
+    return {"authenticated": False, "message": "Unknown visitor."}
+>>>>>>> 9278b8c0711da9717ed2ccd6e225ebe8332f0214

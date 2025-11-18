@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # TODO: Fix Face Authentication in Visitor Modal
 
 ## Current Issue
@@ -19,3 +20,10 @@ Face authentication in the visitor modal is incorrectly using global face embedd
 - Test the authentication functionality
 - Ensure it correctly matches against the visitor's selfie
 - Verify proper error handling
+=======
+- [x] Update visitation_submit.php: Change uploadIdFile uploadDir to __DIR__ . "/"; return $fileName instead of "uploads/ids/" . $fileName
+- [x] Update walkin_submit.php: Change uploadIdFile uploadDir to __DIR__ . "/Pages/"; (since it's in routes/)
+- [x] Update fetch_visitor_image.php: Change path construction to $full_path = __DIR__ . '/' . $file_path for both id and selfie
+- [x] Update fetch_request_image.php: Change $basePath = __DIR__ . DIRECTORY_SEPARATOR; remove subDirectory logic, set $filePath = $basePath . $dbFileName
+- [x] Test image fetching after changes
+>>>>>>> 9278b8c0711da9717ed2ccd6e225ebe8332f0214

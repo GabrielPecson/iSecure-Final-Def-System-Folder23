@@ -55,7 +55,15 @@ try {
         }
 
         // Construct the full path
+<<<<<<< HEAD
         $full_path = $base_upload_dir . $type . 's/' . $cleaned_file_path;
+=======
+        $full_path = $base_upload_dir . $type . 's/' . $cleaned_file_path; else {
+            http_response_code(400);
+            echo "Invalid image type for path construction.";
+            exit;
+        }
+>>>>>>> 9278b8c0711da9717ed2ccd6e225ebe8332f0214
 
         // error_log("Trying to load: " . $full_path);
         // error_log("File exists: " . (file_exists($full_path) ? 'yes' : 'no'));

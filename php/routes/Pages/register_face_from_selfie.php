@@ -38,7 +38,11 @@ try {
     $visitor_name = trim($result['first_name'] . ' ' . $result['last_name']);
 
     // Call the Python API to register this selfie
+<<<<<<< HEAD
     $api_url = 'http://localhost:8000/register/from_selfie';
+=======
+    $api_url = 'https://isecured.online:8000/register/from_selfie';
+>>>>>>> 9278b8c0711da9717ed2ccd6e225ebe8332f0214
     $post_data = json_encode(['visitor_id' => $visitor_id, 'visitor_name' => $visitor_name, 'selfie_path' => $selfie_path]);
 
     $ch = curl_init($api_url);
