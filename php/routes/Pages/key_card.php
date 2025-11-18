@@ -23,10 +23,18 @@ function hexToLE($hex){
 function log_audit($pdo, $user_id, $username, $action, $details) {
     try {
         $stmt = $pdo->prepare("
+<<<<<<< HEAD
             INSERT INTO audit_log (user_id, username, action, details)
             VALUES (?, ?, ?, ?)
         ");
         $stmt->execute([$user_id, $username, $action, $details]);
+=======
+            INSERT INTO access_log (uid, door, status, reason, timestamp)
+            VALUES (?, 'ADMIN', 'SUCCESS', ?, NOW())
+        ");
+        $reason = $action . ': ' . $details;
+        $stmt->execute([$user_id, $reason]);
+>>>>>>> 67eab98 (Initial commit: local files before connecting to GitHub)
     } catch (PDOException $e) {
         error_log("Audit log failed: " . $e->getMessage());
     }
@@ -60,6 +68,7 @@ if (isset($_GET['action'])) {
     // ---------------------------------------------------------------
     // Register a NEW Key Card (Merged with admin_register logic)
     // ---------------------------------------------------------------
+<<<<<<< HEAD
     if ($action === 'register') {
         $data = json_decode(file_get_contents('php://input'), true);
 
@@ -94,6 +103,78 @@ if (isset($_GET['action'])) {
         exit;
     }
 
+=======
+// ---------------------------------------------------------------
+// Register a NEW Key Card (Fixed: saves UID as LITTLE-ENDIAN HEX)
+// ---------------------------------------------------------------
+if ($action === 'register') {
+    $data = json_decode(file_get_contents('php://input'), true);
+
+    if (empty($data['card_uid']) || empty($data['card_name'])) {
+        http_response_code(400);
+        echo json_encode(['success' => false, 'message' => 'Card UID and Card Name are required.']);
+        exit;
+    }
+
+    // RAW UID from USB Reader
+    $raw_uid = trim($data['card_uid']);
+
+    // ----------------------------------------------
+    // FIX: AUTO-CONVERT UID TO LITTLE-ENDIAN HEX
+    // ----------------------------------------------
+    if (ctype_digit($raw_uid)) {
+        // UID is DECIMAL → convert to little-endian HEX
+        $key_card_uid = decToLEHex($raw_uid);
+    } else {
+        // UID already HEX → normalize to little-endian HEX
+        $key_card_uid = hexToLE($raw_uid);
+    }
+
+    // Check if UID already exists
+    $stmt = $pdo->prepare("SELECT COUNT(*) FROM clearance_badges WHERE key_card_number = ?");
+    $stmt->execute([$key_card_uid]);
+    if ($stmt->fetchColumn() > 0) {
+        echo json_encode(['success' => false, 'message' => 'This card UID is already registered.']);
+        exit;
+    }
+
+    try {
+        // Save card into main table
+        $stmt = $pdo->prepare("
+            INSERT INTO clearance_badges (key_card_number, card_name, status, clearance_level, visitor_id)
+            VALUES (?, ?, 'unassigned', 'none', NULL)
+        ");
+        $stmt->execute([$key_card_uid, $data['card_name']]);
+
+        // Save also into doorlock system
+        $doorlock_db = new PDO("mysql:host=localhost;dbname=isecure", "root", "");
+        $doorlock_stmt = $doorlock_db->prepare("
+            INSERT INTO registered_cards(uid, status)
+            VALUES(?, 'ACTIVE')
+            ON DUPLICATE KEY UPDATE status = 'ACTIVE'
+        ");
+        $doorlock_stmt->execute([$key_card_uid]);
+
+        // Log audit
+        log_audit(
+            $pdo,
+            $admin_user_id,
+            $admin_username,
+            "CARD_REGISTER",
+            "Registered card '{$data['card_name']}' UID: $key_card_uid"
+        );
+
+        echo json_encode(['success' => true, 'message' => 'Key card registered successfully.']);
+
+    } catch (PDOException $e) {
+        echo json_encode(['success' => false, 'message' => 'Database error: ' . $e->getMessage()]);
+    }
+
+    exit;
+}
+
+
+>>>>>>> 67eab98 (Initial commit: local files before connecting to GitHub)
     // ---------------------------------------------------------------
     // Assign Key Card to Visitor (Merged admin_assign logic)
     // ---------------------------------------------------------------
@@ -108,10 +189,30 @@ if (isset($_GET['action'])) {
             exit;
         }
 
+<<<<<<< HEAD
         try {
             $stmt = $pdo->prepare("
                 UPDATE clearance_badges
                 SET visitor_id = ?, validity_start = ?, validity_end = ?, door = ?, status = 'active'
+=======
+        // Check if visitor exists
+        $visitor_id = (int)$data['visitor_id'];
+        if ($visitor_id <= 0) {
+            echo json_encode(['success' => false, 'message' => 'Invalid visitor ID.']);
+            exit;
+        }
+        $stmt = $pdo->prepare("SELECT COUNT(*) FROM visitors WHERE id = ?");
+        $stmt->execute([$visitor_id]);
+        if ($stmt->fetchColumn() == 0) {
+            echo json_encode(['success' => false, 'message' => 'Invalid visitor ID.']);
+            exit;
+        }
+
+        try {
+            $stmt = $pdo->prepare("
+                UPDATE clearance_badges
+                SET visitor_id = ?, validity_start = ?, validity_end = ?, door = ?, status = 'active', clearance_level = 'visitor'
+>>>>>>> 67eab98 (Initial commit: local files before connecting to GitHub)
                 WHERE id = ?
             ");
             $stmt->execute([
@@ -123,6 +224,23 @@ if (isset($_GET['action'])) {
             ]);
 
             if ($stmt->rowCount() > 0) {
+<<<<<<< HEAD
+=======
+                // Get visitor details for card_holder table
+                $visitor_stmt = $pdo->prepare("SELECT first_name, last_name FROM visitors WHERE id = ?");
+                $visitor_stmt->execute([$data['visitor_id']]);
+                $visitor = $visitor_stmt->fetch(PDO::FETCH_ASSOC);
+
+                if ($visitor) {
+                    // Insert into card_holder table
+                    $holder_stmt = $pdo->prepare("
+                        INSERT INTO card_holders (holder_id, first_name, last_name)
+                        VALUES (?, ?, ?)
+                    ");
+                    $holder_stmt->execute([$data['visitor_id'], $visitor['first_name'], $visitor['last_name']]);
+                }
+
+>>>>>>> 67eab98 (Initial commit: local files before connecting to GitHub)
                 log_audit($pdo, $admin_user_id, $admin_username, "CARD_ASSIGN",
                     "Assigned card ID {$data['id']} to visitor {$data['visitor_id']}");
 
@@ -147,6 +265,7 @@ if (isset($_GET['action'])) {
 // ---------------------------------------------------------------------
 $visitors = $pdo->query("SELECT id, first_name, last_name FROM visitors")->fetchAll(PDO::FETCH_ASSOC);
 
+<<<<<<< HEAD
 $unassigned_cards = $pdo->query("
     SELECT id, card_name, key_card_number 
     FROM clearance_badges
@@ -157,6 +276,20 @@ $all_cards = $pdo->query("
     SELECT 
         cb.id, cb.key_card_number, cb.card_name, cb.status,
         cb.validity_start, cb.validity_end,
+=======
+$all_cards_for_assign = $pdo->query("
+    SELECT cb.id, cb.card_name, cb.key_card_number, cb.status,
+           CONCAT(v.first_name, ' ', v.last_name) as holder_name
+    FROM clearance_badges cb
+    LEFT JOIN visitors v ON cb.visitor_id = v.id
+    ORDER BY cb.card_name
+")->fetchAll(PDO::FETCH_ASSOC);
+
+$all_cards = $pdo->query("
+    SELECT
+        cb.id, cb.key_card_number, cb.card_name, cb.status,
+        cb.validity_start, cb.validity_end, cb.door,
+>>>>>>> 67eab98 (Initial commit: local files before connecting to GitHub)
         v.first_name, v.last_name
     FROM clearance_badges cb
     LEFT JOIN visitors v ON cb.visitor_id = v.id
@@ -246,14 +379,26 @@ $fullName = $_SESSION['full_name'] ?? "Admin";
                                 <?php endforeach; ?>
                             </select>
 
+<<<<<<< HEAD
+=======
+                            <!-- Badge List for Selected Visitor -->
+                            <div id="badgeList" class="mb-4"></div>
+
+>>>>>>> 67eab98 (Initial commit: local files before connecting to GitHub)
                             <!-- Card Selector (Assign Mode Only) -->
                             <div id="assignCardField">
                                 <label class="mt-2">Select Card</label>
                                 <select id="keyCardId" class="form-select">
                                     <option value="">-- Select --</option>
+<<<<<<< HEAD
                                     <?php foreach ($unassigned_cards as $c): ?>
                                         <option value="<?= $c['id'] ?>">
                                             <?= $c['card_name'] ?> (<?= $c['key_card_number'] ?>)
+=======
+                                    <?php foreach ($all_cards_for_assign as $c): ?>
+                                        <option value="<?= $c['id'] ?>" <?= $c['status'] === 'active' ? 'disabled' : '' ?>>
+                                            <?= htmlspecialchars($c['card_name']) ?> (<?= $c['key_card_number'] ?>) - <?= $c['status'] === 'active' ? 'Assigned to: ' . htmlspecialchars($c['holder_name'] ?? 'Unknown') : 'Available' ?>
+>>>>>>> 67eab98 (Initial commit: local files before connecting to GitHub)
                                         </option>
                                     <?php endforeach; ?>
                                 </select>
@@ -322,6 +467,10 @@ $fullName = $_SESSION['full_name'] ?? "Admin";
                     <table class="table table-bordered">
                         <thead>
                             <tr>
+<<<<<<< HEAD
+=======
+                                <th>Card Name</th>
+>>>>>>> 67eab98 (Initial commit: local files before connecting to GitHub)
                                 <th>UID</th>
                                 <th>Holder</th>
                                 <th>Door</th>
@@ -333,9 +482,16 @@ $fullName = $_SESSION['full_name'] ?? "Admin";
                         <tbody>
                         <?php foreach ($all_cards as $card): ?>
                             <tr>
+<<<<<<< HEAD
                                 <td><?= $card['key_card_number'] ?></td>
                                 <td><?= ($card['first_name'] ?? 'Unassigned') . " " . ($card['last_name'] ?? '') ?></td>
                                 <td><?= $card['door'] ?></td>
+=======
+                                <td><?= htmlspecialchars($card['card_name']) ?></td>
+                                <td><?= $card['key_card_number'] ?></td>
+                                <td><?= ($card['first_name'] ?? 'Unassigned') . " " . ($card['last_name'] ?? '') ?></td>
+                                <td><?= $card['door'] ?? 'N/A' ?></td>
+>>>>>>> 67eab98 (Initial commit: local files before connecting to GitHub)
                                 <td><?= $card['validity_start'] ?: 'N/A' ?></td>
                                 <td><?= $card['validity_end'] ?: 'N/A' ?></td>
                                 <td><?= ucfirst($card['status']) ?></td>

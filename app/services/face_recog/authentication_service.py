@@ -86,4 +86,8 @@ def authenticate_face(frame):
             continue
 
     _log("Authentication failed: Unknown visitor")
+<<<<<<< HEAD
     return {"authenticated": False, "message": "Unknown visitor."}
+=======
+    return {"authenticated": False, "message": "Unknown visitor."}
+>>>>>>> 67eab98 (Initial commit: local files before connecting to GitHub)

@@ -55,11 +55,15 @@ try {
         }
 
         // Construct the full path
+<<<<<<< HEAD
         $full_path = $base_upload_dir . $type . 's/' . $cleaned_file_path; else {
             http_response_code(400);
             echo "Invalid image type for path construction.";
             exit;
         }
+=======
+        $full_path = $base_upload_dir . $type . 's/' . $cleaned_file_path;
+>>>>>>> 67eab98 (Initial commit: local files before connecting to GitHub)
 
         // error_log("Trying to load: " . $full_path);
         // error_log("File exists: " . (file_exists($full_path) ? 'yes' : 'no'));

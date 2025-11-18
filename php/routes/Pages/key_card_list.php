@@ -7,14 +7,24 @@ $access_logs = [];
 $error_message = '';
 
 try {
+<<<<<<< HEAD
     // Fetch access logs and join with clearance badges and visitors to get the visitor's name
     $stmt_logs = $pdo->query("
         SELECT 
+=======
+    // Fetch access logs and join with clearance badges and visitors to get the visitor's name and card name
+    $stmt_logs = $pdo->query("
+        SELECT
+>>>>>>> 67eab98 (Initial commit: local files before connecting to GitHub)
             al.timestamp,
             al.uid,
             al.door,
             al.status,
             al.reason,
+<<<<<<< HEAD
+=======
+            cb.card_name,
+>>>>>>> 67eab98 (Initial commit: local files before connecting to GitHub)
             v.first_name,
             v.last_name
         FROM access_logs al
@@ -84,6 +94,10 @@ try {
                     <tr>
                         <th>Timestamp</th>
                         <th>Visitor Name</th>
+<<<<<<< HEAD
+=======
+                        <th>Card Name</th>
+>>>>>>> 67eab98 (Initial commit: local files before connecting to GitHub)
                         <th>Card UID Used</th>
                         <th>Door</th>
                         <th>Status</th>
@@ -100,6 +114,10 @@ try {
                             <tr>
                                 <td><?php echo htmlspecialchars(date('Y-m-d H:i:s', strtotime($log['timestamp']))); ?></td>
                                 <td><?php echo htmlspecialchars(($log['first_name'] ?? '') . ' ' . ($log['last_name'] ?? 'Unknown/Unassigned')); ?></td>
+<<<<<<< HEAD
+=======
+                                <td><?php echo htmlspecialchars($log['card_name'] ?? 'Unknown'); ?></td>
+>>>>>>> 67eab98 (Initial commit: local files before connecting to GitHub)
                                 <td><?php echo htmlspecialchars($log['uid']); ?></td>
                                 <td><?php echo htmlspecialchars($log['door']); ?></td>
                                 <td><span class="badge bg-<?php echo $log['status'] === 'GRANTED' ? 'success' : 'danger'; ?>"><?php echo htmlspecialchars($log['status']); ?></span></td>

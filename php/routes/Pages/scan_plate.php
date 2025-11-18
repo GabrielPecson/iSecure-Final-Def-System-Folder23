@@ -9,7 +9,11 @@ if (!isset($_FILES['image'])) {
 
 try {
     // The Python API expects a multipart/form-data request, so we'll forward it using cURL
+<<<<<<< HEAD
     $api_url = 'https://isecured.online:8000/recognize/vehicle';
+=======
+    $api_url = 'http://localhost:8000/recognize/vehicle';
+>>>>>>> 67eab98 (Initial commit: local files before connecting to GitHub)
 
     // Create a CURLFile object to correctly handle the file upload
     $cfile = new CURLFile($_FILES['image']['tmp_name'], $_FILES['image']['type'], $_FILES['image']['name']);

@@ -123,4 +123,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     } else {
         echo json_encode(['success' => false, 'message' => 'Missing request ID']);
     }
+<<<<<<< HEAD
 }
+=======
+} else {
+    echo json_encode(['success' => false, 'message' => 'Invalid request method']);
+}
+>>>>>>> 67eab98 (Initial commit: local files before connecting to GitHub)
