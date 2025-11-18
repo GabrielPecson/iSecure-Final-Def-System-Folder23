@@ -106,7 +106,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
                 // Send SMS to visitor
                 if (!empty($contact_number)) {
-                    require_once __DIR__ . 'sms_module.php';
+                    require_once __DIR__ . '/sms_module.php';
                     if ($action === 'approve') {
                         $smsMessage = "Your visitation request to Basa Air Base has been approved. Please arrive on time for your visit.";
                     } else {
