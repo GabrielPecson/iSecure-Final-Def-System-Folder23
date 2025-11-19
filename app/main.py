@@ -108,32 +108,7 @@ def welcome():
     app.logger.info(f"Request received: {request.method} {request.path}")
     return jsonify({"message": "Welcome to the Flask API Service!"})
 
-@app.route("/api/ocr/plate", methods=["POST"])
-def ocr_plate():
-    if 'file' not in request.files:
-        return jsonify({"error": "No file part"}), 400
-    file = request.files['file']
-    if file.filename == '':
-        return jsonify({"error": "No selected file"}), 400
 
-    try:
-        # Mindee API details
-        api_url = "https://api.mindee.net/v1/products/mindee/license-plates/v1/predict"
-        api_key = os.getenv('MINDEE_API_KEY', 'your_mindee_api_key_here')  # Use environment variable
-
-        # Prepare the request
-        headers = {"Authorization": f"Token {api_key}"}
-        files = {"document": (file.filename, file.read(), file.content_type)}
-
-        # Call Mindee API
-        response = requests.post(api_url, headers=headers, files=files)
-        response.raise_for_status()  # Raise error for bad responses
-
-        # Return the JSON result
-        return jsonify(response.json())
-    except requests.exceptions.RequestException as e:
-        app.logger.error(f"Mindee API error: {e}")
-        return jsonify({"error": f"API request failed: {str(e)}"}), 500
 
 @app.route("/", methods=["GET"])
 def health_check():

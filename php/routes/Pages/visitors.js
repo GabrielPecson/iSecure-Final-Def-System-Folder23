@@ -384,26 +384,23 @@ document.addEventListener("DOMContentLoaded", () => {
     try {
         const frameBlob = await captureVehicleFrame();
         const formData = new FormData();
-        formData.append('file', frameBlob, 'capture.jpg');
+        formData.append('image', frameBlob, 'capture.jpg');
 
-        const response = await fetch('https://isecured.online:8000/api/ocr/plate', { method: 'POST', body: formData });
+        const response = await fetch('scan_plate.php', { method: 'POST', body: formData });
         const data = await response.json();
 
         if (!response.ok || data.error) {
             let errorMsg = data.error || `HTTP error! status: ${response.status}`;
+            if (data.details) {
+                errorMsg += ` - ${data.details}`;
+            }
             throw new Error(errorMsg);
         }
 
-        // Parse Mindee API response
-        const pages = data.document?.inference?.pages;
-        let recognizedPlate = "Not Found";
-        if (pages && pages.length > 0 && pages[0].prediction?.license_plates?.length > 0) {
-            recognizedPlate = pages[0].prediction.license_plates[0].value || "Not Found";
-        }
-
+        const recognizedPlate = data.license_plate_number || "Not Found";
         const expectedPlate = expectedPlateNumberDisplay.textContent.trim();
         recognizedPlateDisplay.textContent = recognizedPlate;
-        document.getElementById('recognizedVehicleTypeDisplay').textContent = "N/A"; // Mindee doesn't provide vehicle type
+        document.getElementById('recognizedVehicleTypeDisplay').textContent = data.vehicle_type || "Not Found";
 
         if (expectedPlate && recognizedPlate.toLowerCase() === expectedPlate.toLowerCase()) {
             verificationStatus.textContent = "Match!";
