@@ -106,7 +106,7 @@ if ($action === 'register') {
         $stmt->execute([$key_card_uid, $data['card_name']]);
 
         // Save also into doorlock system
-        $doorlock_db = new PDO("mysql:host=isecured.online;dbname=isecure", "root", "");
+        $doorlock_db = new PDO("mysql:host=localhost;dbname=isecure", "root", "");
         $doorlock_stmt = $doorlock_db->prepare("
             INSERT INTO registered_cards(uid, status)
             VALUES(?, 'ACTIVE')

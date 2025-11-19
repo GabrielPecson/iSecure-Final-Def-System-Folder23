@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Nov 17, 2025 at 11:39 PM
+-- Generation Time: Nov 19, 2025 at 02:33 PM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -24,21 +24,6 @@ SET time_zone = "+00:00";
 -- --------------------------------------------------------
 
 --
--- Table structure for table `access_logs`
---
-
-CREATE TABLE `access_logs` (
-  `log_id` int(11) NOT NULL,
-  `uid` varchar(32) DEFAULT NULL,
-  `door` varchar(20) DEFAULT NULL,
-  `status` varchar(20) DEFAULT NULL,
-  `reason` varchar(255) DEFAULT NULL,
-  `timestamp` timestamp NOT NULL DEFAULT current_timestamp()
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
--- --------------------------------------------------------
-
---
 -- Table structure for table `admin_audit_logs`
 --
 
@@ -51,17 +36,16 @@ CREATE TABLE `admin_audit_logs` (
   `created_at` timestamp NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
--- --------------------------------------------------------
-
 --
--- Table structure for table `card_holders`
+-- Dumping data for table `admin_audit_logs`
 --
 
-CREATE TABLE `card_holders` (
-  `holder_id` int(11) NOT NULL,
-  `first_name` varchar(100) NOT NULL,
-  `last_name` varchar(100) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+INSERT INTO `admin_audit_logs` (`id`, `user_id`, `action`, `ip_address`, `user_agent`, `created_at`) VALUES
+(32, '690b82279e279', 'User logged in', '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36', '2025-11-19 11:06:41'),
+(33, '690b82279e279', 'User logged out', '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36', '2025-11-19 11:21:07'),
+(34, 'ff94cfd4-c538-11f0-bf01-9c6b0035cf26', 'User logged in', '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36', '2025-11-19 11:21:39'),
+(35, 'ff94cfd4-c538-11f0-bf01-9c6b0035cf26', 'User logged out', '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36', '2025-11-19 11:23:13'),
+(36, '690b82279e279', 'User logged in', '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36', '2025-11-19 11:30:29');
 
 -- --------------------------------------------------------
 
@@ -71,7 +55,7 @@ CREATE TABLE `card_holders` (
 
 CREATE TABLE `clearance_badges` (
   `id` int(11) NOT NULL,
-  `visitor_id` int(11) DEFAULT NULL,
+  `visitor_id` int(11) NOT NULL,
   `clearance_level` varchar(255) NOT NULL,
   `key_card_number` varchar(50) NOT NULL,
   `card_name` varchar(255) DEFAULT NULL,
@@ -158,6 +142,14 @@ CREATE TABLE `password_resets` (
   `expires_at` datetime NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
+--
+-- Dumping data for table `password_resets`
+--
+
+INSERT INTO `password_resets` (`id`, `user_id`, `reset_token`, `expires_at`) VALUES
+(1, '690b82279e279', '1e1547858e204ce11dd9c5cced928d408e3bef463670213ab3d3b94fdd5d51cd', '2025-11-15 02:03:36'),
+(2, '690b82279e279', '29a0c15bcc9d7cb52cedcf9e80ca80f074f1e949527891e78ad8fa03dabc40a3', '2025-11-15 02:03:45');
+
 -- --------------------------------------------------------
 
 --
@@ -172,22 +164,12 @@ CREATE TABLE `personnel_sessions` (
   `expires_at` datetime DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
--- --------------------------------------------------------
-
 --
--- Table structure for table `registered_cards`
+-- Dumping data for table `personnel_sessions`
 --
 
-CREATE TABLE `registered_cards` (
-  `card_id` int(11) NOT NULL,
-  `uid` varchar(32) NOT NULL,
-  `holder_id` int(11) DEFAULT NULL,
-  `door` varchar(20) DEFAULT 'ALL',
-  `valid_from` datetime DEFAULT NULL,
-  `valid_to` datetime DEFAULT NULL,
-  `status` enum('ACTIVE','INACTIVE') DEFAULT 'ACTIVE',
-  `created_at` timestamp NOT NULL DEFAULT current_timestamp()
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+INSERT INTO `personnel_sessions` (`id`, `user_id`, `token`, `created_at`, `expires_at`) VALUES
+('691daa55d0193', '690b82279e279', '7bde5f931765485eb92e49e03f969f2dc4f3b4bf5bc832981a3e1eaefc29a5fd', '2025-11-19 19:30:29', '2025-11-19 20:30:29');
 
 -- --------------------------------------------------------
 
@@ -206,6 +188,14 @@ CREATE TABLE `users` (
   `joined_date` datetime DEFAULT current_timestamp(),
   `last_active` datetime DEFAULT current_timestamp() ON UPDATE current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `users`
+--
+
+INSERT INTO `users` (`id`, `full_name`, `email`, `rank`, `status`, `password_hash`, `role`, `joined_date`, `last_active`) VALUES
+('690b82279e279', 'System Admin', 'admin@example.com', 'Captain', 'Active', '$2y$10$qFlN/pa.jLW3gqHCw6X6DeB6abZvjUy4/8ZZrnw4W/n/KEM1AAyIy', 'Admin', '2025-11-06 00:58:15', '2025-11-06 00:58:15'),
+('ff94cfd4-c538-11f0-bf01-9c6b0035cf26', 'Gabriel', 'gabriel@example.com', 'General', 'Active', '$2y$10$ubZcAemhY2OTfF3RgtmxXu9L3KUzKBoCniwFFUUnaJ46S9mvrydPu', 'Admin', '2025-11-19 19:14:28', '2025-11-19 19:14:28');
 
 -- --------------------------------------------------------
 
@@ -227,6 +217,13 @@ CREATE TABLE `vehicles` (
   `exit_time` datetime DEFAULT NULL,
   `status` enum('Expected','Inside','Exited') DEFAULT 'Expected'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `vehicles`
+--
+
+INSERT INTO `vehicles` (`id`, `visitation_id`, `vehicle_owner`, `vehicle_brand`, `vehicle_model`, `vehicle_color`, `plate_number`, `vehicle_photo_path`, `vehicle_photo_compressed`, `entry_time`, `exit_time`, `status`) VALUES
+(7, 10, 'Gabriel De Mesa Pecson', 'toyota', '', 'blue', 'RMG 631', NULL, NULL, '2025-11-19 19:12:01', '2025-11-19 19:30:50', 'Exited');
 
 -- --------------------------------------------------------
 
@@ -261,6 +258,13 @@ CREATE TABLE `visitation_requests` (
   `driver_id` varchar(255) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
+--
+-- Dumping data for table `visitation_requests`
+--
+
+INSERT INTO `visitation_requests` (`id`, `first_name`, `middle_name`, `last_name`, `home_address`, `contact_number`, `email`, `valid_id_path`, `selfie_photo_path`, `vehicle_owner`, `vehicle_brand`, `plate_number`, `vehicle_color`, `vehicle_model`, `vehicle_photo_path`, `reason`, `personnel_related`, `visit_date`, `visit_time`, `created_at`, `status`, `office_to_visit`, `driver_name`, `driver_id`) VALUES
+(10, 'Gabriel', 'De Mesa', 'Pecson', 'purok 6', '09289555509', 'gidpecs@gmail.com', 'php/routes/Pages/uploads/ids/1763550241_id.jpg', 'php/routes/Pages/uploads/selfies/86aa162bc04374ddcd0f269d40e5ce250438967603b85aa6581d0919eb7c2985.jpg', 'Gabriel De Mesa Pecson', 'toyota', 'RMG 631', 'blue', '', NULL, 'Visitation', 'Gabriel Pecson', '2025-11-21', '12:00:00', '2025-11-19 11:04:01', 'Approved', 'ICT Facility', NULL, NULL);
+
 -- --------------------------------------------------------
 
 --
@@ -291,6 +295,13 @@ CREATE TABLE `visitors` (
   `visitation_id` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
+--
+-- Dumping data for table `visitors`
+--
+
+INSERT INTO `visitors` (`id`, `visitation_request_id`, `first_name`, `middle_name`, `last_name`, `contact_number`, `email`, `address`, `id_photo_path`, `id_photo_compressed`, `selfie_photo_path`, `selfie_photo_compressed`, `reason`, `date`, `time_in`, `time_out`, `status`, `key_card_number`, `office_to_visit`, `personnel_related`, `visitation_id`) VALUES
+(10, NULL, 'Gabriel', 'De Mesa', 'Pecson', '09289555509', 'gidpecs@gmail.com', 'purok 6', 'php/routes/Pages/uploads/ids/1763550241_id.jpg', NULL, 'php/routes/Pages/uploads/selfies/86aa162bc04374ddcd0f269d40e5ce250438967603b85aa6581d0919eb7c2985.jpg', NULL, 'Visitation', '2025-11-21', '19:12:01', '19:30:50', 'Exited', NULL, 'ICT Facility', 'Gabriel Pecson', 10);
+
 -- --------------------------------------------------------
 
 --
@@ -305,14 +316,15 @@ CREATE TABLE `visitor_sessions` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
--- Indexes for dumped tables
+-- Dumping data for table `visitor_sessions`
 --
 
+INSERT INTO `visitor_sessions` (`user_token`, `created_at`, `expires_at`, `selfie_photo_path`) VALUES
+('86aa162bc04374ddcd0f269d40e5ce250438967603b85aa6581d0919eb7c2985', '2025-11-19 11:03:26', '2025-11-19 20:03:26', 'php/routes/Pages/uploads/selfies/86aa162bc04374ddcd0f269d40e5ce250438967603b85aa6581d0919eb7c2985.jpg');
+
 --
--- Indexes for table `access_logs`
+-- Indexes for dumped tables
 --
-ALTER TABLE `access_logs`
-  ADD PRIMARY KEY (`log_id`);
 
 --
 -- Indexes for table `admin_audit_logs`
@@ -320,12 +332,6 @@ ALTER TABLE `access_logs`
 ALTER TABLE `admin_audit_logs`
   ADD PRIMARY KEY (`id`),
   ADD KEY `user_id` (`user_id`);
-
---
--- Indexes for table `card_holders`
---
-ALTER TABLE `card_holders`
-  ADD PRIMARY KEY (`holder_id`);
 
 --
 -- Indexes for table `clearance_badges`
@@ -376,14 +382,6 @@ ALTER TABLE `personnel_sessions`
   ADD KEY `user_id` (`user_id`);
 
 --
--- Indexes for table `registered_cards`
---
-ALTER TABLE `registered_cards`
-  ADD PRIMARY KEY (`card_id`),
-  ADD UNIQUE KEY `uid` (`uid`),
-  ADD KEY `fk_registered_cards_holder_id` (`holder_id`);
-
---
 -- Indexes for table `users`
 --
 ALTER TABLE `users`
@@ -421,22 +419,10 @@ ALTER TABLE `visitor_sessions`
 --
 
 --
--- AUTO_INCREMENT for table `access_logs`
---
-ALTER TABLE `access_logs`
-  MODIFY `log_id` int(11) NOT NULL AUTO_INCREMENT;
-
---
 -- AUTO_INCREMENT for table `admin_audit_logs`
 --
 ALTER TABLE `admin_audit_logs`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
-
---
--- AUTO_INCREMENT for table `card_holders`
---
-ALTER TABLE `card_holders`
-  MODIFY `holder_id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=37;
 
 --
 -- AUTO_INCREMENT for table `clearance_badges`
@@ -454,43 +440,37 @@ ALTER TABLE `contact_messages`
 -- AUTO_INCREMENT for table `landing_audit_logs`
 --
 ALTER TABLE `landing_audit_logs`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
 
 --
 -- AUTO_INCREMENT for table `notifications`
 --
 ALTER TABLE `notifications`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
 
 --
 -- AUTO_INCREMENT for table `password_resets`
 --
 ALTER TABLE `password_resets`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
-
---
--- AUTO_INCREMENT for table `registered_cards`
---
-ALTER TABLE `registered_cards`
-  MODIFY `card_id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT for table `vehicles`
 --
 ALTER TABLE `vehicles`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
 
 --
 -- AUTO_INCREMENT for table `visitation_requests`
 --
 ALTER TABLE `visitation_requests`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
 
 --
 -- AUTO_INCREMENT for table `visitors`
 --
 ALTER TABLE `visitors`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
 
 --
 -- Constraints for dumped tables
@@ -519,12 +499,6 @@ ALTER TABLE `password_resets`
 --
 ALTER TABLE `personnel_sessions`
   ADD CONSTRAINT `personnel_sessions_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE;
-
---
--- Constraints for table `registered_cards`
---
-ALTER TABLE `registered_cards`
-  ADD CONSTRAINT `fk_registered_cards_holder_id` FOREIGN KEY (`holder_id`) REFERENCES `card_holders` (`holder_id`) ON DELETE SET NULL ON UPDATE CASCADE;
 
 --
 -- Constraints for table `vehicles`
