@@ -441,14 +441,24 @@ def capture_vehicle_image():
         abort(500, description=str(e))
 
 if __name__ == '__main__':
+    # Pre-load models before starting the server
     preload_models()
 
-    host = os.getenv('FLASK_HOST', '0.0.0.0')
-    port = int(os.getenv('FLASK_PORT', 8000))
-    debug = os.getenv('FLASK_DEBUG', 'False').lower() in ("true", "1", "t")
-    
-    if not debug:
-        # In production mode, add the handler to the app's logger
-        app.logger.addHandler(handler)
+    import ssl
 
-    app.run(host=host, port=port, debug=debug)
+    # Create SSL context
+    context = ssl.SSLContext(ssl.PROTOCOL_TLS)
+
+    # Load your Let's Encrypt certificate + private key
+    context.load_cert_chain(
+        '/etc/letsencrypt/live/isecured.online/fullchain.pem',
+        '/etc/letsencrypt/live/isecured.online/privkey.pem'
+    )
+
+    # Run Flask with HTTPS manually
+    app.run(
+        host='0.0.0.0',
+        port=8000,
+        debug=True,
+        ssl_context=context
+    )
