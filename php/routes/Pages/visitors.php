@@ -77,8 +77,6 @@ if (!empty($session['user_id'])) {
           <h6 class="current-loc mb-0 ms-1">Visitors</h6>
         </div>
         <div class="header-right d-flex align-items-center">
-          <i class="fa-regular fa-bell me-3"></i>
-          <i class="fa-regular fa-message me-3"></i>
           <div class="user-info d-flex align-items-center">
             <i class="fa-solid fa-user-circle fa-lg me-2"></i>
             <div class="user-text">
