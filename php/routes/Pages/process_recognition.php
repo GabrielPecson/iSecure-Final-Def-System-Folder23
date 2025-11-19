@@ -15,7 +15,7 @@ if (!$image || $image['error'] !== UPLOAD_ERR_OK) {
     exit;
 }
 
-$api_base = 'https://isecured.online:8000';
+$api_base = 'http://isecured.online:8000';
 $endpoint = '';
 
 switch ($mode) {
