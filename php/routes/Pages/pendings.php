@@ -94,8 +94,6 @@ foreach ($requests as &$request) {
       <h6 class="current-loc">Pendings</h6>
     </div>
     <div class="header-right">
-      <i class="fa-regular fa-bell me-3"></i>
-      <i class="fa-regular fa-message me-3"></i>
       <div class="user-info">
         <i class="fa-solid fa-user-circle fa-lg me-2" id="user-icon"></i>
         <div class="user-text">
