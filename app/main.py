@@ -443,7 +443,7 @@ def capture_vehicle_image():
 if __name__ == '__main__':
     preload_models()
 
-    host = os.getenv('FLASK_HOST', '127.0.0.1')
+    host = os.getenv('FLASK_HOST', '0.0.0.0')
     port = int(os.getenv('FLASK_PORT', 8000))
     debug = os.getenv('FLASK_DEBUG', 'False').lower() in ("true", "1", "t")
     
