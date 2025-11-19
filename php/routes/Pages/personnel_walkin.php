@@ -247,8 +247,8 @@ if ($role !== 'User') {
   </div>
 </div>
 
-<script src="../../scripts/personnel_dashboard.js"></script>
-<script src="../../scripts/session_check.js"></script>
+<script src="personnel_dashboard.js"></script>
+<script src="session_check.js"></script>
 
 <script>
 // Vehicle Fields Toggle
@@ -285,7 +285,7 @@ document.querySelectorAll('input[name="has_vehicle"]').forEach(radio => {
   </div>
 </div>
 
-<script src="../../scripts/sidebar_personnel.js"></script>
+<script src="sidebar_personnel.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
