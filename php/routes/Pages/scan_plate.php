@@ -8,8 +8,8 @@ if (!isset($_FILES['image'])) {
 }
 
 try {
-    // The Python API expects a multipart/form-data request, so we'll forward it using cURL
-    $api_url = 'http://isecured.online:8000/recognize/vehicle';
+    // The Flask API expects a multipart/form-data request, so we'll forward it using cURL
+    $api_url = 'https://isecured.online:8000/api/ocr/plate';
 
     // Create a CURLFile object to correctly handle the file upload
     $cfile = new CURLFile($_FILES['image']['tmp_name'], $_FILES['image']['type'], $_FILES['image']['name']);
