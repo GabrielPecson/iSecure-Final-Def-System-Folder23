@@ -1,0 +1,16 @@
+Flask
+Flask-Cors
+pyjwt
+deepface
+opencv-python
+pymysql
+keras>=2.15.0
+pytesseract
+tensorflow
+tf-keras
+python-dotenv
+dlib
+imutils
+python-dateutil
+mindee
+watchdog

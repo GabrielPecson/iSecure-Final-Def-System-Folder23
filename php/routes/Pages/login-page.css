@@ -1,0 +1,267 @@
+/* For the loginpage animation */
+   
+   /* -----------------------------
+       Background fade-in (blur → clear)
+    ------------------------------ */
+    @keyframes bgFadeIn {
+      0% {  opacity: 0; }
+      100% {  opacity: 1; }
+    }
+
+    body {
+      animation: bgFadeIn 1.2s ease-in forwards;
+      overflow: hidden;
+    }
+
+    /* -----------------------------
+       Blue panel entry + rounding
+    ------------------------------ */
+    @keyframes panelFade {
+      0% { opacity: 0; transform: scale(0.8); border-radius: none; }
+      100% { opacity: 1; transform: scale(1); border-radius: 45px; }
+    }
+
+    .blue-panel {
+      width: 800px;
+      animation: panelFade 0.8s 0.5s ease-in forwards;
+    }
+
+    /* -----------------------------
+       Slide blue panel left + shrink logo
+    ------------------------------ */
+    @keyframes slideLeft {
+      0% { transform: translateX(0) scale(1); width: 800px; }
+      100% { transform: translateX(-230px) scale(1); width: 500px; }
+    }
+
+    @keyframes logoShrink {
+      0% { transform: translateY(0) scale(1); }
+      100% { transform: translateY(0) scale(0.9); }
+    }
+
+    .slide-left {
+      transition-delay: 800ms;
+      animation: slideLeft 1s 2s ease-in forwards;
+        border-radius: 45px;
+        
+    }
+
+    .logo-shrink {
+      animation: logoShrink 1s 2s ease-in forwards;
+    }
+
+    /* -----------------------------
+       Fade-in animations
+    ------------------------------ */
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .fade-in {
+      opacity: 0;
+      animation: fadeIn 0.8s ease-in forwards;
+    }
+
+    .logo-fade-in {
+      animation: fadeIn 0.8s ease-in forwards;
+      animation-delay: 1.5s;
+    }
+
+    /* -----------------------------
+       White panel reveal
+    ------------------------------ */
+    @keyframes whiteReveal {
+      from { opacity: 0; transform: translateX(100px); }
+      to { opacity: 1; transform: translateX(150px); }
+    }
+
+    .white-reveal {
+      animation: whiteReveal 0.8s 2.6s ease-in forwards;
+      opacity: 0;
+    }
+
+    /* -----------------------------
+       Sequential text + form fade
+    ------------------------------ */
+    .welcome-text { animation-delay: 3.4s; }
+    .sub-text { animation-delay: 3.8s; }
+    .login-form { animation-delay: 4.2s; }
+
+    /* -----------------------------
+       Background image setup
+    ------------------------------ */
+    #login-bg {
+      background-image: url('login-page-bg.png');
+      background-size: cover;
+      background-position: center;
+    }
+
+    /* -----------------------------
+       Responsive adjustments
+    ------------------------------ */
+    /* Custom Modal Styles */
+    .custom-modal {
+      display: none;
+      position: fixed;
+      z-index: 1000;
+      left: 0;
+      top: 0;
+      width: 100%;
+      height: 100%;
+      overflow: auto;
+    }
+
+    .custom-modal-overlay {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0, 0, 0, 0.5);
+    }
+
+    .custom-modal-content {
+      background-color: #fefefe;
+      margin: 15% auto;
+      padding: 0;
+      border: 1px solid #888;
+      width: 90%;
+      max-width: 400px;
+      border-radius: 8px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+      position: relative;
+      z-index: 10;
+    }
+
+    .custom-modal-header {
+      padding: 15px 20px;
+      border-bottom: 1px solid #ddd;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .custom-modal-title {
+      margin: 0;
+      font-size: 1.25rem;
+      font-weight: bold;
+    }
+
+    .custom-modal-close {
+      background: none;
+      border: none;
+      font-size: 1.5rem;
+      cursor: pointer;
+      color: white;
+    }
+
+    .custom-modal-body {
+      padding: 20px;
+    }
+
+    .form-group {
+      margin-bottom: 15px;
+    }
+
+    .form-group label {
+      display: block;
+      margin-bottom: 5px;
+      font-weight: bold;
+      color: #006682;
+    }
+
+    .form-group input {
+      width: 100%;
+      padding: 8px;
+      border: 1px solid #006682;
+      border-radius: 4px;
+      box-sizing: border-box;
+    }
+
+    .custom-modal-submit {
+      width: 100%;
+      padding: 10px;
+      color: white;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 1rem;
+    }
+
+    .custom-modal-submit:hover {
+      opacity: 0.9;
+    }
+
+    .custom-modal-footer {
+      padding: 10px;
+      text-align: right;
+    }
+
+    .btn-secondary {
+      background-color: #6c757d;
+      border-color: #6c757d;
+      color: white;
+      padding: 8px 16px;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+
+    .btn-secondary:hover {
+      background-color: #5a6268;
+      border-color: #545b62;
+    }
+
+    /* Loader Overlay */
+    .loader-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0, 0, 0, 0.5);
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      z-index: 9999;
+    }
+
+    .loader-spinner {
+      width: 50px;
+      height: 50px;
+      border: 5px solid #f3f3f3;
+      border-top: 5px solid #006682;
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+    }
+
+    .loader-text {
+      margin-top: 20px;
+      color: white;
+      font-size: 28px;
+      font-weight: bold;
+      text-align: center;
+    }
+
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+
+    @media (max-width: 1024px) {
+      .container {
+        flex-direction: column;
+        gap: 1rem;
+      }
+      .blue-panel, .white-panel {
+        width: 90%;
+        height: auto;
+        min-height: 400px;
+      }
+      .white-panel {
+        position: static;
+        left: 480px;
+        transform: none !important;
+      }
+    }

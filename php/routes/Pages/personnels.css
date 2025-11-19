@@ -1,0 +1,234 @@
+/* === Base Reset === */
+* {
+  padding: 0;
+  margin: 0;
+  font-family: 'League Spartan', sans-serif;
+  box-sizing: border-box;
+}
+
+/* === Layout === */
+.body {
+  display: flex;
+  height: 100vh;
+  background-color: #F5F5F5;
+}
+
+.left-panel {
+  flex: 0 0 auto;
+}
+
+.right-panel {
+  flex: 1;
+}
+
+
+
+/* === Main Content === */
+.main-content {
+  flex: 1;
+  padding: 20px;
+  background-color: #F5F5F5;
+  overflow-y: auto;
+}
+
+.main-header {
+  width: 100%;
+  height: 63px;
+  background-color: white;
+  border: 1px solid #C9C3C3;
+  border-radius: 15px;
+  display: flex;
+  justify-content: space-between;
+  padding: 0 15px;
+}
+
+.header-left,
+.header-right {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+}
+
+.header-left i {
+  color: #4B5563;
+}
+
+.path {
+  padding-top: 10px;
+  color: #4B5563;
+  font-weight: lighter;
+}
+
+.current-loc {
+  padding-top: 10px;
+  font-weight: 900;
+}
+
+.user-info {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.user-text {
+  display: flex;
+  flex-direction: column;
+  line-height: 1.2;
+}
+
+.username {
+  font-weight: 900;
+}
+
+.logout-link {
+  font-size: 13px;
+  color: red;
+  text-decoration: none;
+  font-weight: bold;
+}
+.logout-link:hover {
+  text-decoration: underline;
+}
+
+.fa-user-circle {
+  color: #B8ECFF;
+  background-color: #1A728B;
+  border-radius: 50%;
+  font-size: 30px;
+}
+
+/* === Personnel Table === */
+.personnel-container {
+  width: 100%;
+  background: white;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+  margin-top: 30px;
+}
+
+.personnel-container table {
+  width: 100% !important;
+  table-layout: fixed !important;
+  border-collapse: collapse !important;
+  margin-top: 20px;
+}
+
+.personnel-container thead th {
+  background-color: #5BB7D1 !important;
+  color: #fff !important;
+  font-weight: 600 !important;
+  text-align: center !important;
+  padding: 12px !important;
+  border: none !important;
+  white-space: nowrap !important;
+}
+
+.personnel-container tbody td {
+  padding: 12px !important;
+  text-align: center !important;
+  vertical-align: middle !important;
+  border: none !important;
+  background: transparent !important;
+  word-wrap: break-word !important;
+}
+
+.personnel-container tbody tr {
+  border-bottom: 1px solid #f0f0f0 !important;
+}
+
+.personnel-container tbody td:last-child {
+  width: 150px !important;
+  white-space: nowrap !important;
+}
+
+/* === Status Badges === */
+.status-badge {
+  display: inline-block !important;
+  padding: 4px 10px !important;
+  border-radius: 20px !important;
+  font-size: 12px !important;
+  font-weight: bold !important;
+  color: #fff !important;
+}
+.status-active { background: #28a745 !important; }
+.status-inactive { background: #6c757d !important; }
+.status-banned { background: #dc3545 !important; }
+.status-pending { background: #ffc107 !important; color: #000 !important; }
+.status-suspended { background: #6f42c1 !important; }
+
+/* === Table Action Buttons === */
+.table-actions .btn {
+  border: none !important;
+  border-radius: 6px !important;
+  font-size: 13px !important;
+  padding: 5px 12px !important;
+  margin: 0 2px !important;
+  cursor: pointer !important;
+}
+.table-actions .btn-success {
+  background: #28a745 !important;
+  color: #fff !important;
+}
+.table-actions .btn-success:hover {
+  background: #218838 !important;
+}
+.table-actions .btn-danger {
+  background: #dc3545 !important;
+  color: #fff !important;
+}
+.table-actions .btn-danger:hover {
+  background: #c82333 !important;
+}
+
+/* === Edit User Modal === */
+#editUserModal {
+  display: none;
+  position: fixed;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: rgba(0,0,0,0.6);
+  justify-content: center;
+  align-items: center;
+  z-index: 2000;
+}
+#editUserModal.show {
+  display: flex;
+}
+
+#editUserModal .modal-content {
+  background: #fff;
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+  animation: fadeInScale 0.25s ease;
+}
+
+#editUserModal label {
+  display: block;
+  margin-top: 12px;
+  font-weight: 600;
+}
+
+#editUserModal input,
+#editUserModal select {
+  width: 100%;
+  padding: 8px;
+  margin-top: 5px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+}
+
+/* Modal Buttons */
+#editUserModal .btn-success {
+  background: #28a745 !important;
+  border: none !important;
+}
+#editUserModal .btn-danger {
+  background: #dc3545 !important;
+  border: none !important;
+}
+
+@keyframes fadeInScale {
+  from { opacity: 0; transform: scale(0.9); }
+  to   { opacity: 1; transform: scale(1); }
+}

@@ -1,0 +1,463 @@
+/* ===========================================
+   customizelanding.css
+   Reordered to match the PHP structure and
+   adjusted so previews are centered + page scrolls
+   =========================================== */
+
+/* -------------------------
+   1) Global / Reset
+   ------------------------- */
+html, body {
+  height: 100%;
+  /* allow vertical scrolling on the page */
+  overflow-x: hidden;
+  background-color: #F5F5F5;
+  font-family: 'League Spartan', sans-serif;
+}
+
+* {
+  padding: 0;
+  margin: 0;
+  box-sizing: border-box;
+  /* removed overflow: hidden so page can scroll */
+}
+
+/* -------------------------
+   2) Body container (outer)
+   corresponds to <div class="body">
+   ------------------------- */
+.body {
+  display: flex;
+  height: 100vh;        /* fixed height to match viewport */
+  overflow: hidden;     /* prevent body scroll, allow internal scroll in main-content */
+  background-color: #F5F5F5;
+}
+
+/* -------------------------
+   3) Left panel & sidebar
+   corresponds to <div class="left-panel"> and .sidebar-panel
+   ------------------------- */
+.left-panel {
+  flex: 0 0 auto;
+  height: 100vh;
+}
+
+
+
+/* -------------------------
+   4) Right panel and main content
+   corresponds to <div class="right-panel"> and <div class="main-content">
+   ------------------------- */
+.right-panel {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+}
+
+.main-content {
+  flex: 1;
+  padding: 20px;
+  background-color: #F5F5F5;
+  /* allow the right-side content area to scroll vertically */
+  overflow-y: auto;
+  height: calc(100vh - 79px); /* subtract header height (63px) + margin-bottom (16px) */
+}
+
+/* -------------------------
+   5) Header area
+   corresponds to .main-header
+   ------------------------- */
+.main-header {
+  width: 100%;
+  height: 63px;
+  background-color: white;
+  border-style: solid;
+  border-width: 1px;
+  border-color: #C9C3C3;
+  border-radius: 15px;
+  display: flex;
+  justify-content: space-between;
+  padding: 0 15px;
+  align-items: center;
+  margin-bottom: 16px;
+}
+
+.header-left,
+.header-right {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+}
+
+.user-info {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.user-text {
+  display: flex;
+  flex-direction: column;
+  line-height: 1.2;
+}
+
+.username {
+  font-weight: 900;
+}
+
+.logout-link {
+  font-size: 13px;
+  color: red;
+  text-decoration: none;
+  font-weight: bold;
+}
+.logout-link:hover { text-decoration: underline; }
+
+.header-left i { color: #4B5563; }
+
+.path {
+  color: #4B5563;
+  font-weight: lighter;
+}
+
+.current-loc { font-weight: 900; }
+
+.fa-user-circle {
+  height: 30px;
+  width: 30px;
+  color: #B8ECFF;
+  background-color: #1A728B;
+  border-radius: 50%;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 18px;
+}
+
+/* -------------------------
+   6) Modal (keep as-is, below header)
+   ------------------------- */
+.modal {
+  display: none;
+  position: fixed;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: rgba(0,0,0,0.6);
+  justify-content: center;
+  align-items: center;
+  z-index: 2000;
+}
+.modal.show { display: flex; }
+
+.modal-content {
+  background: white;
+  padding: 20px;
+  border-radius: 10px;
+  width: 350px;
+  max-width: 90%;
+  text-align: center;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+}
+.modal-actions { margin-top: 20px; display:flex; justify-content:space-around; }
+.modal-actions button { padding: 8px 20px; border:none; border-radius:6px; cursor:pointer; }
+.modal-actions .btn-danger { background:#dc3545; color:#fff; }
+.modal-actions .btn-secondary { background:#6c757d; color:#fff; }
+
+/* -------------------------
+   7) Tabs / tab navigation
+   (nav-tabs follows header)
+   ------------------------- */
+.nav-tabs .nav-link {
+  border-radius: 8px 8px 0 0;
+  color: #333;
+  font-weight: bold;
+  background: #f5f5f5;
+  margin-right: 5px;
+}
+.nav-tabs .nav-link.active {
+  background: #006682;
+  color: white;
+}
+
+/* -------------------------
+   8) Card style (tab content containers)
+   ------------------------- */
+.card {
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+  border: none;
+  padding: 20px;
+  margin-bottom: 20px;
+}
+
+/* Form inputs inside cards */
+.card input.form-control,
+.card textarea.form-control,
+.card select.form-control {
+  border-radius: 10px;
+  border: 1px solid #ccc;
+  padding: 10px;
+  font-size: 14px;
+  width: 100%;
+}
+
+/* Buttons (inside cards) */
+.card .btn {
+  border-radius: 8px;
+  font-weight: bold;
+  padding: 8px 18px;
+  transition: background 0.3s ease;
+}
+.card .btn-primary { background-color: #006682; color: white; }
+.card .btn-primary:hover { background-color: #2789A4; }
+.card .btn-success { background-color: #28a745; color: white; }
+.card .btn-success:hover { background-color: #218838; }
+.card .btn-info { background-color: #17a2b8; color: white; }
+.card .btn-info:hover { background-color: #138496; }
+.card .btn-warning { background-color: #ffc107; color: #212529; }
+.card .btn-warning:hover { background-color: #e0a800; }
+.card .btn-danger { background-color: #dc3545; color: white; }
+.card .btn-danger:hover { background-color: #c82333; }
+
+/* -------------------------
+   9) Current images preview area (centered)
+   placed above each upload form inside tab panes
+   ------------------------- */
+.current-images {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 15px;
+  justify-content: center;   /* center previews horizontally */
+  align-items: flex-start;
+  margin-bottom: 18px;
+}
+
+/* Each preview card — center content vertically & horizontally */
+.preview-card {
+  background: #fff;
+  border-radius: 10px;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+  padding: 10px;
+  width: 220px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;  /* vertical center */
+  align-items: center;      /* horizontal center */
+  text-align: center;
+}
+
+.preview-card.selected {
+  border: 3px solid #007bff;
+  box-shadow: 0 4px 12px rgba(0,123,255,0.3);
+}
+
+.headline-item.selected {
+  border: 3px solid #007bff;
+  box-shadow: 0 4px 12px rgba(0,123,255,0.3);
+}
+
+/* image inside preview */
+.preview-img {
+  width: 100%;
+  height: 120px;
+  object-fit: cover;
+  border-radius: 8px;
+  margin-bottom: 8px;
+}
+
+/* caption centered */
+.preview-caption {
+  font-size: 14px;
+  color: #333;
+  text-align: center;
+  line-height: 1.2;
+  word-break: break-word;
+}
+
+/* -------------------------
+   10) Table styling (archives / adminTable)
+   ------------------------- */
+.adminTable {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0 8px;
+}
+.adminTable th, .adminTable td {
+  padding: 12px 15px;
+  text-align: center;
+  border: none;
+}
+.adminTable th {
+  background: #5BB7D1;
+  color: white;
+  font-weight: bold;
+  border-radius: 8px 8px 0 0;
+}
+.adminTable tr {
+  background: white;
+  border-radius: 8px;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.08);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+.adminTable tr:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0,0,0,0.12);
+}
+.adminTable .btn { border-radius: 6px; font-size: 13px; padding: 5px 12px; margin: 0 2px; cursor: pointer; }
+
+/* -------------------------
+   11) small utilities used in markup
+   ------------------------- */
+.mt-2 { margin-top: 10px; }
+.mt-3 { margin-top: 15px; }
+
+/* =========================
+   News Headlines Modal
+   ========================= */
+.modal-backdrop {
+  background-color: rgba(0, 0, 0, 0.5);
+}
+
+.modal-dialog {
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: calc(100vh - 1rem);
+  max-width: 900px !important; /* adjust as needed */
+  width: 90%; /* keep it responsive */
+}
+
+.modal-dialog-centered {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.modal-content {
+  border-radius: 12px;
+  padding: 15px;
+  box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+}
+
+.modal-title {
+  font-family: "League Spartan", sans-serif;
+  font-weight: 600;
+  font-size: 1.25rem;
+  color: #003673;
+}
+
+.modal-body .preview-card {
+  background: #fff;
+  border-radius: 10px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
+  padding: 15px;
+  margin-bottom: 20px;
+  text-align: center;
+  transition: transform 0.2s ease-in-out;
+}
+
+.modal-body .preview-card:hover {
+  transform: translateY(-3px);
+}
+
+.modal-body .preview-img {
+  width: 100%;
+  height: 160px;
+  object-fit: cover;
+  border-radius: 8px;
+  margin-bottom: 10px;
+}
+
+.modal-body .preview-caption {
+  font-size: 14px;
+  color: #333;
+  line-height: 1.4;
+  word-break: break-word;
+}
+
+/* Modal Footer Buttons */
+.modal-footer .btn-secondary {
+  background-color: #6c757d;
+  border: none;
+  border-radius: 6px;
+  padding: 6px 14px;
+}
+
+.modal-footer .btn-secondary:hover {
+  background-color: #5a6268;
+}
+
+
+
+/* -------------------------
+   12) Responsive tweaks
+   ------------------------- */
+@media (max-width: 992px) {
+  .right-panel { margin-left: 0; }
+  .current-images { gap: 10px; }
+  .preview-card { width: 160px; }
+}
+
+@media (max-width: 768px) {
+  .card input.form-control,
+  .card textarea.form-control,
+  .card select.form-control {
+    font-size: 13px;
+    padding: 8px;
+  }
+  .preview-img { height: 90px; }
+  .preview-card { width: 140px; }
+}
+
+/* Crop Modal Specific Styles */
+#cropModal .modal-dialog {
+  width: 90vw !important;
+  max-width: 1200px !important;
+  margin: auto !important;
+}
+
+#cropModal .modal-content {
+  width: 90vw !important;
+  max-width: 1200px !important;
+  height: 100vh !important;
+  border-radius: 0 !important;
+  border: none !important;
+  margin: 0 !important;
+}
+
+#cropModal .modal-header,
+#cropModal .modal-footer {
+  flex-shrink: 0;
+  padding: 0.5rem 1rem !important;
+}
+
+#cropModal .modal-body {
+  flex: 1 !important;
+  overflow: hidden !important;
+  display: flex !important;
+  flex-direction: column !important;
+  justify-content: center !important;
+  align-items: center !important;
+  padding: 0.5rem !important;
+}
+
+#cropModal #cropCanvas {
+  max-width: 100% !important;
+  max-height: 90% !important;
+  height: auto !important;
+  border: 1px solid #ccc !important;
+  display: block !important;
+}
+
+#cropModal .mt-3 {
+  margin-top: 1rem !important;
+  flex-shrink: 0;
+  padding: 0.5rem;
+}
+
+#cropModal .btn-outline-primary {
+  margin: 0 0.25rem !important;
+  padding: 0.375rem 0.75rem !important;
+}
