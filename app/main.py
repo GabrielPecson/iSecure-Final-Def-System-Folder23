@@ -447,29 +447,21 @@ if __name__ == '__main__':
     # Pre-load models before starting the server
     preload_models()
 
-    # For local testing, run without SSL
-    # Comment out the SSL block below and uncomment the simple run for local dev
+    import ssl
+
+    # Create SSL context
+    context = ssl.SSLContext(ssl.PROTOCOL_TLS)
+
+    # Load your Let's Encrypt certificate + private key
+    context.load_cert_chain(
+        '/etc/letsencrypt/live/isecured.online/fullchain.pem',
+        '/etc/letsencrypt/live/isecured.online/privkey.pem'
+    )
+
+    # Run Flask with HTTPS manually
     app.run(
         host='0.0.0.0',
         port=8000,
-        debug=True
+        debug=True,
+        ssl_context=context
     )
-
-    # import ssl
-
-    # # Create SSL context
-    # context = ssl.SSLContext(ssl.PROTOCOL_TLS)
-
-    # # Load your Let's Encrypt certificate + private key
-    # context.load_cert_chain(
-    #     '/etc/letsencrypt/live/isecured.online/fullchain.pem',
-    #     '/etc/letsencrypt/live/isecured.online/privkey.pem'
-    # )
-
-    # # Run Flask with HTTPS manually
-    # app.run(
-    #     host='0.0.0.0',
-    #     port=8000,
-    #     debug=True,
-    #     ssl_context=context
-    # )
