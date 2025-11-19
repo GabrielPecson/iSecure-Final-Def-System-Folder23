@@ -301,7 +301,7 @@ if ($role !== 'User') {
                 <div class="col-md-6">
                   <h5>Live Camera</h5>
                   <div style="position: relative; width: 100%; height: 300px; border: 1px solid #ccc; border-radius: 8px; overflow: hidden;">
-                    <img id="facialCamera" src="http://localhost:8000/camera/facial/frame" alt="Live Camera" style="width: 100%; height: 100%; object-fit: cover;">
+                    <img id="facialCamera" src="https://isecured.online:8000/camera/facial/frame" alt="Live Camera" style="width: 100%; height: 100%; object-fit: cover;">
                     <div style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 200px; height: 250px; border: 3px solid red; border-radius: 8px; pointer-events: none;"></div>
                   </div>
                 </div>
@@ -322,7 +322,7 @@ if ($role !== 'User') {
                 <div class="col-md-6">
                   <h5>Live Camera</h5>
                   <div class="camera-feed-container" style="position: relative; width: 100%; height: 240px; border: 1px solid #ccc; border-radius: 8px; overflow: hidden;">
-                    <img id="cameraFeed" src="http://isecured.online:8000/camera/vehicle/frame" alt="Camera Feed" style="width: 100%; height: 100%; object-fit: cover;">
+                    <img id="cameraFeed" src="https://isecured.online:8000/camera/vehicle/frame" alt="Camera Feed" style="width: 100%; height: 100%; object-fit: cover;">
                   </div>
                 </div>
               </div>
