@@ -46,7 +46,7 @@ header('Content-Type: application/json');
 $uidRaw = $_GET['uid'] ?? '';
 $door   = strtoupper(trim($_GET['door'] ?? ''));
 
-if ($uidRaw === '' || $door === '' || !in_array($door, ['DOOR1', 'DOOR2', 'ALL'])) {
+if ($uidRaw === '' || $door === '' || !in_array($door, ['DOOR1','DOOR2','ALL','DOOR1_EXIT','DOOR2_EXIT'])) {
     echo json_encode(["status" => "REJECTED", "reason" => "BAD_REQUEST"]);
     exit;
 }
