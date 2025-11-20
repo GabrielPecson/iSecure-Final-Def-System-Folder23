@@ -3,6 +3,7 @@
 
 // ========================= CONFIG =========================
 $DB_HOST = "isecured.online";
+$DB_PORT = 8000;
 $DB_USER = "root";
 $DB_PASS = "";
 $DB_NAME = "isecure";
@@ -77,7 +78,7 @@ else if (is_decimal_uid($uid)) {
 $uidsToTry = array_unique($uidsToTry);
 
 // ========================= DB CONNECTION =========================
-$mysqli = new mysqli($DB_HOST, $DB_USER, $DB_PASS, $DB_NAME);
+$mysqli = new mysqli($DB_HOST, $DB_USER, $DB_PASS, $DB_NAME, $DB_PORT);
 if ($mysqli->connect_errno) {
     echo json_encode(["status" => "REJECTED", "reason" => "DB_ERROR"]);
     exit;
