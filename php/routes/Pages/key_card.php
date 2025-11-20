@@ -58,36 +58,28 @@ if (isset($_GET['action'])) {
         exit;
     }
 
-    // ---------------------------------------------------------------
-    // Register a NEW Key Card (Merged with admin_register logic)
-    // ---------------------------------------------------------------
 // ---------------------------------------------------------------
-// Register a NEW Key Card (Fixed: saves UID as LITTLE-ENDIAN HEX)
+// REGISTER a new key card (Form POST) — converts UID to little-endian HEX
 // ---------------------------------------------------------------
 if ($action === 'register') {
-    $data = json_decode(file_get_contents('php://input'), true);
+    // read POST
+    $card_uid  = isset($_POST['card_uid']) ? trim($_POST['card_uid']) : '';
+    $card_name = isset($_POST['card_name']) ? trim($_POST['card_name']) : '';
 
-    if (empty($data['card_uid']) || empty($data['card_name'])) {
+    if ($card_uid === '' || $card_name === '') {
         http_response_code(400);
         echo json_encode(['success' => false, 'message' => 'Card UID and Card Name are required.']);
         exit;
     }
 
-    // RAW UID from USB Reader
-    $raw_uid = trim($data['card_uid']);
-
-    // ----------------------------------------------
-    // FIX: AUTO-CONVERT UID TO LITTLE-ENDIAN HEX
-    // ----------------------------------------------
-    if (ctype_digit($raw_uid)) {
-        // UID is DECIMAL → convert to little-endian HEX
-        $key_card_uid = decToLEHex($raw_uid);
+    // Convert to little-endian HEX
+    if (ctype_digit($card_uid)) {
+        $key_card_uid = decToLEHex($card_uid);
     } else {
-        // UID already HEX → normalize to little-endian HEX
-        $key_card_uid = hexToLE($raw_uid);
+        $key_card_uid = hexToLE($card_uid);
     }
 
-    // Check if UID already exists
+    // Check duplicate by key_card_number
     $stmt = $pdo->prepare("SELECT COUNT(*) FROM clearance_badges WHERE key_card_number = ?");
     $stmt->execute([$key_card_uid]);
     if ($stmt->fetchColumn() > 0) {
@@ -98,37 +90,53 @@ if ($action === 'register') {
     }
 
     try {
-        // Save card into main table
-        $stmt = $pdo->prepare("
+        // Try to insert with visitor_id = NULL (Option A)
+        $insertStmt = $pdo->prepare("
             INSERT INTO clearance_badges (key_card_number, card_name, status, clearance_level, visitor_id)
             VALUES (?, ?, 'unassigned', 'none', NULL)
         ");
-        $stmt->execute([$key_card_uid, $data['card_name']]);
+        $insertStmt->execute([$key_card_uid, $card_name]);
 
-        // Save also into doorlock system
-        $doorlock_db = new PDO("mysql:host=localhost;dbname=isecure", "root", "");
-        $doorlock_stmt = $doorlock_db->prepare("
-            INSERT INTO registered_cards(uid, status)
-            VALUES(?, 'ACTIVE')
-            ON DUPLICATE KEY UPDATE status = 'ACTIVE'
-        ");
-        $doorlock_stmt->execute([$key_card_uid]);
+        // Also try to save to doorlock table if it exists; ignore if missing
+        try {
+            $doorlock_db = new PDO("mysql:host=localhost;dbname=isecure", "root", "");
+            $doorlock_db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+            $doorlock_stmt = $doorlock_db->prepare("
+                INSERT INTO registered_cards(uid, status)
+                VALUES(?, 'ACTIVE')
+                ON DUPLICATE KEY UPDATE status = 'ACTIVE'
+            ");
+            $doorlock_stmt->execute([$key_card_uid]);
+        } catch (PDOException $e) {
+            // if doorlock table doesn't exist or connection fails, just continue
+            error_log("Doorlock sync skipped: " . $e->getMessage());
+        }
 
-        // Log audit
-        log_audit(
-            $pdo,
-            $admin_user_id,
-            $admin_username,
-            "CARD_REGISTER",
-            "Registered card '{$data['card_name']}' UID: $key_card_uid"
-        );
+        log_audit($pdo, $admin_user_id, $admin_username, "CARD_REGISTER", "Registered card '{$card_name}' UID: $key_card_uid");
 
         $_SESSION['notification_message'] = 'Key card registered successfully.';
         $_SESSION['notification_type'] = 'success';
-
     } catch (PDOException $e) {
-        $_SESSION['notification_message'] = 'Database error: ' . $e->getMessage();
-        $_SESSION['notification_type'] = 'error';
+        // Fallback: if DB schema still enforces NOT NULL for visitor_id, try inserting with 0
+        if (strpos($e->getMessage(), 'Column') !== false) {
+            try {
+                $insertStmt = $pdo->prepare("
+                    INSERT INTO clearance_badges (key_card_number, card_name, status, clearance_level, visitor_id)
+                    VALUES (?, ?, 'unassigned', 'none', 0)
+                ");
+                $insertStmt->execute([$key_card_uid, $card_name]);
+
+                log_audit($pdo, $admin_user_id, $admin_username, "CARD_REGISTER", "Registered card '{$card_name}' UID: $key_card_uid (fallback visitor_id=0)");
+                $_SESSION['notification_message'] = 'Key card registered (fallback visitor_id=0).';
+                $_SESSION['notification_type'] = 'success';
+            } catch (PDOException $e2) {
+                $_SESSION['notification_message'] = 'Database error: ' . $e2->getMessage();
+                $_SESSION['notification_type'] = 'error';
+            }
+        } else {
+            $_SESSION['notification_message'] = 'Database error: ' . $e->getMessage();
+            $_SESSION['notification_type'] = 'error';
+        }
     }
 
     header('Location: key_card.php');
@@ -137,28 +145,27 @@ if ($action === 'register') {
 
 
     // ---------------------------------------------------------------
-    // Assign Key Card to Visitor (Merged admin_assign logic)
+    // ASSIGN / UPDATE / TERMINATE (Form POST)
     // ---------------------------------------------------------------
     if ($action === 'update') {
-        $data = json_decode(file_get_contents('php://input'), true);
+        // read POST values
+        $badge_id       = $_POST['badge_id'] ?? '';   // present in edit mode
+        $visitor_id     = $_POST['visitor_id'] ?? '';
+        $card_id        = $_POST['card_id'] ?? '';    // present in assign mode
+        $validity_start = $_POST['validity_start'] ?? '';
+        $validity_end   = $_POST['validity_end'] ?? '';
+        $door           = $_POST['door'] ?? 'ALL';
+        $status         = $_POST['status'] ?? 'active'; // edit mode
 
-        if (empty($data['id']) || empty($data['visitor_id']) ||
-            empty($data['validity_start']) || empty($data['validity_end'])) {
-
+        // Basic validation
+        if (empty($visitor_id) || empty($validity_start) || empty($validity_end)) {
             $_SESSION['notification_message'] = 'Missing required fields.';
             $_SESSION['notification_type'] = 'error';
             header('Location: key_card.php');
             exit;
         }
 
-        // Check if visitor exists
-        $visitor_id = (int)$data['visitor_id'];
-        if ($visitor_id <= 0) {
-            $_SESSION['notification_message'] = 'Invalid visitor ID.';
-            $_SESSION['notification_type'] = 'error';
-            header('Location: key_card.php');
-            exit;
-        }
+        // Validate visitor exists
         $stmt = $pdo->prepare("SELECT COUNT(*) FROM visitors WHERE id = ?");
         $stmt->execute([$visitor_id]);
         if ($stmt->fetchColumn() == 0) {
@@ -168,49 +175,104 @@ if ($action === 'register') {
             exit;
         }
 
-        try {
-            $stmt = $pdo->prepare("
-                UPDATE clearance_badges
-                SET visitor_id = ?, validity_start = ?, validity_end = ?, door = ?, status = 'active', clearance_level = 'visitor'
-                WHERE id = ?
-            ");
-            $stmt->execute([
-                $data['visitor_id'],
-                $data['validity_start'],
-                $data['validity_end'],
-                $data['door'],
-                $data['id']
-            ]);
+        // -----------------------------
+        // ASSIGN MODE (no badge_id, card_id provided)
+        // -----------------------------
+        if (empty($badge_id) && !empty($card_id)) {
+            try {
+                // Protect against assigning an already active card: only update when status != 'active'
+                $assignStmt = $pdo->prepare("
+                    UPDATE clearance_badges
+                    SET visitor_id = ?, validity_start = ?, validity_end = ?, door = ?, status = 'active', clearance_level = 'visitor'
+                    WHERE id = ? AND (status IS NULL OR status != 'active')
+                ");
+                $assignStmt->execute([$visitor_id, $validity_start, $validity_end, $door, $card_id]);
 
-            if ($stmt->rowCount() > 0) {
-                // Get visitor details for card_holder table
-                $visitor_stmt = $pdo->prepare("SELECT first_name, last_name FROM visitors WHERE id = ?");
-                $visitor_stmt->execute([$data['visitor_id']]);
-                $visitor = $visitor_stmt->fetch(PDO::FETCH_ASSOC);
+                if ($assignStmt->rowCount() > 0) {
+                    // Insert into card_holders if not exists
+                    $visitor_stmt = $pdo->prepare("SELECT first_name, last_name FROM visitors WHERE id = ?");
+                    $visitor_stmt->execute([$visitor_id]);
+                    $visitor = $visitor_stmt->fetch(PDO::FETCH_ASSOC);
 
-                if ($visitor) {
-                    // Insert into card_holder table
-                    $holder_stmt = $pdo->prepare("
-                        INSERT INTO card_holders (holder_id, first_name, last_name)
-                        VALUES (?, ?, ?)
-                    ");
-                    $holder_stmt->execute([$data['visitor_id'], $visitor['first_name'], $visitor['last_name']]);
+                    if ($visitor) {
+                        // avoid duplicate card_holders
+                        $existsStmt = $pdo->prepare("SELECT COUNT(*) FROM card_holders WHERE holder_id = ?");
+                        $existsStmt->execute([$visitor_id]);
+                        if ($existsStmt->fetchColumn() == 0) {
+                            $holder_stmt = $pdo->prepare("
+                                INSERT INTO card_holders (holder_id, first_name, last_name)
+                                VALUES (?, ?, ?)
+                            ");
+                            $holder_stmt->execute([$visitor_id, $visitor['first_name'], $visitor['last_name']]);
+                        }
+                    }
+
+                    log_audit($pdo, $admin_user_id, $admin_username, "CARD_ASSIGN", "Assigned card ID {$card_id} to visitor {$visitor_id}");
+
+                    $_SESSION['notification_message'] = 'Key card assigned successfully.';
+                    $_SESSION['notification_type'] = 'success';
+                } else {
+                    $_SESSION['notification_message'] = 'Card is already assigned or cannot be updated.';
+                    $_SESSION['notification_type'] = 'error';
                 }
-
-                log_audit($pdo, $admin_user_id, $admin_username, "CARD_ASSIGN",
-                    "Assigned card ID {$data['id']} to visitor {$data['visitor_id']}");
-
-                $_SESSION['notification_message'] = 'Key card assigned successfully.';
-                $_SESSION['notification_type'] = 'success';
-            } else {
-                $_SESSION['notification_message'] = 'Failed to assign card.';
+            } catch (PDOException $e) {
+                $_SESSION['notification_message'] = 'Database error: ' . $e->getMessage();
                 $_SESSION['notification_type'] = 'error';
             }
 
-        } catch (PDOException $e) {
-            $_SESSION['notification_message'] = 'Database error: ' . $e->getMessage();
-            $_SESSION['notification_type'] = 'error';
+            header('Location: key_card.php');
+            exit;
         }
+
+        // -----------------------------
+        // EDIT MODE (badge_id provided)
+        // -----------------------------
+        if (!empty($badge_id)) {
+            try {
+                $updateStmt = $pdo->prepare("
+                    UPDATE clearance_badges
+                    SET visitor_id = ?, validity_start = ?, validity_end = ?, door = ?, status = ?, clearance_level = 'visitor'
+                    WHERE id = ?
+                ");
+                $updateStmt->execute([$visitor_id, $validity_start, $validity_end, $door, $status, $badge_id]);
+
+                // If status is set to terminated, optionally sync to doorlock (wrapped in try/catch)
+                if ($status === 'terminated') {
+                    try {
+                        $doorlock_db = new PDO("mysql:host=localhost;dbname=isecure", "root", "");
+                        $doorlock_db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+                        $uidRow = $pdo->prepare("SELECT key_card_number FROM clearance_badges WHERE id = ?");
+                        $uidRow->execute([$badge_id]);
+                        $r = $uidRow->fetch(PDO::FETCH_ASSOC);
+                        if ($r && !empty($r['key_card_number'])) {
+                            $doorlock_stmt = $doorlock_db->prepare("
+                                INSERT INTO registered_cards(uid, status)
+                                VALUES(?, 'INACTIVE')
+                                ON DUPLICATE KEY UPDATE status = 'INACTIVE'
+                            ");
+                            $doorlock_stmt->execute([$r['key_card_number']]);
+                        }
+                    } catch (PDOException $e) {
+                        error_log("Doorlock sync (terminate) failed: " . $e->getMessage());
+                    }
+                }
+
+                log_audit($pdo, $admin_user_id, $admin_username, "CARD_UPDATE", "Updated card ID {$badge_id} for visitor {$visitor_id}");
+
+                $_SESSION['notification_message'] = 'Key card updated successfully.';
+                $_SESSION['notification_type'] = 'success';
+            } catch (PDOException $e) {
+                $_SESSION['notification_message'] = 'Database error: ' . $e->getMessage();
+                $_SESSION['notification_type'] = 'error';
+            }
+
+            header('Location: key_card.php');
+            exit;
+        }
+
+        // fallback
+        $_SESSION['notification_message'] = 'Invalid request.';
+        $_SESSION['notification_type'] = 'error';
         header('Location: key_card.php');
         exit;
     }

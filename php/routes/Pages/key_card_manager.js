@@ -230,55 +230,31 @@ document.addEventListener('DOMContentLoaded', function() {
     // ============================================================
     // ASSIGN or UPDATE SUBMIT HANDLER
     // ============================================================
-    badgeForm.addEventListener('submit', function(e) {
+badgeForm.addEventListener('submit', function(e) {
+    // STOP preventing form submission!
+    // Remove e.preventDefault();
+
+    const editingBadgeId = badgeIdField.value;
+    const visitorId = visitorSelect.value;
+
+    if (!visitorId) {
+        showAlertModal('Please select a visitor.');
         e.preventDefault();
+        return;
+    }
 
-        const editingBadgeId = (badgeIdField && badgeIdField.value) ? badgeIdField.value : '';
-        const visitorId = (visitorSelect && visitorSelect.value) ? visitorSelect.value : '';
+    const vsVal = validityStartField.value;
+    const veVal = validityEndField.value;
 
-        if (!visitorId) {
-            showAlertModal('Please select a visitor.');
-            return;
-        }
+    if (!vsVal || !veVal) {
+        showAlertModal('Please fill validity start and end.');
+        e.preventDefault();
+        return;
+    }
 
-        const vsVal = validityStartField ? validityStartField.value : '';
-        const veVal = validityEndField ? validityEndField.value : '';
+    // allow natural submit here!
+});
 
-        if (!vsVal || !veVal) {
-            showAlertModal('Please fill validity start and end.');
-            return;
-        }
-
-        const validityStart = vsVal.replace('T', ' ') + ':00';
-        const validityEnd = veVal.replace('T', ' ') + ':00';
-
-        const data = {
-            visitor_id: visitorId,
-            validity_start: validityStart,
-            validity_end: validityEnd,
-            door: doorSelect ? doorSelect.value : 'ALL'
-        };
-
-        if (editingBadgeId) {
-            data.id = editingBadgeId;
-            if (badgeStatus) data.status = badgeStatus.value;
-        } else {
-            data.id = keyCardIdSelect ? keyCardIdSelect.value : '';
-            if (!data.id) {
-                showAlertModal('Please select a card to assign.');
-                return;
-            }
-            // Check if selected option is disabled (already assigned)
-            const selectedOption = keyCardIdSelect.options[keyCardIdSelect.selectedIndex];
-            if (selectedOption.disabled) {
-                showAlertModal('This card is already assigned to a visitor. Please select an available card.');
-                return;
-            }
-        }
-
-        // If client-side validation passes, allow form to submit normally
-        // (no e.preventDefault() here, and no fetch call)
-    });
 
 
     // ============================================================
