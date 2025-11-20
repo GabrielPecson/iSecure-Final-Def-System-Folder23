@@ -8,7 +8,7 @@ $adminCount = $stmt->fetchColumn();
 
 // If no admin exists, redirect to seed_admin.php
 if ($adminCount == 0) {
-    header("Location: seed_admin.php");
+    header("Location: Pages/seed_admin.php");
     exit;
 }
 
