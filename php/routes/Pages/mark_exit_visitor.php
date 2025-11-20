@@ -25,6 +25,7 @@ try {
     $visitorStmt->execute([':vid' => $visitorId]);
     $visitorData = $visitorStmt->fetch(PDO::FETCH_ASSOC);
 
+    $visitorName = 'Unknown Visitor';
     if ($visitorData) {
         $visitorName = trim($visitorData['first_name'] . ' ' . $visitorData['middle_name'] . ' ' . $visitorData['last_name']);
 
@@ -56,13 +57,16 @@ try {
     $visitorPhone = $phoneStmt->fetchColumn();
 
     if ($visitorPhone) {
-        require_once __DIR__ . 'sms_module.php';
+        require_once __DIR__ . '/sms_module.php';
         $message = "Thank you for visiting Basa Air Base. You have been successfully checked out. Safe travels!";
         send_sms($visitorPhone, $message);
     }
 
+    $_SESSION['notification_message'] = htmlspecialchars($visitorName) . " has been marked as Exited.";
+    $_SESSION['notification_type'] = 'success';
     echo json_encode(['success' => true, 'message' => 'Visitor marked as exited']);
 } catch (Exception $e) {
-    $pdo->rollBack();
+    $_SESSION['notification_message'] = 'Error marking visitor as Exited: ' . $e->getMessage();
+    $_SESSION['notification_type'] = 'error';
     echo json_encode(['success' => false, 'message' => $e->getMessage()]);
 }
