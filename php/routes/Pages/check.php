@@ -3,7 +3,7 @@
 
 // ========================= CONFIG =========================
 $DB_HOST = "isecured.online";
-$DB_PORT = 8000;
+$DB_PORT = 3306;
 $DB_USER = "root";
 $DB_PASS = "";
 $DB_NAME = "isecure";
