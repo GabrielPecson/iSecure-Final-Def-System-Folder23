@@ -57,7 +57,7 @@ try {
             <i class="fa-solid fa-id-badge"></i>
             <h6 class="current-loc">Key Cards List</h6>
         </div>
-        <div class="header-right">
+        <div class="header-right">t
             <div class="user-info">
                 <i class="fa-solid fa-user-circle fa-lg me-2"></i>
                 <div class="user-text">

@@ -387,88 +387,38 @@ $all_cards = $pdo->query("
                         <h4 id="formTitle">Assign Key Card to Visitor</h4>
 
                         <form id="badgeForm" action="key_card.php?action=update" method="POST">
+                            <input type="hidden" id="badgeId" name="badge_id">
 
-                            <!-- Store badge ID when editing -->
-                            <input type="hidden" id="badgeId">
-
-                            <!-- Visitor Selector -->
                             <label class="mt-2">Select Visitor</label>
-                            <select id="visitorSelect" class="form-select" required>
-                                <option value="">-- Select --</option>
-                                <?php foreach ($visitors as $v): ?>
-                                    <option value="<?= $v['id'] ?>">
-                                        <?= $v['first_name'] . " " . $v['last_name'] ?>
-                                    </option>
-                                <?php endforeach; ?>
-                            </select>
+                            <select id="visitorSelect" name="visitor_id" class="form-select" required></select>
 
-                            <!-- Badge List for Selected Visitor -->
                             <div id="badgeList" class="mb-4"></div>
 
-                            <!-- Card Selector (Assign Mode Only) -->
                             <div id="assignCardField">
                                 <label class="mt-2">Select Card</label>
-                                <select id="keyCardId" class="form-select">
-                                    <option value="">-- Select --</option>
-                                    <?php foreach ($all_cards_for_assign as $c): ?>
-                                        <option value="<?= $c['id'] ?>" <?= $c['status'] === 'active' ? 'disabled' : '' ?>>
-                                            <?= htmlspecialchars($c['card_name']) ?> (<?= $c['key_card_number'] ?>) - <?= $c['status'] === 'active' ? 'Assigned to: ' . htmlspecialchars($c['holder_name'] ?? 'Unknown') : 'Available' ?>
-                                        </option>
-                                    <?php endforeach; ?>
-                                </select>
+                                <select id="keyCardId" name="card_id" class="form-select"></select>
                             </div>
 
-                            <!-- UID (READ-ONLY) – Edit mode only -->
                             <div id="uidField" style="display:none;">
                                 <label class="mt-2">Key Card UID</label>
-                                <input type="text" id="keyCardNumber" class="form-control" readonly>
+                                <input type="text" id="keyCardNumber" name="key_card_uid" class="form-control" readonly>
                             </div>
 
-                            <!-- Validity -->
                             <label class="mt-2">Validity Start</label>
-                            <input type="datetime-local" id="validityStart" class="form-control" required>
+                            <input type="datetime-local" id="validityStart" name="validity_start" class="form-control" required>
 
                             <label class="mt-2">Validity End</label>
-                            <input type="datetime-local" id="validityEnd" class="form-control" required>
+                            <input type="datetime-local" id="validityEnd" name="validity_end" class="form-control" required>
 
-                            <!-- Door Access -->
-                            <label for="doorAccess" class="mt-2">Door Access</label>
-                            <select id="doorAccess" class="form-select" required>
-                                <option value="ALL">All Doors</option>
-                                <option value="DOOR1">Door 1 Only</option>
-                                <option value="DOOR2">Door 2 Only</option>
-                            </select>
+                            <label class="mt-2">Door Access</label>
+                            <select id="doorAccess" name="door" class="form-select" required></select>
 
-                            <!-- STATUS DROPDOWN (Edit Mode Only) -->
-                            <div id="statusField" class="mt-2" style="display:none;">
+                            <div id="statusField" style="display:none;">
                                 <label>Status</label>
-                                <select id="badgeStatus" class="form-select">
-                                    <option value="active">Active</option>
-                                    <option value="inactive">Inactive</option>
-                                    <option value="terminated">Terminated</option>
-                                </select>
+                                <select id="badgeStatus" name="status" class="form-select"></select>
                             </div>
 
-                            <!-- Buttons -->
-                            <div class="mt-3">
-
-                                <!-- Submit = Assign (default) or Update (edit mode) -->
-                                <button id="submitBtn" type="submit" class="btn btn-success">
-                                    Assign Key Card
-                                </button>
-
-                                <!-- Terminate Button -->
-                                <button id="terminateBtn" type="button" class="btn btn-danger" style="display:none;">
-                                    Terminate
-                                </button>
-
-                                <!-- Cancel Edit -->
-                                <button id="cancelEditBtn" type="button" class="btn btn-secondary" style="display:none;">
-                                    Cancel Edit
-                                </button>
-
-                            </div>
-
+                            <button id="submitBtn" type="submit" class="btn btn-success">Assign Key Card</button>
                         </form>
                     </div>
                 </div>
