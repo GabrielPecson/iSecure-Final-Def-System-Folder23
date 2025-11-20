@@ -390,13 +390,25 @@ $all_cards = $pdo->query("
                             <input type="hidden" id="badgeId" name="badge_id">
 
                             <label class="mt-2">Select Visitor</label>
-                            <select id="visitorSelect" name="visitor_id" class="form-select" required></select>
+                            <select id="visitorSelect" name="visitor_id" class="form-select" required>
+                                <option value="">-- Select Visitor --</option>
+                                <?php foreach ($visitors as $visitor): ?>
+                                    <option value="<?= $visitor['id'] ?>"><?= htmlspecialchars($visitor['first_name'] . ' ' . $visitor['last_name']) ?></option>
+                                <?php endforeach; ?>
+                            </select>
 
                             <div id="badgeList" class="mb-4"></div>
 
                             <div id="assignCardField">
                                 <label class="mt-2">Select Card</label>
-                                <select id="keyCardId" name="card_id" class="form-select"></select>
+                                <select id="keyCardId" name="card_id" class="form-select">
+                                    <option value="">-- Select Card --</option>
+                                    <?php foreach ($all_cards_for_assign as $card): ?>
+                                        <option value="<?= $card['id'] ?>" data-uid="<?= $card['key_card_number'] ?>">
+                                            <?= htmlspecialchars($card['card_name']) ?> (<?= $card['key_card_number'] ?>) - <?= $card['holder_name'] ?: 'Unassigned' ?>
+                                        </option>
+                                    <?php endforeach; ?>
+                                </select>
                             </div>
 
                             <div id="uidField" style="display:none;">
@@ -405,17 +417,21 @@ $all_cards = $pdo->query("
                             </div>
 
                             <label class="mt-2">Validity Start</label>
-                            <input type="datetime-local" id="validityStart" name="validity_start" class="form-control" required>
+                            <input type="datetime-local" id="validityStart" name="validity_start" class="form-control" required value="<?php echo date('Y-m-d\TH:i'); ?>">
 
                             <label class="mt-2">Validity End</label>
-                            <input type="datetime-local" id="validityEnd" name="validity_end" class="form-control" required>
+                            <input type="datetime-local" id="validityEnd" name="validity_end" class="form-control" required value="<?php echo date('Y-m-d\TH:i', strtotime('+1 hour')); ?>">
 
                             <label class="mt-2">Door Access</label>
                             <select id="doorAccess" name="door" class="form-select" required></select>
 
                             <div id="statusField" style="display:none;">
                                 <label>Status</label>
-                                <select id="badgeStatus" name="status" class="form-select"></select>
+                                <select id="badgeStatus" name="status" class="form-select">
+                                    <option value="active">Active</option>
+                                    <option value="inactive">Inactive</option>
+                                    <option value="terminated">Terminated</option>
+                                </select>
                             </div>
 
                             <button id="submitBtn" type="submit" class="btn btn-success">Assign Key Card</button>
