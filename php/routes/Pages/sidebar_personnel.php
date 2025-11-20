@@ -4,7 +4,7 @@
         <ul>
           <h6>MENU</h6>
           <li><i class="fa-solid fa-users"></i><a href="visitors.php"> Visitors Inside</a></li>
-          <li><i class="fa-solid fa-user-plus"></i><a href="personnel_walkin.php"> Walk-in Visit</a></li>
+          <!-- <li><i class="fa-solid fa-user-plus"></i><a href="personnel_walkin.php"> Walk-in Visit</a></li> -->
           <!-- <h6>NOTIFICATIONS</h6> -->
           <!-- <li><i class="fa-solid fa-bell"></i><a href="personnel_notifications.php"> View Notifications</a></li> -->
           <h6>DATA MANAGEMENT</h6>
