@@ -424,10 +424,8 @@ $all_cards = $pdo->query("
 
                             <label class="mt-2">Door Access</label>
                             <select id="doorAccess" name="door" class="form-select" required>
-                                <option value="ALL">All Doors</option>
-                                <option value="MAIN">Main Door</option>
-                                <option value="SIDE">Side Door</option>
-                                <option value="BACK">Back Door</option>
+                                <option value="1">Door 1</option>
+                                <option value="2">Door 2</option>
                             </select>
 
                             <div id="statusField" style="display:none;">
