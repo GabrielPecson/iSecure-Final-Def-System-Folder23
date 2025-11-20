@@ -222,7 +222,7 @@ if ($action === 'register') {
 // ---------------------------------------------------------------------
 // Render UI Page
 // ---------------------------------------------------------------------
-$visitors = $pdo->query("SELECT id, first_name, last_name FROM visitors")->fetchAll(PDO::FETCH_ASSOC);
+$visitors = $pdo->query("SELECT id, first_name, last_name FROM visitors WHERE status != 'Exited'")->fetchAll(PDO::FETCH_ASSOC);
 
 $all_cards_for_assign = $pdo->query("
     SELECT cb.id, cb.card_name, cb.key_card_number, cb.status,
