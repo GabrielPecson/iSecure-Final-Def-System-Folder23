@@ -371,10 +371,10 @@ $all_cards = $pdo->query("
                             <h4>Register New Key Card</h4>
                             <form id="registerCardForm" action="key_card.php?action=register" method="POST">
                                 <label>Card Name</label>
-                                <input type="text" id="card_name" class="form-control" required>
+                                <input type="text" id="card_name" name="card_name" class="form-control" required>
 
                                 <label>New Card UID (Decimal or HEX)</label>
-                                <input type="text" id="card_uid" class="form-control" required>
+                                <input type="text" id="card_uid" name="card_uid" class="form-control" required>
 
                                 <button class="btn btn-info mt-2">Register Card</button>
                             </form>
