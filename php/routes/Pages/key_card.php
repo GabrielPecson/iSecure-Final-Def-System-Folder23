@@ -423,7 +423,12 @@ $all_cards = $pdo->query("
                             <input type="datetime-local" id="validityEnd" name="validity_end" class="form-control" required value="<?php echo date('Y-m-d\TH:i', strtotime('+1 hour')); ?>">
 
                             <label class="mt-2">Door Access</label>
-                            <select id="doorAccess" name="door" class="form-select" required></select>
+                            <select id="doorAccess" name="door" class="form-select" required>
+                                <option value="ALL">All Doors</option>
+                                <option value="MAIN">Main Door</option>
+                                <option value="SIDE">Side Door</option>
+                                <option value="BACK">Back Door</option>
+                            </select>
 
                             <div id="statusField" style="display:none;">
                                 <label>Status</label>
