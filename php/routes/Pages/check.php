@@ -2,7 +2,7 @@
 // check.php - unified UID handling + DB error handling + door access validation
 
 // ========================= CONFIG =========================
-$DB_HOST = "isecured.online";
+$DB_HOST = "https://isecured.online:8000";
 $DB_USER = "root";
 $DB_PASS = "";
 $DB_NAME = "isecure";
