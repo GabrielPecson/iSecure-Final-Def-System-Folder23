@@ -9,7 +9,7 @@ function send_sms($number, $message, $sendername = 'SEMAPHORE') {
         'apikey' => '4c8de78e2a781ffdadb3f3c2ad90eeda', // Your API KEY
         'number' => $number,
         'message' => $message,
-        'sendername' => $sendername
+        'sendername' => 'Semaphore'
     );
     curl_setopt($ch, CURLOPT_URL, 'https://semaphore.co/api/v4/messages');
     curl_setopt($ch, CURLOPT_POST, 1);
