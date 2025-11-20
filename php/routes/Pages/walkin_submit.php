@@ -96,7 +96,7 @@ $stmt = $pdo->prepare("
     (first_name, middle_name, last_name, home_address, contact_number, email, valid_id_path, selfie_photo_path,
      vehicle_brand, vehicle_color, plate_number, vehicle_model,
      personnel_related, office_to_visit, visit_date, visit_time, reason, status)
-    VALUES (:first_name, :middle_name, :last_name, :home_address, :contact_number, :email, :valid_id_path, :facial_photos,
+    VALUES (:first_name, :middle_name, :last_name, :home_address, :contact_number, :email, :valid_id_path, :selfie_photo_path,
             :vehicle_brand, :vehicle_color, :plate_number, :vehicle_type,
             :contact_personnel, :office_to_visit, :visit_date, :visit_time, 'Walk-in Visit', 'Pending')
 ");
